@@ -18,7 +18,9 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.util;
+package vellum.system;
+
+import vellum.util.MockableConsole;
 
 /**
  *

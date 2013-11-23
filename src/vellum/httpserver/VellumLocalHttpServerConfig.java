@@ -20,7 +20,7 @@
  */
 package vellum.httpserver;
 
-import vellum.util.SystemProperties;
+import vellum.system.SystemProperties;
 
 /**
  *

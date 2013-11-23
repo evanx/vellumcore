@@ -20,6 +20,7 @@
  */
 package vellum.util;
 
+import vellum.system.SystemConsole;
 import java.util.HashMap;
 import java.util.Properties;
 import org.slf4j.Logger;

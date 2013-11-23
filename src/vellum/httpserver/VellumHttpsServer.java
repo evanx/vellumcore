@@ -52,6 +52,11 @@ public class VellumHttpsServer implements Shutdownable {
     public VellumHttpsServer() {
     }
 
+    public void start(ExtendedProperties properties, SSLContextFactory sslContextFactory,
+            HttpHandler handler) throws Exception {
+        start(properties, sslContextFactory.create(properties), handler);
+    }
+    
     public void start(ExtendedProperties properties, SSLContext sslContext,
             HttpHandler handler) throws Exception {
         int port = properties.getInt("port", 8443);

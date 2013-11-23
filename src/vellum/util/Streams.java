@@ -162,6 +162,7 @@ public class Streams {
             while (true) {
                 int b = stream.read();
                 if (b < 0) {
+                    stream.close();
                     return outputStream.toByteArray();
                 }
                 outputStream.write(b);

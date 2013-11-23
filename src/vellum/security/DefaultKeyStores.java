@@ -41,15 +41,22 @@ public class DefaultKeyStores {
             System.getProperty("javax.net.ssl.trustStore");
     static final char[] trustStorePassword = 
             System.getProperty("javax.net.ssl.trustStorePassword").toCharArray();
-    public static final KeyStore keyStore = 
-            KeyStores.loadKeyStore("JKS", keyStoreLocation, keyStorePassword);
-    public static final KeyStore trustStore = 
-            KeyStores.loadKeyStore("JKS", trustStoreLocation, trustStorePassword);
-    public static final KeyManagerFactory keyManagerFactory = 
-            KeyStores.loadKeyManagerFactory(keyStore, keyStorePassword);
-    public static final TrustManagerFactory trustManagerFactory = 
-            KeyStores.loadTrustManagerFactory(trustStore);
+    public static final KeyStore keyStore;
+    public static final KeyStore trustStore;
+    public static final KeyManagerFactory keyManagerFactory; 
+    public static final TrustManagerFactory trustManagerFactory;
 
+    static {
+        try {
+            keyStore = KeyStores.loadKeyStore("JKS", keyStoreLocation, keyStorePassword);
+            trustStore = KeyStores.loadKeyStore("JKS", trustStoreLocation, trustStorePassword);
+            keyManagerFactory = KeyStores.loadKeyManagerFactory(keyStore, keyStorePassword);
+            trustManagerFactory = KeyStores.loadTrustManagerFactory(trustStore);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     public static PrivateKey getPrivateKey(String alias) throws Exception {
         return (PrivateKey) keyStore.getKey(alias, keyPassword);
     }

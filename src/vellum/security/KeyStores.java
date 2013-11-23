@@ -21,6 +21,7 @@
 package vellum.security;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
@@ -29,11 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
-import vellum.crypto.rsa.GenECPair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.crypto.genkeypair.GenKeyPair;
-import vellum.exception.Exceptions;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
 
 /**
  *
@@ -42,20 +41,16 @@ import vellum.logr.LogrFactory;
  */
 public class KeyStores {
 
-    static Logr logger = LogrFactory.getLogger(KeyStores.class);
+    static Logger logger = LoggerFactory.getLogger(KeyStores.class);
 
-    public static KeyStore loadKeyStore(String type, String filePath, 
-            char[] keyStorePassword) {
-        try {
-            KeyStore keyStore = KeyStore.getInstance(type);
-            FileInputStream inputStream = new FileInputStream(filePath);
-            keyStore.load(inputStream, keyStorePassword);
-            return keyStore;
-        } catch (Exception e) {
-            throw Exceptions.newRuntimeException(e);
-        }
+    public static KeyStore loadKeyStore(String type, String filePath, char[] keyStorePassword) 
+        throws GeneralSecurityException, IOException {
+        KeyStore keyStore = KeyStore.getInstance(type);
+        FileInputStream inputStream = new FileInputStream(filePath);
+        keyStore.load(inputStream, keyStorePassword);
+        return keyStore;
     }
-
+    
     public static X509TrustManager loadTrustManager(TrustManagerFactory trustManagerFactory) 
             throws Exception {
         for (TrustManager trustManager : trustManagerFactory.getTrustManagers()) {
@@ -91,24 +86,18 @@ public class KeyStores {
         return sslContext;
     }
     
-    public static TrustManagerFactory loadTrustManagerFactory(KeyStore trustStore) {
-        try {
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-            tmf.init(trustStore);
-            return tmf;
-        } catch (Exception e) {
-            throw Exceptions.newRuntimeException(e);
-        }
+    public static TrustManagerFactory loadTrustManagerFactory(KeyStore trustStore)
+            throws GeneralSecurityException {
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        tmf.init(trustStore);
+        return tmf;
     }
 
-    public static KeyManagerFactory loadKeyManagerFactory(KeyStore keyStore, char[] keyPassword) {
-        try {
-            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-            kmf.init(keyStore, keyPassword);
-            return kmf;
-        } catch (Exception e) {
-            throw Exceptions.newRuntimeException(e);
-        }
+    public static KeyManagerFactory loadKeyManagerFactory(KeyStore keyStore, char[] keyPassword)
+            throws GeneralSecurityException {
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(keyStore, keyPassword);
+        return kmf;
     }
     
     public static KeyStore createEmptyKeyStore(String type) throws Exception {
@@ -136,5 +125,69 @@ public class KeyStores {
         keyStore.setKeyEntry(commonName, keyPair.getPrivateKey(), keyPassword, chain);
         return keyStore;
     }
+
+    public static X509Certificate findPrivateKeyCertificate(KeyStore keyStore, 
+            String keyAlias) throws KeyStoreException {
+        if (!keyStore.entryInstanceOf(keyAlias, KeyStore.PrivateKeyEntry.class)) {
+            throw new KeyStoreException("Not private key entry: " + keyAlias);
+        }
+        return (X509Certificate) keyStore.getCertificate(keyAlias);
+    }
+
+    public static X509Certificate findPrivateKeyCertificate(KeyStore keyStore) 
+            throws KeyStoreException {
+        if (countKeys(keyStore) == 1) {
+            for (String alias : Collections.list(keyStore.aliases())) {
+                if (keyStore.entryInstanceOf(alias, KeyStore.PrivateKeyEntry.class)) {
+                    return (X509Certificate) keyStore.getCertificate(alias);
+                }
+            }
+        }
+        throw new KeyStoreException("No sole private key found in keystore");
+    }
+
+    public static X509Certificate findSoleTrustedCertificate(KeyStore trustStore) 
+            throws KeyStoreException {        
+        if (Collections.list(trustStore.aliases()).size() == 1) {
+            return (X509Certificate) trustStore.getCertificate(
+                    trustStore.aliases().nextElement());
+        }
+        throw new KeyStoreException("No sole trusted certificate found in keystore");
+    }
+
+        public static int countCerts(KeyStore trustStore) throws KeyStoreException {
+        int count = 0;
+        for (String alias : Collections.list(trustStore.aliases())) {
+            logger.debug("countCerts {}", alias);
+            if (trustStore.entryInstanceOf(alias, KeyStore.TrustedCertificateEntry.class)) {
+                count++;
+            }
+        }
+        return count;
+    }
     
+    public static int countKeys(KeyStore keyStore) throws KeyStoreException {
+        int count = 0;
+        for (String alias : Collections.list(keyStore.aliases())) {
+            logger.debug("countKeys {}", alias);
+            if (keyStore.entryInstanceOf(alias, KeyStore.PrivateKeyEntry.class)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static X509TrustManager findX509TrustManager(KeyStore trustStore)
+            throws GeneralSecurityException {
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+        trustManagerFactory.init(trustStore);
+        if (trustManagerFactory.getTrustManagers().length != 1) {
+            throw new GeneralSecurityException("Multiple default trust managers");
+        }
+        if (trustManagerFactory.getTrustManagers()[0] instanceof X509TrustManager) {
+            return (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
+        }
+        throw new GeneralSecurityException("Default X509TrustManager not found");
+    }
+       
 }

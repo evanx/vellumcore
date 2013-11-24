@@ -23,6 +23,7 @@ package vellum.datatype;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import vellum.exception.ParseRuntimeException;
+import vellum.format.CalendarFormats;
 import vellum.util.Strings;
 
 /**
@@ -115,5 +116,9 @@ public class Millis {
             return Long.parseLong(string);
         }  
         throw new ParseRuntimeException(string);
+    }
+
+    public static String formatTimestamp(long time) {
+        return CalendarFormats.millisTimestampFormat.format(new Date(time));
     }
 }

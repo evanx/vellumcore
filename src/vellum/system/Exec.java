@@ -21,10 +21,14 @@
  */
 package vellum.system;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.util.Strings;
 
 /**
  *
@@ -40,19 +44,31 @@ public class Exec<T> {
     public String exec(String command, String ... envp) throws Exception {
         return exec(command, null, envp);
     }
+
+    public String exec(String command, byte[] data, Map map) throws Exception {
+        List env = new ArrayList();
+        for (Object key : map.keySet()) {
+            Object value = map.get(key);
+            if (value != null) {
+                env.add(key.toString() + "=" + value.toString());
+            }
+        }
+        return exec(command, data, Strings.toArray(env));
+    }
     
-    public String exec(String command, byte[] data, String ... envp) throws Exception {
+    public String exec(String command, byte[] data, String[] envp) throws Exception {
         Process process = Runtime.getRuntime().exec(command, envp);
         logger.info("process started: " + command);
         if (data != null) {
             process.getOutputStream().write(data);
+            process.getOutputStream().close();
         }
         Future<String> resultFuture = Executors.newSingleThreadExecutor().submit(
                 new ExecReader(process.getInputStream()));
         Future<String> errorFuture = Executors.newSingleThreadExecutor().submit(
                 new ExecReader(process.getErrorStream()));
         result = resultFuture.get();
-        //error = errorFuture.get();
+        error = errorFuture.get();
         exitCode = process.waitFor();
         logger.info("process completed {} {}", exitCode, result);
         return result;

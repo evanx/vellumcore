@@ -1,22 +1,22 @@
 /*
  * Source https://code.google.com/p/vellum by @evanxsummers
 
-       Licensed to the Apache Software Foundation (ASF) under one
-       or more contributor license agreements. See the NOTICE file
-       distributed with this work for additional information
-       regarding copyright ownership.  The ASF licenses this file
-       to you under the Apache License, Version 2.0 (the
-       "License"); you may not use this file except in compliance
-       with the License.  You may obtain a copy of the License at
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
 
-         http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-       Unless required by applicable law or agreed to in writing,
-       software distributed under the License is distributed on an
-       "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-       KIND, either express or implied.  See the License for the
-       specific language governing permissions and limitations
-       under the License.  
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.  
  */
 package vellum.util;
 
@@ -28,11 +28,11 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
- * This class contains several useful methods for working with Strings,
- * as language extensions.
+ * This class contains several useful methods for working with Strings, as language
+ * extensions.
  *
- * {@code Types} has utility methods related to types in general,
- * whereas this is more specific to {@code String} types.
+ * {@code Types} has utility methods related to types in general, whereas this is more
+ * specific to {@code String} types.
  *
  * @author evan.summers
  */
@@ -42,8 +42,15 @@ public class Strings {
     public static final String ENCODING = "UTF-8";
 
     /**
+     * This class cannot be instantiated, since all of its methods are static.
+     *
+     */
+    private Strings() {
+    }
+
+    /**
      * Return first argument that is not null.
-     * 
+     *
      */
     public static String coalesce(String... args) {
         for (String arg : args) {
@@ -56,7 +63,7 @@ public class Strings {
 
     /**
      * Format args using pattern.
-     * 
+     *
      */
     public static String format(String string, Object[] args) {
         List list = new ArrayList();
@@ -71,8 +78,8 @@ public class Strings {
 
     /**
      * Join list of lines.
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String joinLines(List<String> lineList) {
         StringBuilder builder = new StringBuilder();
@@ -87,8 +94,8 @@ public class Strings {
 
     /**
      * Join list of lines.
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String joinArray(String delimiter, String[] args) {
         StringBuilder builder = new StringBuilder();
@@ -103,28 +110,36 @@ public class Strings {
 
     /**
      * check equality.
-     * 
+     *
      */
     public static boolean equals(List<String> list, List<String> otherList) {
-        if (list == null || otherList == null || list.size() != otherList.size()) return false;
+        if (list == null || otherList == null || list.size() != otherList.size()) {
+            return false;
+        }
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) == null || otherList.get(i) == null) return false;
+            if (list.get(i) == null || otherList.get(i) == null) {
+                return false;
+            }
             if (!list.get(i).equals(otherList.get(i))) {
                 return false;
             }
         }
         return true;
     }
-    
-    /**
-     * This class cannot be instantiated, since all of its methods are static.
-     *
-     */
-    private Strings() {
+
+    public static String[] toArray(List list) {
+        String[] array = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) != null) {
+                array[i] = list.get(i).toString();
+            }
+        }
+        return array;
     }
 
     /**
-     * @returns {@literal true} if the given {@code String} is not empty and contains only uppercase letters
+     * @returns {@literal true} if the given {@code String} is not empty and contains only
+     * uppercase letters
      * @see Character#isUpperCase(char)
      */
     public static boolean isUpperCase(String string) {
@@ -140,7 +155,8 @@ public class Strings {
     }
 
     /**
-     * @returns {@literal true} if the given {@code String} is not empty and contains only lowercase letters
+     * @returns {@literal true} if the given {@code String} is not empty and contains only
+     * lowercase letters
      * @see Character#isLowerCase(char)
      */
     public static boolean isLowerCase(String string) {
@@ -156,10 +172,9 @@ public class Strings {
     }
 
     /**
-     * Returns {@literal true} if the given {@code String} is {@literal null}
-     * or considered empty. This method takes the additional step of testing
-     * to see if the {@link String#trim() trimmed} {@code String} is
-     * empty.
+     * Returns {@literal true} if the given {@code String} is {@literal null} or
+     * considered empty. This method takes the additional step of testing to see if the
+     * {@link String#trim() trimmed} {@code String} is empty.
      *
      * @param object the {@code String} to test
      * @return {@literal true} if the given {@code String} is empty
@@ -171,7 +186,8 @@ public class Strings {
     }
 
     /**
-     * @returns {@literal true} if the given {@code String} is not empty and contains only digits
+     * @returns {@literal true} if the given {@code String} is not empty and contains only
+     * digits
      * @see Character#isDigit(char)
      */
     public static boolean isDigits(String string) {
@@ -187,7 +203,8 @@ public class Strings {
     }
 
     /**
-     * @returns {@literal true} if the given {@code String} is not empty and contains only letters
+     * @returns {@literal true} if the given {@code String} is not empty and contains only
+     * letters
      * @see Character#isLetter(char)
      */
     public static boolean isLetter(String string) {
@@ -495,7 +512,7 @@ public class Strings {
             throw Exceptions.newRuntimeException(e);
         }
     }
-    
+
     public static void replace(StringBuilder text, String pattern, String string) {
         if (string != null) {
             int index = 0;
@@ -513,6 +530,13 @@ public class Strings {
             }
         }
     }
-        
+    
+    public static String formatFirst(List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return list.get(0);
+    }
+
     
 }

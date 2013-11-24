@@ -54,7 +54,9 @@ public class JsonMapParser {
             Matcher matcher = keyValuePattern.matcher(line);
             if (matcher.find()) {
                 map.put(matcher.group(1), matcher.group(2));
-                logger.info("parse {} \"{}\"", matcher.group(1), matcher.group(2));
+                if (!matcher.group(1).toLowerCase().contains("pass")) {
+                    logger.info("parse {} \"{}\"", matcher.group(1), matcher.group(2));
+                }
             }
         }
     }

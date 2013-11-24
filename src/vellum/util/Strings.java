@@ -108,6 +108,20 @@ public class Strings {
         return builder.toString();
     }
 
+    public static String joinNotNullArgs(String delimiter, String ... args) {
+        StringBuilder builder = new StringBuilder();
+        for (String arg : args) {
+            if (!isEmpty(arg)) {
+                if (builder.length() > 0) {
+                    builder.append(delimiter);
+                }
+            }
+            builder.append(arg);
+        }
+        return builder.toString();
+    }
+
+    
     /**
      * check equality.
      *

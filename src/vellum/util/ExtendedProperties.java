@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.datatype.Millis;
 
 /**
  *
@@ -57,19 +58,27 @@ public class ExtendedProperties extends Properties {
     }
     
     public String getString(String key) {
-        String propertyValue = super.getProperty(key);
-        if (propertyValue == null) {
+        String value = super.getProperty(key);
+        if (value == null) {
             throw new RuntimeException("Missing property: " + key);
         }
-        return propertyValue;
+        return value;
     } 
 
     public String getString(String key, String defaultValue) {
-        String propertyValue = super.getProperty(key);
-        if (propertyValue == null) {
+        String value = super.getProperty(key);
+        if (value == null) {
             return defaultValue;
         }
-        return propertyValue;
+        return value;
+    } 
+
+    public long getMillis(String key, long defaultValue) {
+        String value = super.getProperty(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        return Millis.parse(value);
     } 
     
     public int getInt(String name) {

@@ -27,6 +27,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.httphandler.DelegatingHttpHandler;
@@ -35,6 +36,7 @@ import vellum.httphandler.WebHttpHandler;
 import vellum.lifecycle.Shutdownable;
 import vellum.security.HttpsConfiguratorFactory;
 import vellum.ssl.SSLContextFactory;
+import vellum.ssl.SSLContexts;
 import vellum.util.ExtendedProperties;
 
 /**
@@ -55,6 +57,11 @@ public class VellumHttpsServer implements Shutdownable {
     public void start(ExtendedProperties properties, SSLContextFactory sslContextFactory,
             HttpHandler handler) throws Exception {
         start(properties, sslContextFactory.create(properties), handler);
+    }
+
+    public void start(ExtendedProperties properties, X509TrustManager trustManager,
+            HttpHandler handler) throws Exception {
+        start(properties, SSLContexts.create(properties, trustManager), handler);
     }
     
     public void start(ExtendedProperties properties, SSLContext sslContext,

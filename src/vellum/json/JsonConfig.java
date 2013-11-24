@@ -24,6 +24,8 @@ import vellum.util.ExtendedProperties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @TODO implement properly to support different sections
@@ -32,6 +34,7 @@ import java.io.IOException;
  */
 public class JsonConfig extends JsonMapParser {
 
+    private Logger logger = LoggerFactory.getLogger(JsonConfig.class);
     private ExtendedProperties properties = new ExtendedProperties(System.getProperties());
 
     public static ExtendedProperties parseProperties(Class parent, String prefix) throws IOException {
@@ -43,7 +46,8 @@ public class JsonConfig extends JsonMapParser {
         File confFile = new File(confFileName);
         if (confFile.exists()) {            
             properties.putAll(parse(new FileInputStream(confFile)));
-        } else {            
+        } else {
+            logger.warn("resource {} {}", parent, prefix);
             properties.putAll(parse(parent.getResourceAsStream(prefix + ".json")));
             properties.put("confParentClass", parent);
         }

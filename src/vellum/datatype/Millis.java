@@ -23,6 +23,7 @@ package vellum.datatype;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import vellum.exception.ParseRuntimeException;
+import vellum.util.Strings;
 
 /**
  *
@@ -95,7 +96,8 @@ public class Millis {
     public static long parse(String string) {
         int index = string.indexOf(" ");
         if (index > 0) {
-            return TimeUnit.valueOf(string.substring(index + 1)).toMillis(Long.parseLong(string.substring(0, index)));
+            return TimeUnit.valueOf(string.substring(index + 1)).
+                    toMillis(Long.parseLong(string.substring(0, index)));
         } else if (string.length() >= 2 &&
                 Character.isLowerCase(string.charAt(string.length() - 1)) && 
                 Character.isDigit(string.charAt(string.length() - 2))) {    
@@ -109,6 +111,8 @@ public class Millis {
             } else if (string.endsWith("s")) {
                 return TimeUnit.SECONDS.toMillis(value);
             }
+        } else if (Strings.isDigits(string)) {
+            return Long.parseLong(string);
         }  
         throw new ParseRuntimeException(string);
     }

@@ -23,9 +23,7 @@ package vellum.json;
 import vellum.util.ExtendedProperties;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 /**
  * @TODO implement properly to support different sections
@@ -34,10 +32,13 @@ import org.slf4j.LoggerFactory;
  */
 public class JsonConfig extends JsonMapParser {
 
-    private Logger logger = LoggerFactory.getLogger(JsonConfig.class);
     private ExtendedProperties properties = new ExtendedProperties(System.getProperties());
 
-    public void init(Class parent, String prefix) throws Exception {
+    public static ExtendedProperties parseProperties(Class parent, String prefix) throws IOException {
+        return new JsonConfig().init(parent, prefix).getProperties();
+    }
+        
+    public JsonConfig init(Class parent, String prefix) throws IOException {
         String confFileName = properties.getString(prefix + ".json", prefix + ".json");
         File confFile = new File(confFileName);
         if (confFile.exists()) {            
@@ -46,6 +47,7 @@ public class JsonConfig extends JsonMapParser {
             properties.putAll(parse(parent.getResourceAsStream(prefix + ".json")));
             properties.put("confParentClass", parent);
         }
+        return this;
     }
    
     public ExtendedProperties getProperties() {

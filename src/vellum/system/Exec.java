@@ -58,7 +58,7 @@ public class Exec<T> {
     
     public String exec(String command, byte[] data, String[] envp) throws Exception {
         Process process = Runtime.getRuntime().exec(command, envp);
-        logger.info("process started: " + command);
+        logger.debug("process started {}", command);
         if (data != null) {
             process.getOutputStream().write(data);
             process.getOutputStream().close();
@@ -70,7 +70,11 @@ public class Exec<T> {
         result = resultFuture.get();
         error = errorFuture.get();
         exitCode = process.waitFor();
-        logger.info("process completed {} {}", exitCode, result);
+        logger.debug("process completed {}: {}", exitCode, command);
+        logger.trace("process output {}: {}", result.length(), result);
+        if (!error.isEmpty()) {
+            logger.warn("process {}: {}", exitCode, error);
+        }
         return result;
     }
 

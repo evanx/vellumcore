@@ -108,20 +108,19 @@ public class Strings {
         return builder.toString();
     }
 
-    public static String joinNotNullArgs(String delimiter, String ... args) {
+    public static String joinNotNullArgs(String delimiter, String... args) {
         StringBuilder builder = new StringBuilder();
         for (String arg : args) {
             if (!isEmpty(arg)) {
                 if (builder.length() > 0) {
                     builder.append(delimiter);
                 }
+                builder.append(arg);
             }
-            builder.append(arg);
         }
         return builder.toString();
     }
 
-    
     /**
      * check equality.
      *
@@ -544,13 +543,11 @@ public class Strings {
             }
         }
     }
-    
+
     public static String formatFirst(List<String> list) {
         if (list == null || list.isEmpty()) {
             return "";
         }
         return list.get(0);
     }
-
-    
 }

@@ -20,6 +20,7 @@
  */
 package vellum.httpserver;
 
+import vellum.util.Args;
 import vellum.util.ExtendedProperties;
 
 /**
@@ -51,4 +52,10 @@ public class HttpServerProperties {
     public boolean isEnabled() {
         return enabled;
     }  
+    
+    @Override
+    public String toString() {
+        return Args.format(port, enabled);
+    }
+    
 }

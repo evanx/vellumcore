@@ -31,7 +31,7 @@ public class HttpServerProperties {
     boolean enabled = true;
 
     public HttpServerProperties(ExtendedProperties props) {
-        this(props.getInt("port", 8443),
+        this(props.getInt("port", 8080),
                 props.getBoolean("enabled", true));
     }
     

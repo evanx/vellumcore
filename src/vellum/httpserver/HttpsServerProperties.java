@@ -26,22 +26,22 @@ import vellum.util.ExtendedProperties;
  *
  * @author evan.summers
  */
-public class HttpsServerConfig {
+public class HttpsServerProperties {
     int port;
     boolean enabled = true;
     boolean clientAuth = false;
 
-    public HttpsServerConfig(ExtendedProperties props) {
+    public HttpsServerProperties(ExtendedProperties props) {
         this(props.getInt("port", 8443),
                 props.getBoolean("clientAuth", false),
                 props.getBoolean("enabled", true));
     }
     
-    public HttpsServerConfig(int port) {
+    public HttpsServerProperties(int port) {
         this.port = port;
     }
 
-    public HttpsServerConfig(int port, boolean clientAuth, boolean enabled) {
+    public HttpsServerProperties(int port, boolean clientAuth, boolean enabled) {
         this.port = port;
         this.clientAuth = clientAuth;
         this.enabled = enabled;

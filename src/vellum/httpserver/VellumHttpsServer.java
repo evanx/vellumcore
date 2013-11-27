@@ -35,7 +35,6 @@ import vellum.httphandler.HttpHandlerFactory;
 import vellum.httphandler.WebHttpHandler;
 import vellum.lifecycle.Shutdownable;
 import vellum.security.HttpsConfiguratorFactory;
-import vellum.ssl.SSLContextFactory;
 import vellum.ssl.SSLContexts;
 import vellum.util.ExtendedProperties;
 
@@ -54,30 +53,31 @@ public class VellumHttpsServer implements Shutdownable {
     public VellumHttpsServer() {
     }
 
-    public void start(ExtendedProperties properties, SSLContextFactory sslContextFactory,
-            HttpHandler handler) throws Exception {
-        start(properties, sslContextFactory.create(properties), handler);
+    public void start(ExtendedProperties properties, X509TrustManager trustManager, String webPath,
+            String appContext, HttpHandlerFactory httpHandlerFactory) throws Exception {
+        start(properties, trustManager,
+                new DelegatingHttpHandler(appContext, httpHandlerFactory, 
+                new WebHttpHandler(webPath)));
     }
-
+       
     public void start(ExtendedProperties properties, X509TrustManager trustManager,
             HttpHandler handler) throws Exception {
-        start(properties, SSLContexts.create(properties, trustManager), handler);
+        start(new HttpsServerProperties(properties), 
+                SSLContexts.create(properties, trustManager), handler);
     }
-    
-    public void start(ExtendedProperties properties, SSLContext sslContext,
+
+    public void start(HttpsServerProperties properties, SSLContext sslContext,
             HttpHandler handler) throws Exception {
-        int port = properties.getInt("port", 8443);
-        boolean needClientAuth = properties.getBoolean("needClientAuth", false);
         executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
             new ArrayBlockingQueue<Runnable>(4));
-        InetSocketAddress socketAddress = new InetSocketAddress(port);
+        InetSocketAddress socketAddress = new InetSocketAddress(properties.getPort());
         httpsServer = HttpsServer.create(socketAddress, 4);
         httpsServer.setHttpsConfigurator(HttpsConfiguratorFactory.
-                createHttpsConfigurator(sslContext, needClientAuth));
+                createHttpsConfigurator(sslContext, properties.isClientAuth()));
         httpsServer.setExecutor(executor);
         httpsServer.createContext("/", handler);
         httpsServer.start();
-        logger.info("init {}", port);
+        logger.info("init {}", properties);
     }
 
     public void createContext(String contextName, HttpHandler httpHandler) {
@@ -90,16 +90,5 @@ public class VellumHttpsServer implements Shutdownable {
             httpsServer.stop(0);
             executor.shutdown();
         }  
-    }
-    
-    public static VellumHttpsServer start(ExtendedProperties properties, 
-            SSLContextFactory sslContextFactory, String webPath,
-            String appContext, HttpHandlerFactory httpHandlerFactory) throws Exception {
-        VellumHttpsServer server = new VellumHttpsServer();
-        server.start(properties, sslContextFactory.create(properties),
-                new DelegatingHttpHandler(appContext, httpHandlerFactory, 
-                new WebHttpHandler(webPath)));
-        return server;
-    }
-    
+    }       
 }

@@ -38,10 +38,10 @@ import vellum.logr.LogrFactory;
 public class VellumHttpServer implements Startable {
     private Logr logger = LogrFactory.getLogger(VellumHttpServer.class);
     HttpServer httpServer;
-    HttpsServerConfig config; 
+    HttpsServerProperties config; 
     ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(4));
     
-    public VellumHttpServer(HttpsServerConfig config) {
+    public VellumHttpServer(HttpsServerProperties config) {
         this.config = config;
     }
 

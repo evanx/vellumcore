@@ -30,9 +30,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.httphandler.DelegatingHttpHandler;
-import vellum.httphandler.HttpHandlerFactory;
-import vellum.httphandler.WebHttpHandler;
 import vellum.lifecycle.Shutdownable;
 import vellum.security.HttpsConfiguratorFactory;
 import vellum.ssl.SSLContexts;
@@ -53,13 +50,6 @@ public class VellumHttpsServer implements Shutdownable {
     public VellumHttpsServer() {
     }
 
-    public void start(ExtendedProperties properties, X509TrustManager trustManager, String webPath,
-            String appContext, HttpHandlerFactory httpHandlerFactory) throws Exception {
-        start(properties, trustManager,
-                new DelegatingHttpHandler(appContext, httpHandlerFactory, 
-                new WebHttpHandler(webPath)));
-    }
-       
     public void start(ExtendedProperties properties, X509TrustManager trustManager,
             HttpHandler handler) throws Exception {
         start(new HttpsServerProperties(properties), 

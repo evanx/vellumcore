@@ -298,7 +298,8 @@ public class Httpx {
 
     public void sendResponse(String contentType, byte[] bytes) throws IOException {
         httpExchange.getResponseHeaders().set("Content-type", contentType);
-        httpExchange.getResponseHeaders().set("Content-length", Integer.toString(bytes.length));
+        httpExchange.getResponseHeaders().set("Content-length", 
+                Integer.toString(bytes.length));
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         getPrintStream().write(bytes);
     }

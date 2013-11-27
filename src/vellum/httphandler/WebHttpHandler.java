@@ -86,9 +86,4 @@ public class WebHttpHandler implements HttpHandler {
         }
         httpExchange.close();
     }
-    
-    public static HttpHandler create(String appContext, String webPath, 
-            HttpHandlerFactory factory) {
-        return new DelegatingHttpHandler(appContext, factory, new WebHttpHandler(webPath));
-    }
 }

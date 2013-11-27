@@ -23,77 +23,51 @@ package vellum.httpserver;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import vellum.lifecycle.Startable;
+import vellum.lifecycle.Shutdownable;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
+import vellum.util.ExtendedProperties;
 
 /**
  *
  * @author evan.summers
  */
-public class VellumHttpServer implements Startable {
+public class VellumHttpServer implements Shutdownable {
     private Logr logger = LogrFactory.getLogger(VellumHttpServer.class);
-    HttpServer httpServer;
-    HttpsServerProperties config; 
-    ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(4));
+    HttpServer delegate;
+    HttpServerProperties properties; 
+    ThreadPoolExecutor executor = 
+            new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
+            new ArrayBlockingQueue<Runnable>(4));
     
-    public VellumHttpServer(HttpsServerProperties config) {
-        this.config = config;
+    public VellumHttpServer() {
     }
 
-    private boolean portAvailable(int port) {
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            serverSocket.close();
-            return true;
-        } catch (Exception e) {
-            logger.warn("portAvailable", e.getMessage());
-            return false;
-        }
+    public void start(ExtendedProperties properties, HttpHandler httpHandler) 
+            throws Exception {
+        start(new HttpServerProperties(properties), httpHandler);
     }
-    
-    private boolean waitPort(int port, long millis, long sleep) {
-        long time = System.currentTimeMillis() + millis;
-        while (!portAvailable(port)) {
-            if (System.currentTimeMillis() > time) {
-                return false;
-            }
-            try {
-                Thread.sleep(sleep);
-            } catch (InterruptedException e) {
-                logger.warn(e, "waitPort");
-            }
-        }
-        return true;
-    }
-
-    public void start(HttpHandler httpHandler) throws Exception {
-        start();
-        httpServer.createContext("/", httpHandler);
-    }
-    
-    @Override
-    public void start() throws Exception {
-        waitPort(config.getPort(), 4000, 500);
-        InetSocketAddress socketAddress = new InetSocketAddress(config.getPort());
-        httpServer = HttpServer.create(socketAddress, 4);
-        httpServer.setExecutor(executor);
-        httpServer.start();
-        logger.info("start", config.getPort());
+    public void start(HttpServerProperties properties, HttpHandler httpHandler) 
+            throws Exception {
+        InetSocketAddress socketAddress = new InetSocketAddress(properties.getPort());
+        delegate = HttpServer.create(socketAddress, 4);
+        delegate.setExecutor(executor);
+        delegate.createContext("/", httpHandler);
+        delegate.start();
+        logger.info("start", properties.getPort());
     }
 
     public void createContext(String contextName, HttpHandler httpHandler) {
-        httpServer.createContext(contextName, httpHandler);
+        delegate.createContext(contextName, httpHandler);
     }
 
     @Override
     public void shutdown() {
-        if (httpServer != null) {
-            httpServer.stop(0); 
+        if (delegate != null) {
+            delegate.stop(0); 
             executor.shutdown();
         }  
     }

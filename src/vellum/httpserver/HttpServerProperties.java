@@ -20,31 +20,35 @@
  */
 package vellum.httpserver;
 
-import vellum.system.SystemProperties;
+import vellum.util.ExtendedProperties;
 
 /**
  *
  * @author evan.summers
  */
-public class VellumLocalHttpServerConfig {
-    int port = 8080;
-    String[] allowHosts = {"127.0.0.1"};
-    String rootDir = SystemProperties.getString("vellum.web.root");
-    String rootFile = "home.html";
+public class HttpServerProperties {
+    int port;
+    boolean enabled = true;
+
+    public HttpServerProperties(ExtendedProperties props) {
+        this(props.getInt("port", 8443),
+                props.getBoolean("enabled", true));
+    }
+    
+    public HttpServerProperties(int port) {
+        this.port = port;
+    }
+
+    public HttpServerProperties(int port, boolean enabled) {
+        this.port = port;
+        this.enabled = enabled;
+    }
     
     public int getPort() {
         return port;
     }
-
-    public String[] getAllowHosts() {
-        return allowHosts;
-    }   
-
-    public String getRootDir() {
-        return rootDir;
-    }
-
-    public String getRootFile() {
-        return rootFile;
-    }
+    
+    public boolean isEnabled() {
+        return enabled;
+    }  
 }

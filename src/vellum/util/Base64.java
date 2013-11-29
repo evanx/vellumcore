@@ -20,9 +20,6 @@
  */
 package vellum.util;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 /**
  *
  * @author evan.summers
@@ -30,12 +27,12 @@ import sun.misc.BASE64Encoder;
 public class Base64 {
     
     public static String encode(byte[] bytes) {
-        return new BASE64Encoder().encode(bytes);
+        return org.apache.commons.codec.binary.Base64.encodeBase64String(bytes);
     }
 
     public static byte[] decode(String string) {
         try {
-            return new BASE64Decoder().decodeBuffer(string);
+            return org.apache.commons.codec.binary.Base64.decodeBase64(string);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

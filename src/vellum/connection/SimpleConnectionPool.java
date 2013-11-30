@@ -2,13 +2,15 @@
  * Source https://code.google.com/p/vellum by @evanxsummers
  * 
  */
-package vellum.storage;
+package vellum.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Queue;
+import vellum.storage.StorageException;
+import vellum.storage.StorageExceptionType;
 
 /**
  *
@@ -16,7 +18,7 @@ import java.util.Queue;
  */
 public class SimpleConnectionPool implements ConnectionPool {
 
-    DataSourceConfig dataSourceInfo;
+    DataSourceProperties dataSourceProperties;
     Queue<ConnectionEntry> availableQueue = new LinkedList();
     Queue<ConnectionEntry> takenQueue = new LinkedList();
     int poolSize = 0;
@@ -24,11 +26,11 @@ public class SimpleConnectionPool implements ConnectionPool {
     int releasedCount = 0;
     int validTimeoutSeconds = 2;
 
-    public SimpleConnectionPool(DataSourceConfig dataSourceInfo) {
+    public SimpleConnectionPool(DataSourceProperties dataSourceInfo) {
         if (dataSourceInfo.getPoolSize() != null) {
             this.poolSize = dataSourceInfo.getPoolSize();
         }
-        this.dataSourceInfo = dataSourceInfo;
+        this.dataSourceProperties = dataSourceInfo;
     }
 
     @Override
@@ -45,18 +47,18 @@ public class SimpleConnectionPool implements ConnectionPool {
                     }
                 } catch (SQLException e) {
                     close(connectionEntry);
-                    throw new StorageRuntimeException(StorageExceptionType.CONNECTION_ERROR, e);
+                    throw e;
                 }
             }
         }
         if (connectionEntry == null) {
             try {
                 Connection connection = DriverManager.getConnection(
-                        dataSourceInfo.getUrl(), dataSourceInfo.getUser(), 
-                        dataSourceInfo.getPassword());
+                        dataSourceProperties.getUrl(), dataSourceProperties.getUser(), 
+                        dataSourceProperties.getPassword());
                 connectionEntry = new ConnectionEntry(connection);
             } catch (SQLException e) {
-                throw new StorageRuntimeException(StorageExceptionType.CONNECTION_ERROR, e);
+                throw e;
             }
         }
         takenCount++;
@@ -65,7 +67,8 @@ public class SimpleConnectionPool implements ConnectionPool {
     }
 
     @Override
-    public synchronized void releaseConnection(ConnectionEntry connectionEntry) {
+    public synchronized void releaseConnection(ConnectionEntry connectionEntry) 
+        throws SQLException {
         releasedCount++;
         connectionEntry.returned();
         takenQueue.remove(connectionEntry);
@@ -77,13 +80,9 @@ public class SimpleConnectionPool implements ConnectionPool {
         close(connectionEntry);
     }
 
-    static void close(ConnectionEntry connectionEntry) {
-        try {
-            if (!connectionEntry.isClosed()) {
-                connectionEntry.getConnection().close();
-            }
-        } catch (SQLException e) {
-            throw new StorageRuntimeException(StorageExceptionType.CONNECTION_ERROR, e);
+    static void close(ConnectionEntry connectionEntry) throws SQLException {
+        if (!connectionEntry.isClosed()) {
+            connectionEntry.getConnection().close();
         }
     }
 }

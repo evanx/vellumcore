@@ -2,12 +2,14 @@
  * Source https://code.google.com/p/vellum by @evanxsummers
  * 
  */
-package vellum.storage;
+package vellum.connection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import vellum.storage.StorageException;
+import vellum.storage.StorageExceptionType;
 
 /**
  *
@@ -53,16 +55,6 @@ public class ConnectionEntry {
         return connection == null || connection.isClosed();
     }
 
-    public void close() {
-        try {
-            if (!isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new StorageRuntimeException(StorageExceptionType.CONNECTION_ERROR, e);
-        }
-    }
-    
     public Statement createStatement() throws SQLException {
         return connection.createStatement();
     }

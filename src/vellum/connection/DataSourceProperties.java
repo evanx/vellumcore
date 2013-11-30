@@ -2,7 +2,7 @@
  * Source https://code.google.com/p/vellum by @evanxsummers
  * 
  */
-package vellum.storage;
+package vellum.connection;
 
 import vellum.util.ExtendedProperties;
 
@@ -10,7 +10,7 @@ import vellum.util.ExtendedProperties;
  *
  * @author evan.summers
  */
-public class DataSourceConfig {
+public class DataSourceProperties {
     String driver;
     String name;
     String url;
@@ -19,10 +19,10 @@ public class DataSourceConfig {
     boolean enabled;
     Integer poolSize; 
     
-    public DataSourceConfig() {
+    public DataSourceProperties() {
     }
 
-    public DataSourceConfig(ExtendedProperties props) {
+    public DataSourceProperties(ExtendedProperties props) {
         this(props.getString("driver"),
                 props.getString("url"),
                 props.getString("user"),
@@ -31,7 +31,7 @@ public class DataSourceConfig {
                 props.getInt("poolSize", 0));
     }
     
-    public DataSourceConfig(String driver, String url, String user, String password, 
+    public DataSourceProperties(String driver, String url, String user, String password, 
             boolean enabled, Integer poolSize) {
         this.driver = driver;
         this.url = url;

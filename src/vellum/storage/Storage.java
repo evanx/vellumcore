@@ -20,32 +20,24 @@
  */
 package vellum.storage;
 
+import java.util.Collection;
+
 /**
  * 
  * @author evan.summers
  */
-public class StorageException extends Exception {
-    StorageExceptionType exceptionType;
-    Comparable key;
+public interface Storage<E extends AbstractEntity> {
     
-    public StorageException(StorageExceptionType exceptionType, Comparable key) {
-        super(exceptionType.name());
-        this.exceptionType = exceptionType;
-        this.key = key;
-    }
-
-    public StorageException(Exception cause, StorageExceptionType exceptionType, 
-            Comparable key) {
-        super(exceptionType.name(), cause);
-        this.exceptionType = exceptionType;
-        this.key = key;
-    }
+    public void insert(E entity) throws StorageException;
     
-    public StorageExceptionType getExceptionType() {
-        return exceptionType;
-    }
+    public void update(E entity) throws StorageException;
 
-    public Comparable getKey() {
-        return key;
-    }                
+    public boolean containsKey(Comparable key);
+    
+    public void delete(Comparable key) throws StorageException;
+    
+    public E select(Comparable key);
+
+    public Collection<E> selectCollection(String query);
+    
 }

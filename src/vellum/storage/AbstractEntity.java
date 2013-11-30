@@ -20,32 +20,39 @@
  */
 package vellum.storage;
 
+import vellum.util.Comparables;
+
 /**
- * 
+ *
  * @author evan.summers
  */
-public class StorageException extends Exception {
-    StorageExceptionType exceptionType;
-    Comparable key;
+public abstract class AbstractEntity implements Comparable<AbstractEntity> {
+
+    public abstract Comparable getKey();
     
-    public StorageException(StorageExceptionType exceptionType, Comparable key) {
-        super(exceptionType.name());
-        this.exceptionType = exceptionType;
-        this.key = key;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AbstractEntity) {
+            AbstractEntity other = (AbstractEntity) obj;
+            return Comparables.equals(getKey(), other.getKey());
+        }
+        return false;
     }
 
-    public StorageException(Exception cause, StorageExceptionType exceptionType, 
-            Comparable key) {
-        super(exceptionType.name(), cause);
-        this.exceptionType = exceptionType;
-        this.key = key;
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
     
-    public StorageExceptionType getExceptionType() {
-        return exceptionType;
+    @Override
+    public int compareTo(AbstractEntity o) {
+        return Comparables.compareTo(getKey(), o.getKey());
     }
-
-    public Comparable getKey() {
-        return key;
-    }                
+    
+    @Override
+    public String toString() {
+        if (getKey() == null) return getClass().getSimpleName();
+        return getKey().toString();
+    }
+        
 }

@@ -71,7 +71,7 @@ public class Exec<T> {
         error = errorFuture.get();
         exitCode = process.waitFor();
         logger.debug("process completed {}: {}", exitCode, command);
-        logger.trace("process output {}: {}", result.length(), result);
+        logger.debug("process output {}: {}", result.length(), result);
         if (!error.isEmpty()) {
             logger.warn("process {}: {}", exitCode, error);
         }

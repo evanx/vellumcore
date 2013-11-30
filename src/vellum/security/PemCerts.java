@@ -21,13 +21,11 @@
 package vellum.security;
 
 import java.security.Key;
-import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-import sun.security.pkcs12.PKCS12KeyStore;
 import sun.security.provider.X509Factory;
 import sun.security.x509.X509CertImpl;
 import vellum.exception.Exceptions;
@@ -46,18 +44,6 @@ public class PemCerts {
 
     private static String formatPem(String label) {
         return dashes + label + dashes;
-    }
-    
-    public static String buildPem(PKCS12KeyStore p12, String keyAlias, char[] password) 
-            throws Exception {
-        PrivateKey key = (PrivateKey) p12.engineGetKey(keyAlias, password);
-        StringBuilder builder = new StringBuilder();
-        builder.append(buildKeyPem(key));
-        Certificate[] chain = p12.engineGetCertificateChain(keyAlias);
-        for (Certificate cert : chain) {
-            builder.append(buildCertPem(cert));
-        }
-        return builder.toString();
     }
     
     public static String buildKeyPem(Key privateKey) throws Exception, CertificateException {

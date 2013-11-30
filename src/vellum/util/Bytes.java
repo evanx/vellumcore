@@ -79,6 +79,12 @@ public class Bytes {
         return Charset.forName(Strings.UTF8).decode(ByteBuffer.wrap(bytes)).array();
     }
 
+    public static byte[] toByteArray(long value) {
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putLong(value);
+        return buffer.array();
+    }
+    
     public static String toString(byte[] bytes) {
         return new String(bytes);
     }

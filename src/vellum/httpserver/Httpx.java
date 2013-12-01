@@ -191,7 +191,6 @@ public class Httpx {
             httpExchange.getResponseHeaders().add("Set-cookie", builder.toString());
         }
     }
-
     
     public StringMap getCookieMap() {
         if (cookieMap == null) {

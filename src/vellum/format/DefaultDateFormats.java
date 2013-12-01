@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.util;
+package vellum.format;
 
 import vellum.datatype.SafeDateFormat;
 import java.util.Date;

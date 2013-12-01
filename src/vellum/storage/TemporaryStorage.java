@@ -66,9 +66,10 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
     }
 
     @Override
-    public E select(Comparable key) {
+    public E select(Comparable key) throws StorageException {
         logger.info("select {} {}", key, map.containsKey(key));
         if (!map.containsKey(key)) {
+            throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
         }
         return map.get(key);
     }

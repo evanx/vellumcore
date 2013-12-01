@@ -18,7 +18,7 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package vellum.json;
+package vellum.jsonconfig;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

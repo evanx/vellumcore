@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import vellum.exception.DisplayMessage;
+import vellum.jx.JMap;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
 import vellum.parameter.Entry;
@@ -51,13 +52,14 @@ public class Httpx {
     HttpExchange httpExchange;
     PrintStream out;
     StringMap parameterMap;
+    StringMap cookieMap;
+    JMap dataMap;
     String urlQuery;
     String requestBody;
     String[] args;
     boolean headersParsed = false;
     boolean acceptGzip = false;
     boolean agentWget = false;
-    StringMap cookieMap;
     
     public Httpx(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
@@ -147,10 +149,16 @@ public class Httpx {
     }
     
     public String getParameter(String key) {
+        if (parameterMap == null) {
+            parseParameterMap();
+        }
         return parameterMap.get(key);
     }
 
     public Integer getInteger(String key) {
+        if (parameterMap == null) {
+            parseParameterMap();
+        }
         String string = parameterMap.get(key);
         if (string != null) {
             return Integer.parseInt(key);
@@ -305,7 +313,7 @@ public class Httpx {
     }
     
     public void sendResponseFile(String contentType, String fileName) throws IOException {
-        httpExchange.getResponseHeaders().add("Content-Disposition",
+        httpExchange.getResponseHeaders().add("Content-disposition",
                 "attachment; filename=" + fileName);
         httpExchange.getResponseHeaders().set("Content-type", contentType);
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -320,6 +328,10 @@ public class Httpx {
         }
     }
 
+    public void sendEmptyOkResponse() throws IOException {
+        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+    }
+    
     public void handleError(Exception e) {
         e.printStackTrace(System.err);
         handleError(e.getMessage());
@@ -355,6 +367,11 @@ public class Httpx {
     
     public String getInputString() {
         return Streams.readString(httpExchange.getRequestBody());
+    }
+
+    public StringMap parseJsonMap() {
+        StringMap map = new StringMap();
+        return map;
     }
 
 }

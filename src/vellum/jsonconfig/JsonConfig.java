@@ -18,7 +18,7 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package vellum.json;
+package vellum.jsonconfig;
 
 import vellum.util.ExtendedProperties;
 import java.io.File;

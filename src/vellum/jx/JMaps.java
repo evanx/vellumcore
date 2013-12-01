@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -58,5 +59,11 @@ public class JMaps {
     
     public static JMap parse(String json) {
         return parse(new JsonParser().parse(json).getAsJsonObject());
+    }
+    
+    public static JMap create(String key, Object value) {
+        JMap map = new JMap();
+        map.add(key, value);
+        return map;
     }
 }

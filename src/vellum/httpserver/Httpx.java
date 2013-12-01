@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
+import vellum.jx.JMaps;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
 import vellum.parameter.Entry;
@@ -360,18 +361,22 @@ public class Httpx {
         return out;
     }
 
-    public void write(StringMap map) throws IOException {
+    public void sendResponse(StringMap map) throws IOException {
         sendResponse("text/json", true);
         getPrintStream().println(JsonStrings.buildJson(map));
+    }
+
+    public void sendResponse(JMap map) throws IOException {
+        sendResponse("text/json", true);
+        getPrintStream().println(map.toString());
     }
     
     public String getInputString() {
         return Streams.readString(httpExchange.getRequestBody());
     }
 
-    public StringMap parseJsonMap() {
-        StringMap map = new StringMap();
-        return map;
+    public JMap parseJsonMap() {
+        return JMaps.parse(getInputString());
     }
 
 }

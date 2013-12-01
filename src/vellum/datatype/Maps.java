@@ -62,7 +62,8 @@ public class Maps {
         return keyLinkedList(descendingValueEntrySet(map));
     }
 
-    public static <K, V extends Comparable> NavigableSet<Entry<K, V>> ascendingValueEntrySet(Map<K, V> map) {
+    public static <K, V extends Comparable> NavigableSet<Entry<K, V>> 
+            ascendingValueEntrySet(Map<K, V> map) {
         TreeSet set = new TreeSet(new Comparator<Entry<K, V>>() {
 
             @Override
@@ -78,7 +79,8 @@ public class Maps {
         return keyLinkedList(ascendingValueEntrySet(map));
     }
 
-    public static <K, V extends Comparable> NavigableSet<Entry<K, V>> descendingValueEntrySet(Map<K, V> map) {
+    public static <K, V extends Comparable> NavigableSet<Entry<K, V>> 
+            descendingValueEntrySet(Map<K, V> map) {
         TreeSet set = new TreeSet(new Comparator<Entry<K, V>>() {
 
             @Override

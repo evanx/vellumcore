@@ -34,9 +34,9 @@ import vellum.util.Strings;
  *
  * @author evan
  */
-public class Exec<T> {
+public class Executor<T> {
 
-    private final static Logger logger = LoggerFactory.getLogger(Exec.class);
+    private final static Logger logger = LoggerFactory.getLogger(Executor.class);
     private int exitCode; 
     private String result;
     private String error;
@@ -70,11 +70,8 @@ public class Exec<T> {
         result = resultFuture.get();
         error = errorFuture.get();
         exitCode = process.waitFor();
-        logger.debug("process completed {}: {}", exitCode, command);
-        logger.debug("process output {}: {}", result.length(), result);
-        if (!error.isEmpty()) {
-            logger.warn("process {}: {}", exitCode, error);
-        }
+        logger.trace("process completed {}: {}", exitCode, command);
+        logger.trace("process output {}: {}", result.length(), result);
         return result;
     }
 

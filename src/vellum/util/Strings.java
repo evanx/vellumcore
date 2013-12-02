@@ -551,4 +551,15 @@ public class Strings {
         }
         return list.get(0);
     }
+    
+    public static String truncate(int length, String string) {
+        if (string == null) return "";
+        string = string.trim();
+        if (string.length() > length) {
+            string = string.substring(0, length);
+        }
+        return string;
+    }
+
+    
 }

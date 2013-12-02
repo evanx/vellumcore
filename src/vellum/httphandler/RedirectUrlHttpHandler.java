@@ -14,20 +14,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public class RedirectHttpHandler implements HttpHandler {
+public class RedirectUrlHttpHandler implements HttpHandler {
     
-    Logger logger = LoggerFactory.getLogger(RedirectHttpHandler.class);
+    Logger logger = LoggerFactory.getLogger(RedirectUrlHttpHandler.class);
     String redirectUrl;
-    
-    public RedirectHttpHandler(String redirectUrl) {
+            
+    public RedirectUrlHttpHandler(String redirectUrl) {
         this.redirectUrl = redirectUrl;
     }
-    
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String host = httpExchange.getRequestURI().getHost();
-        logger.info("host {} {}", host, redirectUrl);
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        logger.info("host {} {}", host, redirectUrl);
         httpExchange.getResponseHeaders().add("Location", redirectUrl);
         httpExchange.close();
     }

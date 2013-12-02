@@ -26,9 +26,9 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.lifecycle.Shutdownable;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
 import vellum.util.ExtendedProperties;
 
 /**
@@ -36,7 +36,7 @@ import vellum.util.ExtendedProperties;
  * @author evan.summers
  */
 public class VellumHttpServer implements Shutdownable {
-    private Logr logger = LogrFactory.getLogger(VellumHttpServer.class);
+    private Logger logger = LoggerFactory.getLogger(VellumHttpServer.class);
     HttpServer delegate;
     HttpServerProperties properties; 
     ThreadPoolExecutor executor = 

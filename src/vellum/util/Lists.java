@@ -33,13 +33,15 @@ import java.util.*;
  */
 public class Lists {
 
-    public static <T> LinkedList<T> sortedLinkedList(Collection<T> collection, Comparator<T> comparator) {
+    public static <T> LinkedList<T> sortedLinkedList(Collection<T> collection, 
+            Comparator<T> comparator) {
         LinkedList list = new LinkedList(collection);
         Collections.sort(list, comparator);
         return list;
     }
     
-    public static <T> LinkedList<T> sortedReverseLinkedList(Collection<T> collection, Comparator<T> comparator) {
+    public static <T> LinkedList<T> sortedReverseLinkedList(Collection<T> collection, 
+            Comparator<T> comparator) {
         return sortedLinkedList(collection, Collections.reverseOrder(comparator));
     }
 

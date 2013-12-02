@@ -1,4 +1,3 @@
-
 package vellum.jx;
 
 /**
@@ -7,8 +6,23 @@ package vellum.jx;
  */
 public class Convertors {
 
+    public static long coerceLong(Object value, long defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof String) {
+            return Long.parseLong((String) value);
+        }
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+        return defaultValue;
+    }
+
     public static int coerceInt(Object value, int defaultValue) {
-        if (value == null) return defaultValue;
+        if (value == null) {
+            return defaultValue;
+        }
         if (value instanceof String) {
             return Integer.parseInt((String) value);
         }
@@ -19,7 +33,9 @@ public class Convertors {
     }
 
     public static Integer coerceInteger(Object value, Integer defaultValue) {
-        if (value == null) return defaultValue;
+        if (value == null) {
+            return defaultValue;
+        }
         if (value instanceof String) {
             return new Integer((String) value);
         }
@@ -28,5 +44,4 @@ public class Convertors {
         }
         return defaultValue;
     }
-    
 }

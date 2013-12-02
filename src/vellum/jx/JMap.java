@@ -37,10 +37,6 @@ public class JMap extends HashMap<String, Object> {
         return value.toString();
     }
 
-    public char[] getChars(String key) throws JMapException {
-        return getString(key).toCharArray();
-    }
-    
     public String getString(String key, String defaultValue) {
         Object value = super.get(key);
         if (value == null) {
@@ -48,11 +44,27 @@ public class JMap extends HashMap<String, Object> {
         }
         return value.toString();
     }
-    
+
+    public char[] getChars(String key) throws JMapException {
+        return getString(key).toCharArray();
+    }
+        
     public int getInt(String key, int defaultValue) {
         return Convertors.coerceInt(super.get(key), defaultValue);
     }
 
+    public long getLong(String key, long defaultValue) {
+        return Convertors.coerceLong(super.get(key), defaultValue);
+    }
+
+    public long getLong(String key) throws JMapException {
+        Object value = super.get(key);
+        if (value == null) {
+            throw new JMapException(key);
+        }
+        return Long.parseLong(value.toString());
+    }
+    
     public Integer getInteger(String key) {
         return Convertors.coerceInteger(super.get(key), null);
     }

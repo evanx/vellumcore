@@ -1,22 +1,22 @@
 /*
  * Source https://code.google.com/p/vellum by @evanxsummers
 
-       Licensed to the Apache Software Foundation (ASF) under one
-       or more contributor license agreements. See the NOTICE file
-       distributed with this work for additional information
-       regarding copyright ownership.  The ASF licenses this file
-       to you under the Apache License, Version 2.0 (the
-       "License"); you may not use this file except in compliance
-       with the License.  You may obtain a copy of the License at
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
 
-         http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-       Unless required by applicable law or agreed to in writing,
-       software distributed under the License is distributed on an
-       "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-       KIND, either express or implied.  See the License for the
-       specific language governing permissions and limitations
-       under the License.  
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.  
  */
 package vellum.httpserver;
 
@@ -25,13 +25,13 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
 import vellum.jx.JMaps;
@@ -49,7 +49,7 @@ import vellum.util.Strings;
  * @author evan.summers
  */
 public class Httpx {
-    
+
     Logger logger = LoggerFactory.getLogger(getClass());
     HttpExchange httpExchange;
     PrintStream out;
@@ -62,11 +62,11 @@ public class Httpx {
     boolean headersParsed = false;
     boolean acceptGzip = false;
     boolean agentWget = false;
-    
+
     public Httpx(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
     }
-    
+
     public String getServerUrl() {
         return "https://" + httpExchange.getRequestHeaders().getFirst("Host");
     }
@@ -78,7 +78,7 @@ public class Httpx {
     public String getQuery() {
         return httpExchange.getRequestURI().getQuery();
     }
-    
+
     public String getPath() {
         return httpExchange.getRequestURI().getPath();
     }
@@ -98,7 +98,7 @@ public class Httpx {
         }
         throw new IllegalArgumentException(path);
     }
-    
+
     public int getPathLength() {
         return getPathArgs().length;
     }
@@ -109,10 +109,12 @@ public class Httpx {
         }
         return requestBody;
     }
-    
+
     public boolean isParameter(String name) {
         String value = getParameterMap().get(name);
-        if (value == null) return false;
+        if (value == null) {
+            return false;
+        }
         return value.equals("on");
     }
 
@@ -122,7 +124,7 @@ public class Httpx {
         }
         return parameterMap;
     }
-    
+
     private void parseParameterMap() {
         parameterMap = new StringMap();
         urlQuery = httpExchange.getRequestURI().getQuery();
@@ -152,7 +154,7 @@ public class Httpx {
             parameterMap.put(entry.getKey(), value);
         }
     }
-    
+
     public String getParameter(String key) {
         if (parameterMap == null) {
             parseParameterMap();
@@ -167,25 +169,25 @@ public class Httpx {
         String string = parameterMap.get(key);
         if (string != null) {
             return Integer.parseInt(key);
-        } 
+        }
         return null;
     }
-    
+
     public void clearCookie(Collection<String> keys) {
         for (String key : keys) {
-            httpExchange.getResponseHeaders().add("Set-cookie", 
+            httpExchange.getResponseHeaders().add("Set-cookie",
                     String.format("%s=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", key));
-            
+
         }
     }
-    
+
     public void setCookie(StringMap map, long ageMillis) {
         String path = map.get("path");
         String version = map.get("version");
         for (String key : map.keySet()) {
             String value = map.get(key);
             StringBuilder builder = new StringBuilder();
-            builder.append(String.format("%s=%s; Max-age=%d", key, value, ageMillis/1000));
+            builder.append(String.format("%s=%s; Max-age=%d", key, value, ageMillis / 1000));
             if (path != null) {
                 builder.append("; Path=").append(path);
             }
@@ -195,14 +197,14 @@ public class Httpx {
             httpExchange.getResponseHeaders().add("Set-cookie", builder.toString());
         }
     }
-    
+
     public StringMap getCookieMap() {
         if (cookieMap == null) {
             parseCookieMap(parseFirstRequestHeader("Cookie"));
         }
         return cookieMap;
     }
-        
+
     public String getCookie(String key) {
         return getCookieMap().get(key);
     }
@@ -220,7 +222,7 @@ public class Httpx {
             }
         }
     }
-        
+
     public List<String> parseFirstRequestHeader(String key) {
         logger.trace("parseFirstRequestHeader {}", key);
         String text = httpExchange.getRequestHeaders().getFirst(key);
@@ -233,7 +235,7 @@ public class Httpx {
         }
         return null;
     }
-        
+
     public void parseHeaders() {
         headersParsed = true;
         for (String key : httpExchange.getRequestHeaders().keySet()) {
@@ -310,19 +312,19 @@ public class Httpx {
 
     public void sendResponse(String contentType, byte[] bytes) throws IOException {
         httpExchange.getResponseHeaders().set("Content-type", contentType);
-        httpExchange.getResponseHeaders().set("Content-length", 
+        httpExchange.getResponseHeaders().set("Content-length",
                 Integer.toString(bytes.length));
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         getPrintStream().write(bytes);
     }
-    
+
     public void sendResponseFile(String contentType, String fileName) throws IOException {
         httpExchange.getResponseHeaders().add("Content-disposition",
                 "attachment; filename=" + fileName);
         httpExchange.getResponseHeaders().set("Content-type", contentType);
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
-    
+
     public void sendResponse(String contentType, boolean ok) throws IOException {
         httpExchange.getResponseHeaders().set("Content-type", contentType);
         if (ok) {
@@ -335,16 +337,19 @@ public class Httpx {
     public void sendEmptyOkResponse() throws IOException {
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
-    
+
     public void handleError(Exception e) {
-        e.printStackTrace(System.err);
+        if (e instanceof DisplayException) {
+        } else {
+            e.printStackTrace(System.err);
+        }
         handleError(e.getMessage());
     }
 
     public void handleError(DisplayMessage message) {
         handleError(message.getDisplayMessage());
     }
-    
+
     public void handleError(String messageString) {
         try {
             logger.warn(messageString, parameterMap);
@@ -353,7 +358,7 @@ public class Httpx {
             logger.warn(e.getMessage(), e);
         }
     }
-    
+
     public PrintStream getPrintStream() {
         if (out == null) {
             out = new PrintStream(httpExchange.getResponseBody());
@@ -370,7 +375,7 @@ public class Httpx {
         sendResponse("text/json", true);
         getPrintStream().println(map.toString());
     }
-    
+
     public String getInputString() {
         return Streams.readString(httpExchange.getRequestBody());
     }

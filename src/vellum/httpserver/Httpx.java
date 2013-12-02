@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
 import vellum.jx.JMaps;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
 import vellum.parameter.Entry;
 import vellum.parameter.StringMap;
 import vellum.parameter.Parameters;
@@ -49,7 +49,7 @@ import vellum.util.Strings;
  */
 public class Httpx {
     
-    Logr logger = LogrFactory.getLogger(getClass());
+    Logger logger = LoggerFactory.getLogger(getClass());
     HttpExchange httpExchange;
     PrintStream out;
     StringMap parameterMap;
@@ -124,7 +124,6 @@ public class Httpx {
         if (httpExchange.getRequestMethod().equals("POST")) {
             urlQuery = Streams.readString(httpExchange.getRequestBody());
         }
-        logger.info("parseParameterMap", httpExchange.getRequestMethod());
         if (urlQuery == null) {
             return;
         }
@@ -218,7 +217,7 @@ public class Httpx {
     }
         
     public List<String> parseFirstRequestHeader(String key) {
-        logger.info("parseFirstRequestHeader", key);
+        logger.trace("parseFirstRequestHeader {}", key);
         String text = httpExchange.getRequestHeaders().getFirst(key);
         if (text != null) {
             List<String> list = new ArrayList();
@@ -234,7 +233,7 @@ public class Httpx {
         headersParsed = true;
         for (String key : httpExchange.getRequestHeaders().keySet()) {
             List<String> values = httpExchange.getRequestHeaders().get(key);
-            logger.info("parseHeaders", key, values);
+            logger.trace("parseHeaders {}", key, values);
             if (key.equals("Accept-encoding")) {
                 if (values.contains("gzip")) {
                     acceptGzip = true;
@@ -349,7 +348,7 @@ public class Httpx {
             PrintStream out = new PrintStream(httpExchange.getResponseBody());
             out.printf("{ errorMessage: \"%s\"; }\n", messageString);
         } catch (Exception e) {
-            logger.warn(e);
+            logger.warn(e.getMessage(), e);
         }
     }
     

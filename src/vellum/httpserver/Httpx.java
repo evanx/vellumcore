@@ -184,7 +184,7 @@ public class Httpx {
 
     public void setCookie(JMap map, long ageMillis) throws JMapException {
         Object path = map.getString("path", null);
-        String version = map.getString("version");
+        String version = map.getString("version", null);
         for (String key : map.keySet()) {
             Object value = map.get(key);
             StringBuilder builder = new StringBuilder();

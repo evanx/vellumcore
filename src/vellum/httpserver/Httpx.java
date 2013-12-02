@@ -25,6 +25,7 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -347,10 +348,7 @@ public class Httpx {
     public void handleError(String messageString) {
         try {
             logger.warn(messageString, parameterMap);
-            httpExchange.getResponseHeaders().set("Content-type", "text/json");
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            PrintStream out = new PrintStream(httpExchange.getResponseBody());
-            out.printf("{ errorMessage: \"%s\"; }\n", messageString);
+            sendResponse(JMaps.create("errorMessage", messageString));
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }

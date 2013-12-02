@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
+import vellum.jx.JMapException;
 import vellum.jx.JMaps;
 import vellum.parameter.Entry;
 import vellum.parameter.StringMap;
@@ -181,11 +182,11 @@ public class Httpx {
         }
     }
 
-    public void setCookie(StringMap map, long ageMillis) {
-        String path = map.get("path");
-        String version = map.get("version");
+    public void setCookie(JMap map, long ageMillis) throws JMapException {
+        Object path = map.getString("path");
+        String version = map.getString("version");
         for (String key : map.keySet()) {
-            String value = map.get(key);
+            Object value = map.get(key);
             StringBuilder builder = new StringBuilder();
             builder.append(String.format("%s=%s; Max-age=%d", key, value, ageMillis / 1000));
             if (path != null) {

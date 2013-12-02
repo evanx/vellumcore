@@ -57,9 +57,13 @@ public class JMap extends HashMap<String, Object> {
         return Convertors.coerceInteger(super.get(key), null);
     }
 
+    public String toJson() {
+        return new Gson().toJson(this);
+    }
+    
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return toJson();
     }
 
 }

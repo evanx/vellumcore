@@ -26,5 +26,5 @@ package vellum.storage;
  */
 public abstract class AbstractIdEntity extends AbstractEntity {
 
-    public abstract void setKey(Long key);
+    public abstract void setId(Long id);
 }

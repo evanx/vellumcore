@@ -34,12 +34,16 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
 
     Logger logger = LoggerFactory.getLogger(TemporaryStorage.class);
     Map<Comparable, E> map = new TreeMap();
-
+    long idSequence = 1;
+    
     @Override
     public void insert(E entity) throws StorageException {
         logger.info("insert {} {}", entity.getKey(), !map.containsKey(entity.getKey()));
         if (map.put(entity.getKey(), entity) != null) {
             throw new StorageException(StorageExceptionType.ALREADY_EXISTS, entity.getKey());
+        }
+        if (entity instanceof AbstractIdEntity) {
+            ((AbstractIdEntity) entity).setId(idSequence++);
         }
     }
 

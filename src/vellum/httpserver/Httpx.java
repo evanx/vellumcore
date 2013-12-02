@@ -378,4 +378,8 @@ public class Httpx {
         return JMaps.parse(getInputString());
     }
 
+    public void close() {
+        httpExchange.close();
+    }
+
 }

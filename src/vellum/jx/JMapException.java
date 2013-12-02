@@ -11,7 +11,5 @@ public class JMapException extends Exception {
     public JMapException(String message) {
         super(message);
     }
-        
-
     
 }

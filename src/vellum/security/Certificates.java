@@ -161,11 +161,23 @@ public class Certificates {
     }
 
     public static String getCommonName(Principal principal) throws CertificateException {
+        return get("CN", principal);
+    }    
+    
+    public static String getOrgUnit(Principal principal) throws CertificateException {
+        return get("OU", principal);
+    }    
+    
+    public static String getOrg(Principal principal) throws CertificateException {
+        return get("O", principal);
+    }    
+
+    public static String get(String type, Principal principal) throws CertificateException {
         String dname = principal.getName();
         try {
             LdapName ln = new LdapName(dname);
             for (Rdn rdn : ln.getRdns()) {
-                if (rdn.getType().equalsIgnoreCase("CN")) {
+                if (rdn.getType().equalsIgnoreCase(type)) {
                     return rdn.getValue().toString();
                 }
             }
@@ -174,7 +186,7 @@ public class Certificates {
             throw new CertificateException(e.getMessage());
         }
     }    
-
+    
     public static boolean equals(X509Certificate cert, X509Certificate other) {
         if (cert.getSubjectDN().equals(other.getSubjectDN())) {
             if (Arrays.equals(cert.getPublicKey().getEncoded(),

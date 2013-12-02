@@ -67,7 +67,7 @@ public class Httpx {
     }
     
     public String getServerUrl() {
-        return httpExchange.getRequestURI().toString();
+        return "https://" + httpExchange.getRequestHeaders().getFirst("Host");
     }
 
     public String getRemoteHostName() {
@@ -237,7 +237,7 @@ public class Httpx {
         headersParsed = true;
         for (String key : httpExchange.getRequestHeaders().keySet()) {
             List<String> values = httpExchange.getRequestHeaders().get(key);
-            logger.trace("parseHeaders {}", key, values);
+            logger.trace("parseHeaders {} {}", key, values);
             if (key.equals("Accept-encoding")) {
                 if (values.contains("gzip")) {
                     acceptGzip = true;

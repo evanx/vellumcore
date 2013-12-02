@@ -27,6 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class contains several useful methods for working with Strings, as language
@@ -38,7 +40,8 @@ import java.util.*;
  * @author evan.summers
  */
 public class Strings {
-
+    private static Logger logger = LoggerFactory.getLogger(Strings.class);
+    
     public static final String UTF8 = "UTF-8";
     public static final String ENCODING = "UTF-8";
 
@@ -562,7 +565,9 @@ public class Strings {
     }
     
     public static boolean endsWith(String string, Collection<String> patterns) {
+        logger.info("endsWith {}", string);
         for (String pattern : patterns) {
+            logger.info("endsWith {}", pattern);
             if (string.endsWith(pattern)) {
                 return true;
             }                

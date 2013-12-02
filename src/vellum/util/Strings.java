@@ -555,7 +555,7 @@ public class Strings {
         return list.get(0);
     }
     
-    public static String truncate(int length, String string) {
+    public static String truncate(String string, int length) {
         if (string == null) return "";
         string = string.trim();
         if (string.length() > length) {

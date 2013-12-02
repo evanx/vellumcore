@@ -57,7 +57,7 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
 
     @Override
     public boolean containsKey(Comparable key) {
-        logger.info("containsKey {}", key, map.containsKey(key));
+        logger.debug("containsKey {}", key, map.containsKey(key));
         return map.containsKey(key);
     }
     

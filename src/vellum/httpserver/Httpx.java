@@ -66,6 +66,10 @@ public class Httpx {
         this.httpExchange = httpExchange;
     }
     
+    public String getServerUrl() {
+        return httpExchange.getRequestURI().toString();
+    }
+
     public String getRemoteHostName() {
         return httpExchange.getRemoteAddress().getHostName();
     }
@@ -380,5 +384,4 @@ public class Httpx {
     public void close() {
         httpExchange.close();
     }
-
 }

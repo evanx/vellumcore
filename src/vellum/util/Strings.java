@@ -560,6 +560,16 @@ public class Strings {
         }
         return string;
     }
+    
+    public static boolean endsWith(String string, Collection<String> patterns) {
+        for (String pattern : patterns) {
+            if (string.endsWith(pattern)) {
+                return true;
+            }                
+        }
+        return false;
+    }
+
 
     
 }

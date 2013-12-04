@@ -85,11 +85,11 @@ public class Strings {
      *
      * @return
      */
-    public static String joinLines(List<String> lineList) {
+    public static String join(String delimiter, List<String> lineList) {
         StringBuilder builder = new StringBuilder();
         for (String line : lineList) {
             if (builder.length() > 0) {
-                builder.append("\n");
+                builder.append(delimiter);
             }
             builder.append(line);
         }
@@ -101,7 +101,7 @@ public class Strings {
      *
      * @return
      */
-    public static String joinArray(String delimiter, String[] args) {
+    public static String join(String delimiter, String[] args) {
         StringBuilder builder = new StringBuilder();
         for (String arg : args) {
             if (builder.length() > 0) {

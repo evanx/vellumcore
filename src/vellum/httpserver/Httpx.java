@@ -104,14 +104,14 @@ public class Httpx {
         return getPathArgs().length;
     }
 
-    public String getRequestBody() {
+    public String getRequestBody() throws IOException {
         if (requestBody == null) {
-            requestBody = Streams.readString(httpExchange.getRequestBody());
+            requestBody = readString();
         }
         return requestBody;
     }
 
-    public boolean isParameter(String name) {
+    public boolean isParameter(String name) throws IOException {
         String value = getParameterMap().get(name);
         if (value == null) {
             return false;
@@ -119,18 +119,18 @@ public class Httpx {
         return value.equals("on");
     }
 
-    public StringMap getParameterMap() {
+    public StringMap getParameterMap() throws IOException {
         if (parameterMap == null) {
             parseParameterMap();
         }
         return parameterMap;
     }
 
-    private void parseParameterMap() {
+    private void parseParameterMap() throws IOException {
         parameterMap = new StringMap();
         urlQuery = httpExchange.getRequestURI().getQuery();
         if (httpExchange.getRequestMethod().equals("POST")) {
-            urlQuery = Streams.readString(httpExchange.getRequestBody());
+            urlQuery = readString();
         }
         if (urlQuery == null) {
             return;
@@ -156,14 +156,14 @@ public class Httpx {
         }
     }
 
-    public String getParameter(String key) {
+    public String getParameter(String key) throws IOException {
         if (parameterMap == null) {
             parseParameterMap();
         }
         return parameterMap.get(key);
     }
 
-    public Integer getInteger(String key) {
+    public Integer getInteger(String key) throws IOException {
         if (parameterMap == null) {
             parseParameterMap();
         }
@@ -377,19 +377,15 @@ public class Httpx {
         getPrintStream().println(map.toString());
     }
 
-    public String getInputString() {
-        return Streams.readString(httpExchange.getRequestBody());
-    }
-
-    public JMap parseJsonMap() {
-        return JMaps.parse(getInputString());
+    public JMap parseJsonMap() throws IOException {
+        return JMaps.parse(readString());
     }
 
     public void close() {
         httpExchange.close();
     }
 
-    public String readString() {
+    public String readString() throws IOException {
         return Streams.readString(httpExchange.getRequestBody());
     }
 

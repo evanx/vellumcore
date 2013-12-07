@@ -42,6 +42,6 @@ public interface Storage<E extends AbstractEntity> {
 
     public E findId(Long id) throws StorageException;
     
-    public Collection<E> selectCollection(ChronicQueryType queryType, Object ... parameters);
+    public Collection<E> selectCollection(Enum queryType, Object ... parameters);
     
 }

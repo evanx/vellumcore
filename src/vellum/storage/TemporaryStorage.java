@@ -99,7 +99,7 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
     }
     
     @Override
-    public Collection<E> selectCollection(ChronicQueryType queryType, Object ... parameters) {
+    public Collection<E> selectCollection(Enum queryType, Object ... parameters) {
         if (parameters.length == 0) {
             
         }

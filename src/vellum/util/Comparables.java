@@ -20,6 +20,8 @@
  */
 package vellum.util;
 
+import vellum.type.ComparableTuple;
+
 /**
  *
  * @author evan.summers
@@ -71,4 +73,8 @@ public class Comparables {
         return comparable.toString();
     }
 
+    public static ComparableTuple tuple(Comparable ... values) {
+        return new ComparableTuple(values);        
+    }
+    
 }

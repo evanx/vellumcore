@@ -461,10 +461,15 @@ public class Strings {
     public static String[] split(String string, DelimiterType delimiterType) {
         if (string == null) {
             return new String[]{};
+        } else if (delimiterType == DelimiterType.SPACE) {
+            return string.split("\\s");
+        } else if (delimiterType == DelimiterType.COLON) {
+            return string.split("\\s+:\\s+");
+        } else if (delimiterType == DelimiterType.COMMA) {
+            return string.split(",\\s+");
+        } else {
+            return string.split("\\s");
         }
-        if (delimiterType == DelimiterType.SPACE) {
-        }
-        return string.split("\\s");
     }
 
     public static void appendln(StringBuilder builder, Object object) {

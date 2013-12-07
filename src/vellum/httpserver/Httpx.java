@@ -56,8 +56,8 @@ public class Httpx {
     Logger logger = LoggerFactory.getLogger(getClass());
     HttpExchange httpExchange;
     PrintStream out;
-    StringMap parameterMap;
-    StringMap cookieMap;
+    JMap parameterMap;
+    JMap cookieMap;
     JMap dataMap;
     String urlQuery;
     String requestBody;
@@ -113,15 +113,7 @@ public class Httpx {
         return requestBody;
     }
 
-    public boolean isParameter(String name) throws IOException {
-        String value = getParameterMap().get(name);
-        if (value == null) {
-            return false;
-        }
-        return value.equals("on");
-    }
-
-    public StringMap getParameterMap() throws IOException {
+    public JMap getParameterMap() throws IOException {
         if (parameterMap == null) {
             parseParameterMap();
         }
@@ -129,7 +121,7 @@ public class Httpx {
     }
 
     private void parseParameterMap() throws IOException {
-        parameterMap = new StringMap();
+        parameterMap = new JMap();
         urlQuery = httpExchange.getRequestURI().getQuery();
         if (httpExchange.getRequestMethod().equals("POST")) {
             urlQuery = readString();
@@ -158,24 +150,6 @@ public class Httpx {
         }
     }
 
-    public String getParameter(String key) throws IOException {
-        if (parameterMap == null) {
-            parseParameterMap();
-        }
-        return parameterMap.get(key);
-    }
-
-    public Integer getInteger(String key) throws IOException {
-        if (parameterMap == null) {
-            parseParameterMap();
-        }
-        String string = parameterMap.get(key);
-        if (string != null) {
-            return Integer.parseInt(key);
-        }
-        return null;
-    }
-
     public void clearCookie(Collection<String> keys) {
         for (String key : keys) {
             httpExchange.getResponseHeaders().add("Set-cookie",
@@ -201,19 +175,15 @@ public class Httpx {
         }
     }
 
-    public StringMap getCookieMap() {
+    public JMap getCookieMap() {
         if (cookieMap == null) {
             parseCookieMap(parseFirstRequestHeader("Cookie"));
         }
         return cookieMap;
     }
 
-    public String getCookie(String key) {
-        return getCookieMap().get(key);
-    }
-
     private void parseCookieMap(List<String> cookies) {
-        cookieMap = new StringMap();
+        cookieMap = new JMap();
         if (cookies != null) {
             for (String cookie : cookies) {
                 int index = cookie.indexOf("=");
@@ -254,15 +224,6 @@ public class Httpx {
                         agentWget = true;
                     }
                 }
-            }
-        }
-    }
-
-    public void setBean(Object bean) {
-        for (PropertyDescriptor property : Beans.getPropertyMap(bean.getClass()).values()) {
-            String stringValue = parameterMap.get(property.getName());
-            if (stringValue != null) {
-                Beans.parse(bean, property, stringValue);
             }
         }
     }

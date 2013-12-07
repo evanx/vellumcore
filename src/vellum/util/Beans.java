@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import vellum.jx.JMap;
 
 /**
  *
@@ -87,5 +88,16 @@ public class Beans {
             throw Exceptions.newRuntimeException(e);
         }
     }
+    
+    public static void setBean(Object bean, JMap map) {
+        for (PropertyDescriptor property : Beans.getPropertyMap(bean.getClass()).values()) {
+            String stringValue = map.getString(property.getName(), null);
+            if (stringValue != null) {
+                Beans.parse(bean, property, stringValue);
+            }
+        }
+    }
+
+    
 
 }

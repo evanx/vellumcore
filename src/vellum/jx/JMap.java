@@ -69,6 +69,14 @@ public class JMap extends HashMap<String, Object> {
         return Convertors.coerceInteger(super.get(key), null);
     }
 
+    public Integer getInteger(String key, Integer value) {
+        return Convertors.coerceInteger(super.get(key), value);
+    }
+
+    public Integer getInteger(String key, int value) {
+        return Convertors.coerceInteger(super.get(key), value);
+    }
+    
     public String toJson() {
         return new Gson().toJson(this);
     }

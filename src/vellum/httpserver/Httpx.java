@@ -21,6 +21,7 @@
 package vellum.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpsExchange;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javax.net.ssl.SSLSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.exception.DisplayException;
@@ -339,6 +341,17 @@ public class Httpx {
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
 
+    public void sendPlainResponse(String responseString, Object ... args) 
+            throws IOException {
+        responseString = String.format(responseString, args) + "\n";
+        byte[] responseBytes = responseString.getBytes();
+        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR,
+                responseBytes.length);
+        httpExchange.getResponseHeaders().set("Content-type", "text/plain");
+        httpExchange.getResponseBody().write(responseBytes);
+        httpExchange.close();
+    }
+    
     public void handleError(Exception e) {
         if (e instanceof DisplayException) {
         } else {
@@ -387,6 +400,10 @@ public class Httpx {
 
     public String readString() throws IOException {
         return Streams.readString(httpExchange.getRequestBody());
+    }
+
+    public SSLSession getSSLSession() {
+        return ((HttpsExchange) httpExchange).getSSLSession();
     }
 
 }

@@ -88,6 +88,8 @@ public class ArgFormats {
                 builder.append("{");
                 builder.append(string);
                 builder.append("}");
+            } else if (string.trim().isEmpty()) {
+                builder.append("(empty)");
             } else {
                 builder.append(string);
             }

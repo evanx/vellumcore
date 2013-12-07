@@ -181,7 +181,7 @@ public class Certificates {
                     return rdn.getValue().toString();
                 }
             }
-            throw new InvalidNameException("no CN: " + dname);
+            throw new InvalidNameException(dname);
         } catch (Exception e) {
             throw new CertificateException(e.getMessage());
         }

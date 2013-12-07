@@ -24,8 +24,7 @@ package vellum.storage;
  *
  * @author evan.summers
  */
-public abstract class AbstractIdEntity extends AbstractEntity {
-
-    public abstract Long getId();
-    public abstract void setId(Long id);
+public enum ChronicQueryType {
+    ORG_ROLE,
+    TOPICS_org;
 }

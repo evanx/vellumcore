@@ -35,9 +35,13 @@ public interface Storage<E extends AbstractEntity> {
     public boolean containsKey(Comparable key);
     
     public void delete(Comparable key) throws StorageException;
+
+    public E select(Comparable key);
     
-    public E select(Comparable key) throws StorageException;
+    public E find(Comparable key) throws StorageException;
+
+    public E findId(Long id) throws StorageException;
     
-    public Collection<E> selectCollection(String query);
+    public Collection<E> selectCollection(ChronicQueryType queryType, Object ... parameters);
     
 }

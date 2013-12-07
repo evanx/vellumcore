@@ -33,53 +33,76 @@ import org.slf4j.LoggerFactory;
 public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
 
     Logger logger = LoggerFactory.getLogger(TemporaryStorage.class);
-    Map<Comparable, E> map = new TreeMap();
+    Map<Comparable, E> keyMap = new TreeMap();
+    Map<Long, E> idMap = new TreeMap();
     long idSequence = 1;
     
     @Override
     public void insert(E entity) throws StorageException {
-        logger.info("insert {} {}", entity.getKey(), !map.containsKey(entity.getKey()));
-        if (map.put(entity.getKey(), entity) != null) {
+        logger.info("insert {} {}", entity.getKey(), !keyMap.containsKey(entity.getKey()));
+        if (keyMap.put(entity.getKey(), entity) != null) {
             throw new StorageException(StorageExceptionType.ALREADY_EXISTS, entity.getKey());
         }
         if (entity instanceof AbstractIdEntity) {
-            ((AbstractIdEntity) entity).setId(idSequence++);
+            AbstractIdEntity idEntity = (AbstractIdEntity) entity;
+            idEntity.setId(idSequence++);
+            if (idMap.put(idEntity.getId(), entity) != null) {
+                throw new StorageException(StorageExceptionType.ALREADY_EXISTS, idEntity.getId());
+            }
         }
     }
 
     @Override
     public void update(E entity) throws StorageException {
-        logger.info("update {} {}", entity.getKey(), map.containsKey(entity.getKey()));
-        if (map.put(entity.getKey(), entity) == null) {
+        logger.info("update {} {}", entity.getKey(), keyMap.containsKey(entity.getKey()));
+        if (keyMap.put(entity.getKey(), entity) == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, entity.getKey());            
         }
     }
 
     @Override
     public boolean containsKey(Comparable key) {
-        logger.debug("containsKey {}", key, map.containsKey(key));
-        return map.containsKey(key);
+        logger.debug("containsKey {}", key, keyMap.containsKey(key));
+        return keyMap.containsKey(key);
     }
     
     @Override
     public void delete(Comparable key) throws StorageException {
-        logger.info("delete {} {}", key, map.containsKey(key));
-        if (map.remove(key) != null) {
+        logger.info("delete {} {}", key, keyMap.containsKey(key));
+        if (keyMap.remove(key) != null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
         }
     }
 
     @Override
-    public E select(Comparable key) throws StorageException {
-        logger.info("select {} {}", key, map.containsKey(key));
-        if (!map.containsKey(key)) {
-            throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
-        }
-        return map.get(key);
+    public E select(Comparable key) {
+        logger.info("select {} {}", key, keyMap.containsKey(key));
+        return keyMap.get(key);
     }
 
     @Override
-    public Collection<E> selectCollection(String query) {
-        return map.values();
+    public E find(Comparable key) throws StorageException {
+        E entity = select(key);
+        if (entity == null) {
+            throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
+        }
+        return entity;
+    }
+
+    @Override
+    public E findId(Long id) throws StorageException {
+        E entity = idMap.get(id);
+        if (entity == null) {
+            throw new StorageException(StorageExceptionType.NOT_FOUND, id);           
+        }
+        return entity;
+    }
+    
+    @Override
+    public Collection<E> selectCollection(ChronicQueryType queryType, Object ... parameters) {
+        if (parameters.length == 0) {
+            
+        }
+        return keyMap.values();
     }
 }

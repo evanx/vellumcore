@@ -37,5 +37,13 @@ public class Emails {
         }
         return string;
     }
+
+    public static String getDomain(String string) {
+        int index = string.indexOf("@");
+        if (index > 0) {
+            return string.substring(index + 1);
+        }
+        return string;
+    }
     
 }

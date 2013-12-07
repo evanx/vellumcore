@@ -128,7 +128,7 @@ public class Streams {
         }
     }
 
-    public static String readResourceString(Class parent, String resourceName) {
+    public static String readResourceString(Class parent, String resourceName) throws IOException {
         return readString(getResourceAsStream(parent, resourceName));
     }
 
@@ -156,31 +156,27 @@ public class Streams {
         }
     }
 
-    public static byte[] readBytes(InputStream stream) {
+    public static byte[] readBytes(InputStream stream) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            while (true) {
-                int b = stream.read();
-                if (b < 0) {
-                    stream.close();
-                    return outputStream.toByteArray();
-                }
-                outputStream.write(b);
+        while (true) {
+            int b = stream.read();
+            if (b < 0) {
+                stream.close();
+                return outputStream.toByteArray();
             }
-        } catch (Exception e) {
-            throw Exceptions.newRuntimeException(e);
+            outputStream.write(b);
         }
     }
 
-    public static StringBuilder readStringBuilder(InputStream stream) {
+    public static StringBuilder readStringBuilder(InputStream stream) throws IOException {
         return new StringBuilder(readString(stream));
     }
 
-    public static String readString(InputStream stream) {
+    public static String readString(InputStream stream) throws IOException {
         return new String(readBytes(stream));
     }
 
-    public static char[] readChars(InputStream stream) {
+    public static char[] readChars(InputStream stream) throws IOException {
         return Bytes.toCharArray(readBytes(stream));
     }
 

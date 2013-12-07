@@ -388,4 +388,9 @@ public class Httpx {
     public void close() {
         httpExchange.close();
     }
+
+    public String readString() {
+        return Streams.readString(httpExchange.getRequestBody());
+    }
+
 }

@@ -16,6 +16,12 @@ public class JMap extends HashMap<String, Object> {
     public JMap() {
     }
 
+    public JMap(JEntry... entries) {
+        for (JEntry entry : entries) {
+            super.put(entry.getKey(), entry.getValue());
+        }
+    }
+    
     public Collection getCollection(String key) {
         return (Collection) super.get(key);
     }

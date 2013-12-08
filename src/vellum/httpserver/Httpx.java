@@ -347,6 +347,7 @@ public class Httpx {
     }
 
     public void sendResponse(JMap map) throws IOException {
+        logger.trace("sendResponse {}", map);
         sendResponse("text/json", true);
         getPrintStream().println(map.toString());
     }

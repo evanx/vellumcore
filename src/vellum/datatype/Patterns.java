@@ -29,25 +29,32 @@ import java.util.regex.Pattern;
 public class Patterns {
     private static final String USERNAME_PATTERN_CONTENT = 
             "[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*";
-    private static final String URL_PATTERN_CONTENT = 
+    private static final String DOMAIN_PATTERN_CONTENT = 
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})";
     
     public static Pattern USERNAME_PATTERN = 
             Pattern.compile(String.format("^%s$", USERNAME_PATTERN_CONTENT));
-    public static Pattern URL_PATTERN = 
-            Pattern.compile(String.format("^%s$", URL_PATTERN_CONTENT));
+    public static Pattern DOMAIN_PATTERN = 
+            Pattern.compile(String.format("^%s$", DOMAIN_PATTERN_CONTENT));
     public static Pattern EMAIL_PATTERN = 
-            Pattern.compile(String.format("^%s@%s$", USERNAME_PATTERN_CONTENT, URL_PATTERN_CONTENT));
+            Pattern.compile(String.format("^%s@%s$", 
+            USERNAME_PATTERN_CONTENT, DOMAIN_PATTERN_CONTENT));
+    public static Pattern INTEGER_PATTERN = 
+            Pattern.compile(String.format("^[0-9]+$", DOMAIN_PATTERN_CONTENT));
 
     public static boolean matchesUserName(String string) {
         return USERNAME_PATTERN.matcher(string).matches();
     }
     
-    public static boolean matchesUrl(String string) {
-        return URL_PATTERN.matcher(string).matches();
+    public static boolean matchesDomain(String string) {
+        return DOMAIN_PATTERN.matcher(string).matches();
     }
     
     public static boolean matchesEmail(String string) {
         return EMAIL_PATTERN.matcher(string).matches();
+    }
+
+    public static boolean matchesInteger(String string) {
+        return INTEGER_PATTERN.matcher(string).matches();
     }
 }

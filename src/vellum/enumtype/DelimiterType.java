@@ -27,6 +27,7 @@ package vellum.enumtype;
  */
 public enum DelimiterType {
     SPACE,
+    COMMA_OR_SPACE,
     COMMA,
     COLON;
 }

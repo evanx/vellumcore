@@ -467,6 +467,8 @@ public class Strings {
             return string.split("\\s+:\\s+");
         } else if (delimiterType == DelimiterType.COMMA) {
             return string.split(",\\s+");
+        } else if (delimiterType == DelimiterType.COMMA_OR_SPACE) {
+            return string.split("[\\s,]+");
         } else {
             return string.split("\\s");
         }
@@ -580,5 +582,21 @@ public class Strings {
         return false;
     }
 
+    public static List<String> trimLines(List<String> lineList) {
+        int length = 0;
+        Iterator<String> iterator = new LinkedList(lineList).descendingIterator();
+        while (iterator.hasNext() && isEmpty(iterator.next())) {
+            length++;
+        }        
+        List list = new LinkedList();
+        for (int i = 0; i < lineList.size() - length; i++) {
+            if (!isEmpty(lineList.get(i)) || list.size() > 0) {
+                list.add(lineList.get(i));
+            }
+        }
+        return list;
+    }
+
+    
     
 }

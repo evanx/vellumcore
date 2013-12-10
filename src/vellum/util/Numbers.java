@@ -23,6 +23,7 @@ package vellum.util;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 
 /**
  *
@@ -96,5 +97,9 @@ public class Numbers {
 
     public static int getInt(long value) {
         return (int) value;
+    }
+
+    public static int[] toArray(List<Integer> list) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

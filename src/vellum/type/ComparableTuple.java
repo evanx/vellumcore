@@ -30,7 +30,7 @@ import vellum.format.ArgFormats;
 public class ComparableTuple implements Comparable<ComparableTuple> {
     Comparable[] values;
 
-    public ComparableTuple(Comparable[] values) {
+    public ComparableTuple(Comparable... values) {
         this.values = values;
     }
         

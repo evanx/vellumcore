@@ -597,6 +597,10 @@ public class Strings {
         return list;
     }
 
+    public static String trimEnd(String string) {
+        return string.replaceAll("\\s+$", "");
+    }
+
     
     
 }

@@ -40,8 +40,6 @@ public interface Storage<E extends AbstractEntity> {
     
     public E find(Comparable key) throws StorageException;
 
-    public E findId(Long id) throws StorageException;
-    
-    public Collection<E> selectCollection(Enum queryType, Object ... parameters);
+    public Collection<E> list(Comparable key);
     
 }

@@ -82,6 +82,9 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
 
     @Override
     public E find(Comparable key) throws StorageException {
+        if (key instanceof Long) {
+            return findId((Long) key);
+        }
         E entity = select(key);
         if (entity == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
@@ -89,7 +92,6 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
         return entity;
     }
 
-    @Override
     public E findId(Long id) throws StorageException {
         E entity = idMap.get(id);
         if (entity == null) {
@@ -99,10 +101,7 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
     }
     
     @Override
-    public Collection<E> selectCollection(Enum queryType, Object ... parameters) {
-        if (parameters.length == 0) {
-            
-        }
+    public Collection<E> list(Comparable key) {
         return keyMap.values();
     }
 }

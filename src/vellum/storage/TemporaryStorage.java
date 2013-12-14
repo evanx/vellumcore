@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
+public abstract class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
 
     Logger logger = LoggerFactory.getLogger(TemporaryStorage.class);
     Map<Comparable, E> keyMap = new TreeMap();
@@ -101,7 +101,7 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
     }
     
     @Override
-    public Collection<E> list(Comparable key) {
+    public Collection<E> list() {
         return keyMap.values();
     }
 }

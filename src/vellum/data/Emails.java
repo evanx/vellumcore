@@ -27,7 +27,7 @@ package vellum.data;
 public class Emails {
 
     public static boolean matchesEmail(String string) {
-        return Patterns.EMAIL_PATTERN.matcher(string).matches();
+        return Patterns.EMAIL.matcher(string).matches();
     }
 
     public static String getUsername(String string) {

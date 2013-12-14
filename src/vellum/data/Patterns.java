@@ -27,34 +27,42 @@ import java.util.regex.Pattern;
  * @author evan.summers
  */
 public class Patterns {
-    private static final String USERNAME_PATTERN_CONTENT = 
+    public static final Pattern TAG = 
+            Pattern.compile(".*<\\w*>.*");
+    
+    private static final String USERNAME_CONTENT = 
             "[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*";
-    private static final String DOMAIN_PATTERN_CONTENT = 
+    private static final String DOMAIN_CONTENT = 
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})";
     
-    public static Pattern USERNAME_PATTERN = 
-            Pattern.compile(String.format("^%s$", USERNAME_PATTERN_CONTENT));
-    public static Pattern DOMAIN_PATTERN = 
-            Pattern.compile(String.format("^%s$", DOMAIN_PATTERN_CONTENT));
-    public static Pattern EMAIL_PATTERN = 
+    public static Pattern USERNAME = 
+            Pattern.compile(String.format("^%s$", USERNAME_CONTENT));
+    public static Pattern DOMAIN = 
+            Pattern.compile(String.format("^%s$", DOMAIN_CONTENT));
+    public static Pattern EMAIL = 
             Pattern.compile(String.format("^%s@%s$", 
-            USERNAME_PATTERN_CONTENT, DOMAIN_PATTERN_CONTENT));
-    public static Pattern INTEGER_PATTERN = 
-            Pattern.compile(String.format("^[0-9]+$", DOMAIN_PATTERN_CONTENT));
+            USERNAME_CONTENT, DOMAIN_CONTENT));
+    public static Pattern INTEGER = 
+            Pattern.compile(String.format("^[0-9]+$", DOMAIN_CONTENT));
 
     public static boolean matchesUserName(String string) {
-        return USERNAME_PATTERN.matcher(string).matches();
+        return USERNAME.matcher(string).matches();
     }
     
     public static boolean matchesDomain(String string) {
-        return DOMAIN_PATTERN.matcher(string).matches();
+        return DOMAIN.matcher(string).matches();
     }
     
     public static boolean matchesEmail(String string) {
-        return EMAIL_PATTERN.matcher(string).matches();
+        return EMAIL.matcher(string).matches();
     }
 
     public static boolean matchesInteger(String string) {
-        return INTEGER_PATTERN.matcher(string).matches();
+        return INTEGER.matcher(string).matches();
     }
+    
+    public static boolean matchesTag(String string) {
+        return TAG.matcher(string).matches();
+    }
+    
 }

@@ -79,7 +79,7 @@ public class Strings {
         }
         return String.format(string, list.toArray());
     }
-
+    
     public static String join(String delimiter, Iterable<String> lineList) {
         StringBuilder builder = new StringBuilder();
         for (String line : lineList) {
@@ -596,6 +596,8 @@ public class Strings {
         return string.replaceAll("\\s+$", "");
     }
 
-    
+    public static String trimBegin(String string) {
+        return string.replaceAll("^\\s+", "");
+    }    
     
 }

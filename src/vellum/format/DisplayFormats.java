@@ -20,6 +20,8 @@
  */
 package vellum.format;
 
+import vellum.type.Labelled;
+
 /**
  * Utility methods related to classes.
  * Utility methods for specific types eg {@code String}, are found in {@code Strings}.

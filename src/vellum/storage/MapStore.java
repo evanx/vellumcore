@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public abstract class MapStorage<E extends AbstractEntity> implements Storage<E> {
+public abstract class MapStore<E extends AbstractEntity> implements EntityStore<E> {
 
-    Logger logger = LoggerFactory.getLogger(MapStorage.class);
+    Logger logger = LoggerFactory.getLogger(MapStore.class);
     Map<Comparable, E> keyMap = new TreeMap();
     Map<Long, E> idMap = new TreeMap();
     long idSequence = 1;

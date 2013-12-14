@@ -26,7 +26,7 @@ import java.util.Collection;
  * 
  * @author evan.summers
  */
-public interface Storage<E extends AbstractEntity> {
+public interface EntityStore<E extends AbstractEntity> {
     
     public void insert(E entity) throws StorageException;
     

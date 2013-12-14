@@ -20,7 +20,7 @@
  */
 package vellum.util;
 
-import vellum.type.ComparableTuple;
+import vellum.data.ComparableTuple;
 
 /**
  *

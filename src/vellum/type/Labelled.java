@@ -2,7 +2,7 @@
  * Source https://code.google.com/p/vellum by @evanxsummers
  * 
  */
-package vellum.format;
+package vellum.type;
 
 /**
  *

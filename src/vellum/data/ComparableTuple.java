@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.type;
+package vellum.data;
 
 import vellum.util.Comparables;
 import vellum.format.ArgFormats;

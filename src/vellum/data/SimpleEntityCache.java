@@ -23,7 +23,6 @@ package vellum.data;
 
 import java.util.HashMap;
 import java.util.Map;
-import vellum.type.ComparableTuple;
 
 /**
  *

@@ -41,7 +41,7 @@ public class ComparableValue implements Comparable<ComparableValue> {
         if (o instanceof ComparableValue) {
             return compareTo((ComparableValue) o) == 0;
         }
-        return false;
+        return value.equals(o);
     }
 
     @Override

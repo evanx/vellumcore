@@ -80,12 +80,7 @@ public class Strings {
         return String.format(string, list.toArray());
     }
 
-    /**
-     * Join list of lines.
-     *
-     * @return
-     */
-    public static String join(String delimiter, List<String> lineList) {
+    public static String join(String delimiter, Iterable<String> lineList) {
         StringBuilder builder = new StringBuilder();
         for (String line : lineList) {
             if (builder.length() > 0) {

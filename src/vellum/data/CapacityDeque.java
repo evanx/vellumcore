@@ -26,13 +26,19 @@ import java.util.ArrayDeque;
  *
  * @author evan.summers
  */
-public class CapacityDeque<T> extends ArrayDeque<T> {
+public class CapacityDeque<E> extends ArrayDeque<E> {
     int capacity;
 
     public CapacityDeque(int capacity) {
         this.capacity = capacity;
     }
 
-
-
+    @Override
+    public boolean add(E element) {
+        while (size() > capacity) {
+            super.remove();
+        }
+        return super.add(element);        
+    }
+    
 }

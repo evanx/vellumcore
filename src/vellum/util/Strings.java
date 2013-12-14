@@ -578,13 +578,12 @@ public class Strings {
     }
 
     public static List<String> trimLines(List<String> lineList) {
-        int length = 0;
-        Iterator<String> iterator = new LinkedList(lineList).descendingIterator();
-        while (iterator.hasNext() && isEmpty(iterator.next())) {
-            length++;
+        int length = lineList.size();
+        while (length > 0 && isEmpty(lineList.get(length - 1))) {
+            length--;
         }        
         List list = new LinkedList();
-        for (int i = 0; i < lineList.size() - length; i++) {
+        for (int i = 0; i < length; i++) {
             if (!isEmpty(lineList.get(i)) || list.size() > 0) {
                 list.add(lineList.get(i));
             }

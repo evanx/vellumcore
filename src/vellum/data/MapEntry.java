@@ -1,5 +1,5 @@
 /*
- * Source https://code.google.com/p/vellum by @evanxsummers
+ * Source https://github.com/evanx by @evanxsummers
 
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements. See the NOTICE file
@@ -18,32 +18,53 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.logr;
+package vellum.data;
 
-import vellum.data.Millis;
-import vellum.data.TimestampedDequer;
+import java.util.Map;
 
 /**
  *
  * @author evan.summers
  */
-public class DequerHandler implements LogrHandler {
-    LogrContext context;
-    TimestampedDequer<LogrRecord> dequer = new TimestampedDequer(Millis.fromMinutes(5));
-    DefaultFormatter formatter = new DefaultFormatter();
-    
-    public DequerHandler() {
+public class MapEntry<K, V> implements Map.Entry<K, V> {
+    K key;
+    V value;
+
+    public MapEntry(K key, V value) {
+        this.key = key;
+        this.value = value;
     }
 
     @Override
-    public void handle(LogrContext context, LogrRecord record) {
-        if (record.getLevel().ordinal() >= context.getLevel().ordinal()) {
-            record.setContext(context);
-            dequer.addLast(record);
-        }
+    public K getKey() {
+        return key;
     }
 
-    public TimestampedDequer<LogrRecord> getDequer() {
-        return dequer;
-    }  
+    @Override
+    public V getValue() {
+        return value;
+    }
+
+    @Override
+    public V setValue(V value) {
+        V oldValue = value;
+        this.value = value;
+        return oldValue;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof MapEntry) {
+            MapEntry other = (MapEntry) o;
+            return key.equals(other.key) && value.equals(other.value);
+        }
+        return false;
+                
+
+    }
+
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

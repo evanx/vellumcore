@@ -20,7 +20,7 @@
  */
 package vellum.logr;
 
-import vellum.datatype.Timestamped;
+import vellum.data.Timestamped;
 
 /**
  *

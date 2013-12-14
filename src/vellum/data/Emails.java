@@ -1,5 +1,5 @@
 /*
- * Source https://code.google.com/p/vellum by @evanxsummers
+ * Source https://github.com/evanx by @evanxsummers
 
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements. See the NOTICE file
@@ -18,32 +18,32 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.logr;
-
-import vellum.data.Millis;
-import vellum.data.TimestampedDequer;
+package vellum.data;
 
 /**
  *
  * @author evan.summers
  */
-public class DequerHandler implements LogrHandler {
-    LogrContext context;
-    TimestampedDequer<LogrRecord> dequer = new TimestampedDequer(Millis.fromMinutes(5));
-    DefaultFormatter formatter = new DefaultFormatter();
-    
-    public DequerHandler() {
+public class Emails {
+
+    public static boolean matchesEmail(String string) {
+        return Patterns.EMAIL_PATTERN.matcher(string).matches();
     }
 
-    @Override
-    public void handle(LogrContext context, LogrRecord record) {
-        if (record.getLevel().ordinal() >= context.getLevel().ordinal()) {
-            record.setContext(context);
-            dequer.addLast(record);
+    public static String getUsername(String string) {
+        int index = string.indexOf("@");
+        if (index > 0) {
+            return string.substring(0, index);
         }
+        return string;
     }
 
-    public TimestampedDequer<LogrRecord> getDequer() {
-        return dequer;
-    }  
+    public static String getDomain(String string) {
+        int index = string.indexOf("@");
+        if (index > 0) {
+            return string.substring(index + 1);
+        }
+        return string;
+    }
+    
 }

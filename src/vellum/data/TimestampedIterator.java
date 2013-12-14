@@ -1,5 +1,5 @@
 /*
- * Source https://code.google.com/p/vellum by @evanxsummers
+ * Source https://github.com/evanx by @evanxsummers
 
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements. See the NOTICE file
@@ -17,33 +17,31 @@
        KIND, either express or implied.  See the License for the
        specific language governing permissions and limitations
        under the License.  
+       
  */
-package vellum.logr;
+package vellum.data;
 
-import vellum.data.Millis;
-import vellum.data.TimestampedDequer;
+import java.util.Iterator;
 
 /**
  *
  * @author evan.summers
  */
-public class DequerHandler implements LogrHandler {
-    LogrContext context;
-    TimestampedDequer<LogrRecord> dequer = new TimestampedDequer(Millis.fromMinutes(5));
-    DefaultFormatter formatter = new DefaultFormatter();
-    
-    public DequerHandler() {
+public class TimestampedIterator<T extends Timestamped> implements Iterator<T> {
+
+    @Override
+    public boolean hasNext() {
+        return false;
     }
 
     @Override
-    public void handle(LogrContext context, LogrRecord record) {
-        if (record.getLevel().ordinal() >= context.getLevel().ordinal()) {
-            record.setContext(context);
-            dequer.addLast(record);
-        }
+    public T next() {
+        throw new ArrayIndexOutOfBoundsException();
     }
 
-    public TimestampedDequer<LogrRecord> getDequer() {
-        return dequer;
-    }  
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+    
 }

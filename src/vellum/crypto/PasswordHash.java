@@ -30,7 +30,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import vellum.datatype.Millis;
+import vellum.data.Millis;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
 

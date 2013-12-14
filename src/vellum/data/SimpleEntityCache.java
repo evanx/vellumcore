@@ -1,5 +1,5 @@
 /*
- * Source https://code.google.com/p/vellum by @evanxsummers
+ * Source https://github.com/evanx by @evanxsummers
 
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements. See the NOTICE file
@@ -17,33 +17,31 @@
        KIND, either express or implied.  See the License for the
        specific language governing permissions and limitations
        under the License.  
+       
  */
-package vellum.logr;
+package vellum.data;
 
-import vellum.data.Millis;
-import vellum.data.TimestampedDequer;
+import java.util.HashMap;
+import java.util.Map;
+import vellum.type.ComparableTuple;
 
 /**
  *
  * @author evan.summers
  */
-public class DequerHandler implements LogrHandler {
-    LogrContext context;
-    TimestampedDequer<LogrRecord> dequer = new TimestampedDequer(Millis.fromMinutes(5));
-    DefaultFormatter formatter = new DefaultFormatter();
+public class SimpleEntityCache implements EntityCache<Comparable> {
+    Map<Comparable, Object> map = new HashMap();
+
+    public static Comparable getComparable(Class type, Comparable key) {
+        return new ComparableTuple(new Comparable[] {type.getName(), key});
+    }
     
-    public DequerHandler() {
+    public <E> E put(Comparable key, E entity) {
+        return (E) map.put(getComparable(entity.getClass(), key), entity);
     }
-
-    @Override
-    public void handle(LogrContext context, LogrRecord record) {
-        if (record.getLevel().ordinal() >= context.getLevel().ordinal()) {
-            record.setContext(context);
-            dequer.addLast(record);
-        }
+    
+    public <E> E get(Class<E> type, Comparable key) {
+        return (E) map.get(getComparable(type, key));
+        
     }
-
-    public TimestampedDequer<LogrRecord> getDequer() {
-        return dequer;
-    }  
 }

@@ -20,7 +20,7 @@
  */
 package vellum.format;
 
-import vellum.datatype.SafeDateFormat;
+import vellum.data.SafeDateFormat;
 import java.util.Date;
 
 /**

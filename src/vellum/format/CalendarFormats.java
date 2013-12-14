@@ -6,7 +6,7 @@ package vellum.format;
 
 import java.util.Calendar;
 import java.util.Date;
-import vellum.datatype.SafeDateFormat;
+import vellum.data.SafeDateFormat;
 
 /**
  *

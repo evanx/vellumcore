@@ -1,5 +1,5 @@
 /*
- * Source https://code.google.com/p/vellum by @evanxsummers
+ * Source https://github.com/evanx by @evanxsummers
 
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements. See the NOTICE file
@@ -17,33 +17,25 @@
        KIND, either express or implied.  See the License for the
        specific language governing permissions and limitations
        under the License.  
+       
  */
-package vellum.logr;
+package vellum.data;
 
-import vellum.data.Millis;
-import vellum.data.TimestampedDequer;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
  * @author evan.summers
  */
-public class DequerHandler implements LogrHandler {
-    LogrContext context;
-    TimestampedDequer<LogrRecord> dequer = new TimestampedDequer(Millis.fromMinutes(5));
-    DefaultFormatter formatter = new DefaultFormatter();
-    
-    public DequerHandler() {
-    }
+public class TimestampedComparator implements Comparator<Timestamped> {
 
     @Override
-    public void handle(LogrContext context, LogrRecord record) {
-        if (record.getLevel().ordinal() >= context.getLevel().ordinal()) {
-            record.setContext(context);
-            dequer.addLast(record);
-        }
+    public int compare(Timestamped o1, Timestamped o2) {
+        return Long.compare(o1.getTimestamp(), o2.getTimestamp());
     }
-
-    public TimestampedDequer<LogrRecord> getDequer() {
-        return dequer;
-    }  
+    
+    public static Comparator<Timestamped> reverse() {
+        return Collections.reverseOrder(new TimestampedComparator());
+    }
 }

@@ -20,8 +20,8 @@
  */
 package vellum.util;
 
-import vellum.datatype.MapEntryComparator;
-import vellum.datatype.MapValueComparator;
+import vellum.data.MapEntryComparator;
+import vellum.data.MapValueComparator;
 import vellum.format.ListFormats;
 import java.util.*;
 

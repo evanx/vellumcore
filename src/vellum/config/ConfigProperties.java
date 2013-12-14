@@ -7,7 +7,7 @@ package vellum.config;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import vellum.datatype.Millis;
+import vellum.data.Millis;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
 import vellum.util.Bytes;

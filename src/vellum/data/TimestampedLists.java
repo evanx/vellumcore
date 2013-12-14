@@ -17,33 +17,35 @@
        KIND, either express or implied.  See the License for the
        specific language governing permissions and limitations
        under the License.  
+       
  */
-package vellum.logr;
+package vellum.data;
 
-import vellum.data.Millis;
-import vellum.data.TimestampedDequer;
+import java.util.List;
 
 /**
  *
  * @author evan.summers
  */
-public class DequerHandler implements LogrHandler {
-    LogrContext context;
-    TimestampedDequer<LogrRecord> dequer = new TimestampedDequer(Millis.fromMinutes(5));
-    DefaultFormatter formatter = new DefaultFormatter();
-    
-    public DequerHandler() {
-    }
+public class TimestampedLists {
 
-    @Override
-    public void handle(LogrContext context, LogrRecord record) {
-        if (record.getLevel().ordinal() >= context.getLevel().ordinal()) {
-            record.setContext(context);
-            dequer.addLast(record);
+    public static long getFirstMillis(List<Timestamped> timestampedList) {
+        long firstMillis = 0;
+        for (Timestamped entry : timestampedList) {
+            if (entry.getTimestamp() > 0 && (firstMillis == 0 || firstMillis > entry.getTimestamp())) {
+                firstMillis = entry.getTimestamp();
+            }
         }
+        return firstMillis;
     }
 
-    public TimestampedDequer<LogrRecord> getDequer() {
-        return dequer;
-    }  
+    public static long getLastMillis(List<Timestamped> timestampedList) {
+        long lastMillis = 0;
+        for (Timestamped entry : timestampedList) {
+            if (entry.getTimestamp() > 0 && (lastMillis == 0 || lastMillis < entry.getTimestamp())) {
+                lastMillis = entry.getTimestamp();
+            }
+        }
+        return lastMillis;
+    }
 }

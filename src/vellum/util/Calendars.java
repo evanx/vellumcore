@@ -24,7 +24,7 @@ import static java.util.Calendar.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import vellum.datatype.SafeDateFormat;
+import vellum.data.SafeDateFormat;
 
 /**
  *

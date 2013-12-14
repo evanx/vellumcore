@@ -17,33 +17,28 @@
        KIND, either express or implied.  See the License for the
        specific language governing permissions and limitations
        under the License.  
+       
  */
-package vellum.logr;
-
-import vellum.data.Millis;
-import vellum.data.TimestampedDequer;
+package vellum.data;
 
 /**
  *
  * @author evan.summers
  */
-public class DequerHandler implements LogrHandler {
-    LogrContext context;
-    TimestampedDequer<LogrRecord> dequer = new TimestampedDequer(Millis.fromMinutes(5));
-    DefaultFormatter formatter = new DefaultFormatter();
-    
-    public DequerHandler() {
+public class TimestampedSample<K, T extends Timestamped> extends TimestampedDigester implements Timestamped {
+
+    IntegerCounterMap<K> counterMap = new IntegerCounterMap();
+            
+    public TimestampedSample(long millis) {
+        super(millis);
     }
 
     @Override
-    public void handle(LogrContext context, LogrRecord record) {
-        if (record.getLevel().ordinal() >= context.getLevel().ordinal()) {
-            record.setContext(context);
-            dequer.addLast(record);
-        }
+    public long getTimestamp() {
+        return millis;
     }
 
-    public TimestampedDequer<LogrRecord> getDequer() {
-        return dequer;
-    }  
+    public IntegerCounterMap getCounterMap() {
+        return counterMap;
+    }
 }

@@ -27,6 +27,16 @@ import vellum.data.ComparableTuple;
  * @author evan.summers
  */
 public class Comparables {
+
+    public static boolean matches(Comparable[] array, Comparable[] other) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] != null && other[i] != null &&
+                    !array[i].equals(other[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
     
     public static int compareTo(Comparable[] array, Comparable[] other) {
         for (int i = 0; i < array.length; i++) {

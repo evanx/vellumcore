@@ -20,11 +20,13 @@
  */
 package vellum.util;
 
+import vellum.type.Matcher;
+
 /**
  *
  * @author evan.summers
  */
-public class ComparableValue implements Comparable<ComparableValue> {
+public class ComparableValue implements Comparable<ComparableValue>, Matcher {
     Comparable value;
 
     public ComparableValue(Comparable value) {
@@ -37,13 +39,31 @@ public class ComparableValue implements Comparable<ComparableValue> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof ComparableValue) {
-            return compareTo((ComparableValue) o) == 0;
+    public boolean equals(Object other) {
+        if (this == other || value == other) {
+            return true;
         }
-        return value.equals(o);
+        if (value == null || other == null) {
+            return false;
+        }
+        if (other instanceof ComparableValue) {
+            return value.equals(((ComparableValue) other).value);
+        }
+        return value.equals(other);
     }
 
+    @Override
+    public boolean matches(Object other) {
+        if (this == other || value == other || value == null || other == null) {
+            return true;
+        }
+        if (other instanceof ComparableValue) {
+            Object otherValue = ((ComparableValue) other).value;
+            return otherValue == null || value.equals(otherValue);
+        }
+        return value.equals(other);
+    }
+    
     @Override
     public int hashCode() {
         return value.hashCode();

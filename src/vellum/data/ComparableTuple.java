@@ -22,12 +22,13 @@ package vellum.data;
 
 import vellum.util.Comparables;
 import vellum.format.ArgFormats;
+import vellum.type.Matcher;
 
 /**
  *
  * @author evan.summers
  */
-public class ComparableTuple implements Comparable<ComparableTuple> {
+public class ComparableTuple implements Comparable<ComparableTuple>, Matcher {
     Comparable[] values;
 
     public ComparableTuple(Comparable... values) {
@@ -40,13 +41,21 @@ public class ComparableTuple implements Comparable<ComparableTuple> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ComparableTuple) {
-            return compareTo((ComparableTuple) obj) == 0;
+    public boolean equals(Object other) {
+        if (other instanceof ComparableTuple) {
+            return compareTo((ComparableTuple) other) == 0;
         }
         return false;
     }
 
+    @Override
+    public boolean matches(Object other) {
+        if (other instanceof ComparableTuple) {
+            return Comparables.matches(values, ((ComparableTuple) other).values);
+        }
+        return false;
+    }
+    
     @Override
     public int hashCode() {
         return Comparables.hashCode(values);

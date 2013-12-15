@@ -25,7 +25,7 @@ public class RedirectPortHttpHandler implements HttpHandler {
     
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String hostAddress = "https://" + httpExchange.getRequestHeaders().getFirst("Host");
+        String hostAddress = httpExchange.getRequestHeaders().getFirst("Host");
         logger.info("host {}", hostAddress);
         String redirectUrl = String.format("https://%s:%d", hostAddress, redirectPort);
         logger.info("redirect {}", hostAddress, redirectUrl);

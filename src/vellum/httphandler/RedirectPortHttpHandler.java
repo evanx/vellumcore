@@ -23,16 +23,14 @@ public class RedirectPortHttpHandler implements HttpHandler {
         this.redirectPort = redirectPort;
     }
     
-    
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String host = httpExchange.getRequestURI().getHost();
-        logger.info("host {}", host);
-        String redirectUrl = String.format("https://%s:%d", host, redirectPort);
-        logger.info("redirect {}", host, redirectUrl);
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        String hostAddress = httpExchange.getRemoteAddress().getAddress().getHostAddress();
+        logger.info("host {}", hostAddress);
+        String redirectUrl = String.format("https://%s:%d", hostAddress, redirectPort);
+        logger.info("redirect {}", hostAddress, redirectUrl);
         httpExchange.getResponseHeaders().add("Location", redirectUrl);
+        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_PERM, -1);
         httpExchange.close();
     }
-
 }

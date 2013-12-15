@@ -307,7 +307,6 @@ public class Strings {
             if (arg != null && string.equals(arg)) {
                 return true;
             }
-
         }
         return false;
     }

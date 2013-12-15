@@ -25,9 +25,8 @@ public class RedirectUrlHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String host = httpExchange.getRequestURI().getHost();
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-        logger.info("host {} {}", host, redirectUrl);
+        logger.info("host {}", redirectUrl);
         httpExchange.getResponseHeaders().add("Location", redirectUrl);
         httpExchange.close();
     }

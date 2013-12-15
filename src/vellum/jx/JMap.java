@@ -104,8 +104,4 @@ public class JMap extends HashMap<String, Object> {
     public String toString() {
         return toJson();
     }
-    
-    public static JEntry entry(String key, Object value) {
-        return new JEntry(key, value);
-    }
 }

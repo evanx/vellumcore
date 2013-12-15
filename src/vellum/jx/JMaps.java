@@ -66,4 +66,8 @@ public class JMaps {
         map.add(key, value);
         return map;
     }
+        
+    public static JEntry entry(String key, Object value) {
+        return new JEntry(key, value);
+    }    
 }

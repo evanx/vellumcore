@@ -56,6 +56,8 @@ public class WebHttpHandler implements HttpHandler {
             contentType = "text/css";
         } else if (httpExchange.getRequestURI().getPath().endsWith(".js")) {
             contentType = "text/javascript";
+        } else if (httpExchange.getRequestURI().getPath().endsWith(".sh")) {
+            contentType = "text/x-shellscript";
         } else if (httpExchange.getRequestURI().getPath().endsWith(".txt")) {
             contentType = "text/plain";
         } else if (path.endsWith(".woff")) {

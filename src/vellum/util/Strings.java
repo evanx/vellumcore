@@ -258,6 +258,18 @@ public class Strings {
         return false;
     }
 
+    public static boolean startsWith(String string, Collection<String> patterns) {
+        if (string == null || patterns.isEmpty()) {
+            return false;
+        }
+        for (String pattern : patterns) {
+            if (pattern != null && string.startsWith(pattern)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      * Determine if the string equals any of the given arguments.
      */

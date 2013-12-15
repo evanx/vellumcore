@@ -1,6 +1,6 @@
 /*
  * Source https://code.google.com/p/vellum by @evanxsummers
-
+`
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements. See the NOTICE file
  distributed with this work for additional information
@@ -22,7 +22,6 @@ package vellum.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
@@ -41,7 +40,6 @@ import vellum.jx.JMaps;
 import vellum.parameter.Entry;
 import vellum.parameter.StringMap;
 import vellum.parameter.Parameters;
-import vellum.util.Beans;
 import vellum.util.JsonStrings;
 import vellum.util.Lists;
 import vellum.util.Streams;
@@ -53,7 +51,7 @@ import vellum.util.Strings;
  */
 public class Httpx {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(Httpx.class);
     HttpExchange httpExchange;
     PrintStream out;
     JMap parameterMap;

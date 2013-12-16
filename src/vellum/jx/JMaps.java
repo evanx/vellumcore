@@ -61,12 +61,6 @@ public class JMaps {
         return parse(new JsonParser().parse(json).getAsJsonObject());
     }
     
-    public static JMap create(String key, Object value) {
-        JMap map = new JMap();
-        map.add(key, value);
-        return map;
-    }
-        
     public static JEntry entry(String key, Object value) {
         return new JEntry(key, value);
     }    

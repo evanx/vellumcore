@@ -311,19 +311,19 @@ public class Httpx {
         httpExchange.close();
     }
     
-    public void handleError(Exception e) {
+    public void sendError(Exception e) {
         if (e instanceof DisplayException) {
         } else {
             e.printStackTrace(System.err);
         }
-        handleError(e.getMessage());
+        sendError(e.getMessage());
     }
 
-    public void handleError(DisplayMessage message) {
-        handleError(message.getDisplayMessage());
+    public void sendError(DisplayMessage message) {
+        sendError(message.getDisplayMessage());
     }
 
-    public void handleError(String messageFormat, Object ... args) {
+    public void sendError(String messageFormat, Object ... args) {
         try {
             logger.warn(String.format(messageFormat, args), parameterMap);
             sendResponse(JMaps.create("errorMessage", String.format(messageFormat, args)));

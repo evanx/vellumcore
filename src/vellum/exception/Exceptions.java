@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import vellum.util.Strings;
-import vellum.format.ArgFormats;
+import vellum.util.Args;
 
 /**
  * Utility methods related to exceptions.
@@ -25,9 +25,13 @@ public class Exceptions {
     }
 
     public static String getMessage(Object[] args) {
-        return ArgFormats.formatter.format(args);
+        return Args.format(args);
     }
 
+    public static String getMessage(Throwable e) {
+        return Args.format(e.getClass(), e.getMessage());
+    }
+    
     public static RuntimeException newRuntimeException(Object ... args) {
         if (args.length == 1) {
             Throwable e = getThrowable(args);
@@ -42,6 +46,7 @@ public class Exceptions {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         try {
+            exception.printStackTrace(ps);
             return baos.toString(Strings.ENCODING);
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.newRuntimeException(e);

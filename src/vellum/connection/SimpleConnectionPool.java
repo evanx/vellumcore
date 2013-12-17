@@ -9,8 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Queue;
-import vellum.storage.StorageException;
-import vellum.storage.StorageExceptionType;
 
 /**
  *

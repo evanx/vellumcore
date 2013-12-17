@@ -45,6 +45,10 @@ public class Strings {
     public static final String UTF8 = "UTF-8";
     public static final String ENCODING = "UTF-8";
 
+    public static boolean equalsIgnoreNumeric(String line, String other) {
+        return line.replaceAll("[0-9]", "0").equals(other.replaceAll("[0-9]", "0"));
+    }
+
     /**
      * This class cannot be instantiated, since all of its methods are static.
      *

@@ -5,7 +5,6 @@ package vellum.jx;
 import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -31,8 +30,8 @@ public class JMap extends HashMap<String, Object> {
         return this;
     }
 
-    public Map getMap(String key) {
-        return (Map) super.get(key);
+    public JMap getMap(String key) {
+        return (JMap) super.get(key);
     }
 
     public String getString(String key) throws JMapException {

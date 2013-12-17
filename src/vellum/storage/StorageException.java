@@ -27,7 +27,7 @@ package vellum.storage;
 public class StorageException extends Exception {
     StorageExceptionType exceptionType;
     Comparable key;
-
+            
     public StorageException(StorageExceptionType exceptionType) {
         super(exceptionType.name());
         this.exceptionType = exceptionType;

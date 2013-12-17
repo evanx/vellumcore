@@ -128,6 +128,14 @@ public class Streams {
         }
     }
 
+    public static String loadResourceString(Class parent, String resourceName) {
+        try {
+            return readString(getResourceAsStream(parent, resourceName));
+        } catch (IOException e) {
+            throw Exceptions.newRuntimeException(e, parent, resourceName);
+        }
+    }
+    
     public static String readResourceString(Class parent, String resourceName) throws IOException {
         return readString(getResourceAsStream(parent, resourceName));
     }

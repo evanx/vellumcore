@@ -58,8 +58,8 @@ public class VellumHttpsServer implements Shutdownable {
 
     public void start(HttpsServerProperties properties, SSLContext sslContext,
             HttpHandler handler) throws Exception {
-        executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
-            new ArrayBlockingQueue<Runnable>(4));
+        executor = new ThreadPoolExecutor(10, 20, 0, TimeUnit.MILLISECONDS, 
+            new ArrayBlockingQueue<Runnable>(30));
         InetSocketAddress socketAddress = new InetSocketAddress(properties.getPort());
         httpsServer = HttpsServer.create(socketAddress, 4);
         httpsServer.setHttpsConfigurator(HttpsConfiguratorFactory.

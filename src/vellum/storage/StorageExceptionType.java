@@ -28,5 +28,6 @@ public enum StorageExceptionType {
     NOT_FOUND,
     ALREADY_EXISTS,
     NO_UPDATE,
-    MULTIPLE_UPDATE
+    MULTIPLE_UPDATE,
+    NOT_SUPPORTED;
 }

@@ -32,10 +32,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class MapStore<E extends AbstractEntity> implements EntityStore<E> {
 
-    Logger logger = LoggerFactory.getLogger(MapStore.class);
-    Map<Comparable, E> keyMap = new TreeMap();
-    Map<Long, E> idMap = new TreeMap();
-    long idSequence = 1;
+    private static final Logger logger = LoggerFactory.getLogger(MapStore.class);
+    protected final Map<Comparable, E> keyMap = new TreeMap();
+    private final Map<Long, E> idMap = new TreeMap();
+    private long idSequence = 1;
     
     @Override
     public void insert(E entity) throws StorageException {
@@ -103,5 +103,5 @@ public abstract class MapStore<E extends AbstractEntity> implements EntityStore<
     @Override
     public Collection<E> list() {
         return keyMap.values();
-    }
+    }    
 }

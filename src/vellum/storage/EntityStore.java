@@ -40,8 +40,8 @@ public interface EntityStore<E extends AbstractEntity> {
     
     public E find(Comparable key) throws StorageException;
 
-    public Collection<E> list();
-
     public Collection<E> list(Comparable key);
     
+    public Collection<E> list();
+       
 }

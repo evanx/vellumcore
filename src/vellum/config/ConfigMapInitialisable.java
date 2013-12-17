@@ -18,13 +18,15 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.lifecycle;
+package vellum.config;
+
+import vellum.config.ConfigMap;
 
 /**
  *
  * @author evan.summers
  */
-public interface Initialisable {
-    public void init() throws Exception;
+public interface ConfigMapInitialisable {
+    public void init(ConfigMap configMap) throws Exception;
     
 }

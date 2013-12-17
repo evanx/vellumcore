@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.util.Streams;
 
 /**
@@ -37,7 +37,7 @@ import vellum.util.Streams;
  */
 public class WebHttpHandler implements HttpHandler {
 
-    Logr logger = LogrFactory.getLogger(WebHttpHandler.class);
+    Logger logger = LoggerFactory.getLogger(WebHttpHandler.class);
     Map<String, byte[]> cache = new HashMap();
     String webPath;
     
@@ -74,16 +74,15 @@ public class WebHttpHandler implements HttpHandler {
                     resourcePath = webPath + path;
                 } 
                 logger.trace("get {}", resourcePath);
-                InputStream resourceStream = getClass().getResourceAsStream(
-                        resourcePath);
+                InputStream resourceStream = getClass().getResourceAsStream(resourcePath);
                 bytes = Streams.readBytes(resourceStream);
                 cache.put(path, bytes);
             }
-            logger.trace("path", path, bytes.length);
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             httpExchange.getResponseBody().write(bytes);
-        } catch (Exception e) {
-            logger.warn(e);
+            logger.trace("path", path, bytes.length);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         }
         httpExchange.close();

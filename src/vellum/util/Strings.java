@@ -46,7 +46,7 @@ public class Strings {
     public static final String ENCODING = "UTF-8";
 
     public static boolean equalsIgnoreNumeric(String line, String other) {
-        return line.replaceAll("[0-9]", "0").equals(other.replaceAll("[0-9]", "0"));
+        return line.replaceAll("[0-9]", "#").equals(other.replaceAll("[0-9]", "#"));
     }
 
     /**

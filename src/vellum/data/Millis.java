@@ -85,7 +85,7 @@ public class Millis {
         return String.format("%02d:%02d:%02d", hour, minute, second);
     }
 
-    public static String format(long millis) {
+    public static String formatPeriod(long millis) {
         if (millis == 0) return "00:00:00,000";
         long hour = millis/Millis.fromHours(1);
         long minute = (millis % Millis.fromHours(1))/Millis.fromMinutes(1);

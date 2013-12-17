@@ -29,5 +29,6 @@ public enum StorageExceptionType {
     ALREADY_EXISTS,
     NO_UPDATE,
     MULTIPLE_UPDATE,
-    SQL;
+    SQL, 
+    NOT_INSERTED;
 }

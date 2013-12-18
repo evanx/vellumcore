@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -66,7 +67,21 @@ public class JMaps {
         map.add(key, value);
         return map;
     }
-        
+
+    public static JMap createMap(String key, Iterable<? extends JMapped> iterable) {
+        JMap map = new JMap();
+        map.add(key, map(iterable));
+        return map;
+    }
+    
+    public static Collection<JMap> map(Iterable<? extends JMapped> iterable) {
+        List<JMap> list = new LinkedList();
+        for (JMapped mapped : iterable) {
+            list.add(mapped.getMap());
+        }
+        return list;
+    }
+    
     public static JEntry entry(String key, Object value) {
         return new JEntry(key, value);
     }    

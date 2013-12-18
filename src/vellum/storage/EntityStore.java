@@ -32,16 +32,16 @@ public interface EntityStore<E extends AbstractEntity> {
     
     public void update(E entity) throws StorageException;
 
-    public boolean containsKey(Comparable key);
+    public boolean containsKey(Comparable key) throws StorageException ;
     
     public void delete(Comparable key) throws StorageException;
 
-    public E select(Comparable key);
+    public E select(Comparable key) throws StorageException ;
     
     public E find(Comparable key) throws StorageException;
 
-    public Collection<E> list(Comparable key);
+    public Collection<E> list(Comparable key) throws StorageException ;
     
-    public Collection<E> list();
+    public Collection<E> list() throws StorageException ;
        
 }

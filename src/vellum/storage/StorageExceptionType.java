@@ -25,10 +25,13 @@ package vellum.storage;
  * @author evan.summers
  */
 public enum StorageExceptionType {
-    NOT_FOUND,
+    INVALID_KEY,
     ALREADY_EXISTS,
-    NO_UPDATE,
+    NOT_INSERTED,
+    NOT_UPDATED,
     MULTIPLE_UPDATE,
-    SQL, 
-    NOT_INSERTED;
+    NOT_DELETED,
+    NOT_FOUND,
+    MULTIPLE_FOUND,
+    SQL;
 }

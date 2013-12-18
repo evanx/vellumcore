@@ -61,7 +61,7 @@ public abstract class MapStore<E extends AbstractEntity> implements EntityStore<
     }
 
     @Override
-    public boolean containsKey(Comparable key) {
+    public boolean containsKey(Comparable key) throws StorageException {
         logger.debug("containsKey {}", key, keyMap.containsKey(key));
         return keyMap.containsKey(key);
     }
@@ -75,7 +75,7 @@ public abstract class MapStore<E extends AbstractEntity> implements EntityStore<
     }
 
     @Override
-    public E select(Comparable key) {
+    public E select(Comparable key) throws StorageException {
         logger.info("select {} {}", key, keyMap.containsKey(key));
         return keyMap.get(key);
     }
@@ -101,7 +101,7 @@ public abstract class MapStore<E extends AbstractEntity> implements EntityStore<
     }
     
     @Override
-    public Collection<E> list() {
+    public Collection<E> list() throws StorageException {
         return keyMap.values();
     }    
 }

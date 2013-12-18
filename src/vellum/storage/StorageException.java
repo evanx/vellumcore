@@ -38,10 +38,13 @@ public class StorageException extends Exception {
         this.key = key;
     }
 
-    public StorageException(Exception cause, StorageExceptionType exceptionType, 
-            Comparable key) {
+    public StorageException(Exception cause, StorageExceptionType exceptionType) {
         super(exceptionType.name(), cause);
         this.exceptionType = exceptionType;
+    }
+    
+    public StorageException(Exception cause, StorageExceptionType exceptionType, Comparable key) {
+        this(cause, exceptionType);
         this.key = key;
     }
     

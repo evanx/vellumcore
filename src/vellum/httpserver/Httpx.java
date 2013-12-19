@@ -54,7 +54,7 @@ import vellum.util.Strings;
 public class Httpx {
 
     private static Logger logger = LoggerFactory.getLogger(Httpx.class);
-    HttpExchange httpExchange;
+    HttpExchange delegate;
     PrintStream out;
     JMap parameterMap;
     JMap cookieMap;
@@ -67,38 +67,46 @@ public class Httpx {
     boolean agentWget = false;
 
     public Httpx(HttpExchange httpExchange) {
-        this.httpExchange = httpExchange;
+        this.delegate = httpExchange;
     }
 
-    public String getServerUrl() {
-        return "https://" + httpExchange.getRequestHeaders().getFirst("Host");
+    public HttpExchange getDelegate() {
+        return delegate;
+    }
+    
+    public String getHostUrl() {
+        return "https://" + delegate.getRequestHeaders().getFirst("Host");
     }
 
+    public String getReferer() {
+        return delegate.getRequestHeaders().getFirst("Referer");
+    }
+    
     public String getRemoteHostName() {
-        return httpExchange.getRemoteAddress().getHostName();
+        return delegate.getRemoteAddress().getHostName();
     }
 
     public String getRemoteHostAddress() {
-        return httpExchange.getRemoteAddress().getAddress().getHostAddress();
+        return delegate.getRemoteAddress().getAddress().getHostAddress();
     }
     
     public String getQuery() {
-        return httpExchange.getRequestURI().getQuery();
+        return delegate.getRequestURI().getQuery();
     }
 
     public String getPath() {
-        return httpExchange.getRequestURI().getPath();
+        return delegate.getRequestURI().getPath();
     }
 
     public String[] getPathArgs() {
         if (args == null) {
-            args = httpExchange.getRequestURI().getPath().substring(1).split("/");
+            args = delegate.getRequestURI().getPath().substring(1).split("/");
         }
         return args;
     }
 
     public String getLastPathArg() {
-        String path = httpExchange.getRequestURI().getPath();
+        String path = delegate.getRequestURI().getPath();
         int index = path.lastIndexOf("/");
         if (index > 0) {
             return path.substring(index + 1);
@@ -126,8 +134,8 @@ public class Httpx {
 
     private void parseParameterMap() throws IOException {
         parameterMap = new JMap();
-        urlQuery = httpExchange.getRequestURI().getQuery();
-        if (httpExchange.getRequestMethod().equals("POST")) {
+        urlQuery = delegate.getRequestURI().getQuery();
+        if (delegate.getRequestMethod().equals("POST")) {
             urlQuery = readString();
         }
         if (urlQuery == null) {
@@ -156,7 +164,7 @@ public class Httpx {
 
     public void clearCookie(Collection<String> keys) {
         for (String key : keys) {
-            httpExchange.getResponseHeaders().add("Set-cookie",
+            delegate.getResponseHeaders().add("Set-cookie",
                     String.format("%s=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", key));
 
         }
@@ -175,7 +183,7 @@ public class Httpx {
             if (version != null) {
                 builder.append("; Version=").append(version);
             }
-            httpExchange.getResponseHeaders().add("Set-cookie", builder.toString());
+            delegate.getResponseHeaders().add("Set-cookie", builder.toString());
         }
     }
 
@@ -202,7 +210,7 @@ public class Httpx {
 
     public List<String> parseFirstRequestHeader(String key) {
         logger.trace("parseFirstRequestHeader {}", key);
-        String text = httpExchange.getRequestHeaders().getFirst(key);
+        String text = delegate.getRequestHeaders().getFirst(key);
         if (text != null) {
             List<String> list = new ArrayList();
             for (String string : text.split(";")) {
@@ -215,8 +223,8 @@ public class Httpx {
 
     public void parseHeaders() {
         headersParsed = true;
-        for (String key : httpExchange.getRequestHeaders().keySet()) {
-            List<String> values = httpExchange.getRequestHeaders().get(key);
+        for (String key : delegate.getRequestHeaders().keySet()) {
+            List<String> values = delegate.getRequestHeaders().get(key);
             logger.trace("parseHeaders {} {}", key, values);
             if (key.equals("Accept-encoding")) {
                 if (values.contains("gzip")) {
@@ -271,50 +279,50 @@ public class Httpx {
     }
 
     public void setResponseHeader(String key, String value) throws IOException {
-        httpExchange.getResponseHeaders().set(key, value);
+        delegate.getResponseHeaders().set(key, value);
     }
 
     public List<String> getRequestHeader(String key) throws IOException {
-        return httpExchange.getRequestHeaders().get(key);
+        return delegate.getRequestHeaders().get(key);
     }
 
     public void sendResponse(String contentType, byte[] bytes) throws IOException {
-        httpExchange.getResponseHeaders().set("Content-type", contentType);
-        httpExchange.getResponseHeaders().set("Content-length",
+        delegate.getResponseHeaders().set("Content-type", contentType);
+        delegate.getResponseHeaders().set("Content-length",
                 Integer.toString(bytes.length));
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         getPrintStream().write(bytes);
     }
 
     public void sendResponseFile(String contentType, String fileName) throws IOException {
-        httpExchange.getResponseHeaders().add("Content-disposition",
+        delegate.getResponseHeaders().add("Content-disposition",
                 "attachment; filename=" + fileName);
-        httpExchange.getResponseHeaders().set("Content-type", contentType);
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        delegate.getResponseHeaders().set("Content-type", contentType);
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
 
     public void sendResponse(String contentType, boolean ok) throws IOException {
-        httpExchange.getResponseHeaders().set("Content-type", contentType);
+        delegate.getResponseHeaders().set("Content-type", contentType);
         if (ok) {
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+            delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         } else {
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+            delegate.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         }
     }
 
     public void sendEmptyOkResponse() throws IOException {
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
 
     public void sendPlainResponse(String responseString, Object ... args) 
             throws IOException {
         responseString = String.format(responseString, args) + "\n";
         byte[] responseBytes = responseString.getBytes();
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR,
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR,
                 responseBytes.length);
-        httpExchange.getResponseHeaders().set("Content-type", "text/plain");
-        httpExchange.getResponseBody().write(responseBytes);
-        httpExchange.close();
+        delegate.getResponseHeaders().set("Content-type", "text/plain");
+        delegate.getResponseBody().write(responseBytes);
+        delegate.close();
     }
     
     public void sendError(Exception e) {
@@ -340,7 +348,7 @@ public class Httpx {
 
     public PrintStream getPrintStream() {
         if (out == null) {
-            out = new PrintStream(httpExchange.getResponseBody());
+            out = new PrintStream(delegate.getResponseBody());
         }
         return out;
     }
@@ -361,19 +369,19 @@ public class Httpx {
     }
 
     public void close() {
-        httpExchange.close();
+        delegate.close();
     }
 
     public String readString() throws IOException {
-        return Streams.readString(httpExchange.getRequestBody());
+        return Streams.readString(delegate.getRequestBody());
     }
 
     public SSLSession getSSLSession() {
-        return ((HttpsExchange) httpExchange).getSSLSession();
+        return ((HttpsExchange) delegate).getSSLSession();
     }
 
     public X509Certificate getPeerCertficate() throws SSLPeerUnverifiedException {
-        return ((HttpsExchange) httpExchange).getSSLSession().getPeerCertificateChain()[0];        
+        return ((HttpsExchange) delegate).getSSLSession().getPeerCertificateChain()[0];        
     }
 
 

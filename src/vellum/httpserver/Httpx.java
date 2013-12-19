@@ -29,7 +29,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
+import javax.security.cert.X509Certificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.exception.DisplayException;
@@ -76,6 +78,10 @@ public class Httpx {
         return httpExchange.getRemoteAddress().getHostName();
     }
 
+    public String getRemoteHostAddress() {
+        return httpExchange.getRemoteAddress().getAddress().getHostAddress();
+    }
+    
     public String getQuery() {
         return httpExchange.getRequestURI().getQuery();
     }
@@ -365,5 +371,10 @@ public class Httpx {
     public SSLSession getSSLSession() {
         return ((HttpsExchange) httpExchange).getSSLSession();
     }
+
+    public X509Certificate getPeerCertficate() throws SSLPeerUnverifiedException {
+        return ((HttpsExchange) httpExchange).getSSLSession().getPeerCertificateChain()[0];        
+    }
+
 
 }

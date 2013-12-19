@@ -86,5 +86,4 @@ public class Comparables {
     public static ComparableTuple tuple(Comparable ... values) {
         return new ComparableTuple(values);        
     }
-    
 }

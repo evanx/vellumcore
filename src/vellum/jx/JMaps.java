@@ -62,19 +62,27 @@ public class JMaps {
         return parse(new JsonParser().parse(json).getAsJsonObject());
     }
 
-    public static JMap create(String key, Object value) {
+    public static JMap mapValue(String key, Object value) {
         JMap map = new JMap();
         map.add(key, value);
         return map;
     }
 
-    public static JMap createMap(String key, Iterable<? extends JMapped> iterable) {
+    public static JEntry entryValue(String key, Object value) {
+        return new JEntry(key, value);
+    }    
+
+    public static JEntry entry(String key, Iterable<? extends JMapped> iterable) {
+        return entryValue(key, list(iterable));
+    }
+    
+    public static JMap map(String key, Iterable<? extends JMapped> iterable) {
         JMap map = new JMap();
-        map.add(key, map(iterable));
+        map.add(key, list(iterable));
         return map;
     }
     
-    public static Collection<JMap> map(Iterable<? extends JMapped> iterable) {
+    public static Collection<JMap> list(Iterable<? extends JMapped> iterable) {
         List<JMap> list = new LinkedList();
         for (JMapped mapped : iterable) {
             list.add(mapped.getMap());
@@ -82,8 +90,4 @@ public class JMaps {
         return list;
     }
     
-    public static JEntry entry(String key, Object value) {
-        return new JEntry(key, value);
-    }    
-
 }

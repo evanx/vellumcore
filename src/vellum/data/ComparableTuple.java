@@ -69,4 +69,13 @@ public class ComparableTuple implements Comparable<ComparableTuple>, Matcher {
     public static ComparableTuple create(Comparable ... values) {
         return new ComparableTuple(values);
     }   
+
+    public boolean contains(Comparable key) {
+        for (Comparable value : values) {
+            if (value.equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

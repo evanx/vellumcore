@@ -332,7 +332,7 @@ public class Httpx {
     public void sendError(String messageFormat, Object ... args) {
         try {
             logger.warn(String.format(messageFormat, args), parameterMap);
-            sendResponse(JMaps.create("errorMessage", String.format(messageFormat, args)));
+            sendResponse(JMaps.mapValue("errorMessage", String.format(messageFormat, args)));
         } catch (IOException e) {
             logger.warn(e.getMessage(), e);
         }

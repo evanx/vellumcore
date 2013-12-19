@@ -73,7 +73,7 @@ public class WebHttpHandler implements HttpHandler {
                 if (path.startsWith("/")) {
                     resourcePath = webPath + path;
                 } 
-                logger.info("get {}", resourcePath);
+                logger.trace("get {}", resourcePath);
                 InputStream resourceStream = getClass().getResourceAsStream(resourcePath);
                 bytes = Streams.readBytes(resourceStream);
                 cache.put(path, bytes);

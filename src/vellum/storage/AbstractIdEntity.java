@@ -20,6 +20,8 @@
  */
 package vellum.storage;
 
+import vellum.util.Comparables;
+
 /**
  *
  * @author evan.summers
@@ -28,4 +30,31 @@ public abstract class AbstractIdEntity extends AbstractEntity {
 
     public abstract Long getId();
     public abstract void setId(Long id);
+    
+    @Override
+    public int hashCode() {
+        if (getId() != null) {
+            return getId().hashCode();
+        }
+        return super.hashCode();
+    }
+    
+    @Override
+    public int compareTo(AbstractEntity o) {
+        if (o instanceof AbstractIdEntity) {
+            AbstractIdEntity other = (AbstractIdEntity) o;
+            return Comparables.compareTo(getId(), other.getId());
+        }
+        return super.compareTo(o);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof AbstractIdEntity) {
+            AbstractIdEntity other = (AbstractIdEntity) object;
+            return Comparables.equals(getId(), other.getId());
+        }
+        return false;
+    }
+    
 }

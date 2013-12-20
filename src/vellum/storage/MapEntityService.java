@@ -30,15 +30,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public abstract class MapStore<E extends AbstractEntity> implements EntityStore<E> {
+public abstract class MapEntityService<E extends AbstractEntity> implements EntityService<E> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MapStore.class);
+    private static final Logger logger = LoggerFactory.getLogger(MapEntityService.class);
     protected final Map<Comparable, E> keyMap = new TreeMap();
     private final Map<Long, E> idMap = new TreeMap();
     private long idSequence = 1;
     
     @Override
-    public void insert(E entity) throws StorageException {
+    public void add(E entity) throws StorageException {
         logger.info("insert {} {}", entity.getKey(), !keyMap.containsKey(entity.getKey()));
         if (keyMap.put(entity.getKey(), entity) != null) {
             throw new StorageException(StorageExceptionType.ALREADY_EXISTS, entity.getKey());
@@ -53,7 +53,7 @@ public abstract class MapStore<E extends AbstractEntity> implements EntityStore<
     }
 
     @Override
-    public void update(E entity) throws StorageException {
+    public void replace(E entity) throws StorageException {
         logger.info("update {} {}", entity.getKey(), keyMap.containsKey(entity.getKey()));
         if (keyMap.put(entity.getKey(), entity) == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, entity.getKey());            
@@ -61,13 +61,13 @@ public abstract class MapStore<E extends AbstractEntity> implements EntityStore<
     }
 
     @Override
-    public boolean containsKey(Comparable key) throws StorageException {
+    public boolean contains(Comparable key) throws StorageException {
         logger.debug("containsKey {}", key, keyMap.containsKey(key));
         return keyMap.containsKey(key);
     }
     
     @Override
-    public void delete(Comparable key) throws StorageException {
+    public void remove(Comparable key) throws StorageException {
         logger.info("delete {} {}", key, keyMap.containsKey(key));
         if (keyMap.remove(key) != null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
@@ -75,17 +75,17 @@ public abstract class MapStore<E extends AbstractEntity> implements EntityStore<
     }
 
     @Override
-    public E select(Comparable key) throws StorageException {
+    public E find(Comparable key) throws StorageException {
         logger.info("select {} {}", key, keyMap.containsKey(key));
         return keyMap.get(key);
     }
 
     @Override
-    public E find(Comparable key) throws StorageException {
+    public E retrieve(Comparable key) throws StorageException {
         if (key instanceof Long) {
             return findId((Long) key);
         }
-        E entity = select(key);
+        E entity = find(key);
         if (entity == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
         }

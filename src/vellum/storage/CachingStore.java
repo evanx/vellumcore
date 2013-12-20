@@ -32,16 +32,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public abstract class CachingStore<E extends AbstractIdEntity> implements EntityStore<E> {
+public abstract class CachingStore<E extends AbstractIdEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(CachingStore.class);
     private final Map<Comparable, E> keyMap = Collections.synchronizedMap(new TreeMap());
     private final Map<Long, E> idMap = Collections.synchronizedMap(new TreeMap());
     private final SynchronousQueue<E> evictQueue = new SynchronousQueue();
-    EntityStore<E> delegate;
+    EntityService<E> delegate;
     int capacity;
 
-    public CachingStore(int capacity, EntityStore delegate) {
+    public CachingStore(int capacity, EntityService delegate) {
         this.capacity = capacity;
         this.delegate = delegate;
     }
@@ -69,34 +69,34 @@ public abstract class CachingStore<E extends AbstractIdEntity> implements Entity
     }
 
     @Override
-    public void insert(E entity) throws StorageException {
-        delegate.insert(entity);
+    public void add(E entity) throws StorageException {
+        delegate.add(entity);
         put(entity);
     }
 
     @Override
-    public void update(E entity) throws StorageException {
-        delegate.update(entity);
+    public void replace(E entity) throws StorageException {
+        delegate.replace(entity);
     }
 
     @Override
-    public boolean containsKey(Comparable key) throws StorageException {
-        return delegate.containsKey(key);
+    public boolean contains(Comparable key) throws StorageException {
+        return delegate.contains(key);
     }
 
     @Override
-    public void delete(Comparable key) throws StorageException {
-        delegate.delete(key);
+    public void remove(Comparable key) throws StorageException {
+        delegate.remove(key);
         clear();
     }
 
     @Override
-    public E select(Comparable key) throws StorageException {
-        return delegate.select(key);
+    public E find(Comparable key) throws StorageException {
+        return delegate.find(key);
     }
 
     @Override
-    public E find(Comparable key) throws StorageException {
+    public E retrieve(Comparable key) throws StorageException {
         if (key instanceof Long) {
             E entity = idMap.get((Long) key);
             if (entity != null) {
@@ -108,7 +108,7 @@ public abstract class CachingStore<E extends AbstractIdEntity> implements Entity
                 return entity;
             }
         }
-        E entity = select(key);
+        E entity = find(key);
         if (entity == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);
         }

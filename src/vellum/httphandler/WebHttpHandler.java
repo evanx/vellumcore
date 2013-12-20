@@ -60,6 +60,8 @@ public class WebHttpHandler implements HttpHandler {
             contentType = "text/x-shellscript";
         } else if (httpExchange.getRequestURI().getPath().endsWith(".txt")) {
             contentType = "text/plain";
+        } else if (httpExchange.getRequestURI().getPath().endsWith(".md5sum")) {
+            contentType = "text/plain";
         } else if (path.endsWith(".woff")) {
             contentType = "application/font-woff";
         } else {

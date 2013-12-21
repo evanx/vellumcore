@@ -21,10 +21,6 @@
 package vellum.storage;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.SynchronousQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,97 +31,74 @@ import org.slf4j.LoggerFactory;
 public class DelegatingEntityService<E extends AbstractIdEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(DelegatingEntityService.class);
-    private final Map<Comparable, E> keyMap = Collections.synchronizedMap(new TreeMap());
-    private final Map<Long, E> idMap = Collections.synchronizedMap(new TreeMap());
-    private final SynchronousQueue<E> evictQueue = new SynchronousQueue();
+    CachingEntityService<E> cache;
     EntityService<E> delegate;
-    int capacity;
-
-    public DelegatingEntityService(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void setDelegate(EntityService<E> delegate) {
+            
+    public DelegatingEntityService(CachingEntityService<E> cache, EntityService<E> delegate) {
+        this.cache = cache;
         this.delegate = delegate;
-    }
-    
-    public synchronized void clear() {
-        keyMap.clear();
-        idMap.clear();
-        evictQueue.clear();                
-    }
-
-    private synchronized void remove(E entity) {
-        idMap.remove(entity.getId());
-        keyMap.remove(entity.getKey());
-    }
-    
-    private synchronized void put(E entity) {
-        while (evictQueue.size() > capacity) {
-            E evictEntity = evictQueue.poll();
-            if (evictEntity != null) {
-                remove(evictEntity);
-            }
-        }
-        idMap.put(entity.getId(), entity);
-        keyMap.put(entity.getKey(), entity);
     }
 
     @Override
     public void add(E entity) throws StorageException {
+        assert(entity.getId() == null);
+        assert(!cache.containsKey(entity.getKey()));
         delegate.add(entity);
-        put(entity);
+        cache.put(entity);
+        assert(cache.contains(entity));
     }
 
     @Override
     public void replace(E entity) throws StorageException {
         delegate.replace(entity);
+        cache.put(entity);
     }
 
     @Override
     public boolean containsKey(Comparable key) throws StorageException {
+        if (cache.containsKey(key)) {
+            assert(delegate.containsKey(key));
+            return true;
+        }
         return delegate.containsKey(key);
     }
 
     @Override
     public void remove(Comparable key) throws StorageException {
+        cache.clear();
         delegate.remove(key);
-        clear();
     }
 
     @Override
     public E find(Comparable key) throws StorageException {
-        return delegate.find(key);
+        E entity = cache.find(key);
+        if (entity != null) {
+            assert(delegate.find(key) != null);
+            return entity;
+        }
+        entity = delegate.find(key);
+        if (entity != null) {
+            cache.add(entity);
+        }
+        return entity;
     }
 
     @Override
-    public E retrieve(Comparable key) throws StorageException {
-        if (key instanceof Long) {
-            E entity = idMap.get((Long) key);
-            if (entity != null) {
-                return entity;
-            }
-        } else {
-            E entity = keyMap.get(key);
-            if (entity != null) {
-                return entity;
-            }
-        }
+    public E retrieve(Comparable key) throws StorageException {        
         E entity = find(key);
         if (entity == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);
         }
-        put(entity);
         return entity;
     }
 
     @Override
     public Collection<E> list() throws StorageException {
-        return delegate.list();
+        return cache.putAll(delegate.list());
     }
 
     @Override
     public Collection<E> list(Comparable key) throws StorageException {
-        return delegate.list(key);
+        return cache.putAll(delegate.list(key));
     }
 }

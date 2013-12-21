@@ -26,15 +26,7 @@ import java.util.Collection;
  *
  * @author evan.summers
  */
-public class MapEntityService<E extends AbstractEntity> extends AbstractMapEntityService<E> {
-    EntityMatcher<E> matcher;
+public interface EntityMatcher<E> {
     
-    public MapEntityService(EntityMatcher matcher) {
-        this.matcher = matcher;
-    }
-
-    @Override
-    public Collection<E> list(Comparable key) throws StorageException {
-        return matcher.matches(list(), key);
-    }
+    public Collection<E> matches(Collection<E> entities, Comparable key) throws StorageException;
 }

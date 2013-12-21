@@ -35,15 +35,16 @@ import org.slf4j.LoggerFactory;
 public class CachingEntityService<E extends AbstractIdEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(CachingEntityService.class);
-    private final Map<Comparable, E> keyMap = Collections.synchronizedMap(new TreeMap());
+    protected final Map<Comparable, E> keyMap = Collections.synchronizedMap(new TreeMap());
     private final Map<Long, E> idMap = Collections.synchronizedMap(new TreeMap());
     private final SynchronousQueue<E> evictQueue = new SynchronousQueue();
-    Class<E> entityType;
     int capacity;
+    EntityMatcher matcher;
+    long seq = 1;
     
-    public CachingEntityService(Class<E> entityType, int capacity) {
-        this.entityType = entityType;
+    public CachingEntityService(int capacity, EntityMatcher matcher) {
         this.capacity = capacity;
+        this.matcher = matcher;
     }
 
     public synchronized void clear() {
@@ -52,29 +53,44 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
         evictQueue.clear();                
     }
 
-    private synchronized void remove(E entity) {
-        idMap.remove(entity.getId());
-        keyMap.remove(entity.getKey());
+    public synchronized void put(E entity) {
+        idMap.put(entity.getId(), entity);
+        keyMap.put(entity.getKey(), entity);
+        evict();
+    }
+
+    public synchronized Collection<E> putAll(Collection<E> entities) {
+        for (E entity : entities) {
+            put(entity);
+        }
+        return entities;
     }
     
-    private synchronized void put(E entity) {
+    private synchronized void evict() {
         while (evictQueue.size() > capacity) {
             E evictEntity = evictQueue.poll();
             if (evictEntity != null) {
                 remove(evictEntity);
             }
         }
-        idMap.put(entity.getId(), entity);
-        keyMap.put(entity.getKey(), entity);
+    }
+    
+    private synchronized void remove(E entity) {
+        assert(entity.getId() != null);
+        idMap.remove(entity.getId());
+        keyMap.remove(entity.getKey());
     }
 
     @Override
     public void add(E entity) throws StorageException {
+        assert(entity.getId() == null);
+        entity.setId(seq++);
         put(entity);
     }
 
     @Override
     public void replace(E entity) throws StorageException {
+        assert(entity.getId() != null);
         put(entity);
     }
 
@@ -86,6 +102,12 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
         return keyMap.containsKey(key);
     }
 
+    public boolean contains(E entity) throws StorageException {
+        assert(idMap.containsKey(entity.getId()) == keyMap.containsKey(entity.getKey()));
+        return idMap.containsKey(entity.getId());
+    }
+
+    
     @Override
     public void remove(Comparable key) throws StorageException {
         clear();
@@ -112,9 +134,10 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
     public Collection<E> list() throws StorageException {
         return keyMap.values();
     }
-
+    
     @Override
-    public Collection<E> list(Comparable key) {
-        return new ChronicMatcher(entityType, keyMap.values()).list(key);
+    public Collection<E> list(Comparable key) throws StorageException {
+        return matcher.matches(list(), key);
     }
+    
 }

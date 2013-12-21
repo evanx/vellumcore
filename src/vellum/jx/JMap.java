@@ -11,10 +11,16 @@ import java.util.HashMap;
  * @author evan.summers
  */
 public class JMap extends HashMap<String, Object> {
-
+    
+    String text;
+    
     public JMap() {
     }
 
+    public JMap(String text) {
+        this.text = text;
+    }
+    
     public JMap(JEntry... entries) {
         for (JEntry entry : entries) {
             super.put(entry.getKey(), entry.getValue());
@@ -99,6 +105,10 @@ public class JMap extends HashMap<String, Object> {
         return new Gson().toJson(this);
     }
 
+    public String getText() {
+        return text;
+    }
+    
     @Override
     public String toString() {
         return toJson();

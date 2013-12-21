@@ -4,10 +4,10 @@
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements. See the NOTICE file
        distributed with this work for additional information
-       regarding copyright ownership.  The ASF licenses this file
-       to you under the Apache License, Version 2.0 (the
-       "License"); you may not use this file except in compliance
-       with the License.  You may obtain a copy of the License at
+       regarding copyright ownership. The ASF licenses this file to
+       you under the Apache License, Version 2.0 (the "License").
+       You may not use this file except in compliance with the
+       License. You may obtain a copy of the License at:
 
          http://www.apache.org/licenses/LICENSE-2.0
 
@@ -22,6 +22,7 @@ package vellum.data;
 
 import java.util.*;
 import java.util.Map.Entry;
+import vellum.jx.JMap;
 
 
 /**
@@ -116,6 +117,10 @@ public class Maps {
             map.put(entry.getKey(), entry.getValue());
         }
         return map;
+    }
+
+    public static String getPlain(JMap map) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

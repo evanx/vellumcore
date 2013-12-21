@@ -4,10 +4,10 @@
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements. See the NOTICE file
  distributed with this work for additional information
- regarding copyright ownership.  The ASF licenses this file
- to you under the Apache License, Version 2.0 (the
- "License"); you may not use this file except in compliance
- with the License.  You may obtain a copy of the License at
+ regarding copyright ownership. The ASF licenses this file to
+ you under the Apache License, Version 2.0 (the "License").
+ You may not use this file except in compliance with the
+ License. You may obtain a copy of the License at:
 
  http://www.apache.org/licenses/LICENSE-2.0
 
@@ -34,6 +34,7 @@ import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.data.Maps;
 import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
@@ -75,11 +76,11 @@ public class Httpx {
     }
     
     public String getHostUrl() {
-        return "https://" + delegate.getRequestHeaders().getFirst("Host");
+        return "https://" + getRequestHeader("Host");
     }
 
     public String getReferer() {
-        return delegate.getRequestHeaders().getFirst("Referer");
+        return getRequestHeader("Referer");
     }
     
     public String getRemoteHostName() {
@@ -116,13 +117,6 @@ public class Httpx {
 
     public int getPathLength() {
         return getPathArgs().length;
-    }
-
-    public String getRequestBody() throws IOException {
-        if (requestBody == null) {
-            requestBody = readString();
-        }
-        return requestBody;
     }
 
     public JMap getParameterMap() throws IOException {
@@ -282,8 +276,8 @@ public class Httpx {
         delegate.getResponseHeaders().set(key, value);
     }
 
-    public List<String> getRequestHeader(String key) throws IOException {
-        return delegate.getRequestHeaders().get(key);
+    public String getRequestHeader(String key) {
+        return delegate.getRequestHeaders().getFirst(key);
     }
 
     public void sendResponse(String contentType, byte[] bytes) throws IOException {
@@ -360,8 +354,11 @@ public class Httpx {
 
     public void sendResponse(JMap map) throws IOException {
         logger.trace("sendResponse {}", map);
-        sendResponse("text/json", true);
-        getPrintStream().println(map.toString());
+        if (map.getText() != null) {
+            sendResponse("text/plain", map.getText().getBytes());
+        } else {
+            sendResponse("text/json", map.toString().getBytes());
+        }
     }
 
     public JMap parseJsonMap() throws IOException {
@@ -383,6 +380,4 @@ public class Httpx {
     public X509Certificate getPeerCertficate() throws SSLPeerUnverifiedException {
         return ((HttpsExchange) delegate).getSSLSession().getPeerCertificateChain()[0];        
     }
-
-
 }

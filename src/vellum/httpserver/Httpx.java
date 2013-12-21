@@ -282,11 +282,15 @@ public class Httpx {
         return delegate.getRequestHeaders().getFirst(key);
     }
 
+    public void sendResponse(String contentType, String string) throws IOException {
+        logger.info("sendResponse {} string [{}]", contentType, string);
+        sendResponse(contentType, string.getBytes());
+    }
+    
     public void sendResponse(String contentType, byte[] bytes) throws IOException {
         delegate.getResponseHeaders().set("Content-type", contentType);
-        delegate.getResponseHeaders().set("Content-length",
-                Integer.toString(bytes.length));
-        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        delegate.getResponseHeaders().set("Content-length", Integer.toString(bytes.length));
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, bytes.length);
         getPrintStream().write(bytes);
     }
 
@@ -327,6 +331,7 @@ public class Httpx {
             StorageException se = (StorageException) e;
             if (se.getExceptionType() == StorageExceptionType.SQL) {
                 logger.warn("sql {}", se.getCause().getMessage());
+                e = se;
             }
         } else {
             e.printStackTrace(System.err);
@@ -360,11 +365,11 @@ public class Httpx {
     }
 
     public void sendResponse(JMap map) throws IOException {
-        logger.trace("sendResponse {}", map);
+        logger.trace("sendResponse map {}", map);
         if (map.getText() != null) {
-            sendResponse("text/plain", map.getText().getBytes());
+            sendResponse("text/plain", map.getText());
         } else {
-            sendResponse("text/json", map.toString().getBytes());
+            sendResponse("text/json", map.toJson());
         }
     }
 

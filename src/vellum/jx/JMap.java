@@ -5,12 +5,15 @@ package vellum.jx;
 import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class JMap extends HashMap<String, Object> {
+    final static Logger logger = LoggerFactory.getLogger(JMap.class);
     
     String text;
     
@@ -18,6 +21,7 @@ public class JMap extends HashMap<String, Object> {
     }
 
     public JMap(String text) {
+        logger.info("string [{}]", text);
         this.text = text;
     }
     

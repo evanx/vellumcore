@@ -32,20 +32,23 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public abstract class CachingStore<E extends AbstractIdEntity> implements EntityService<E> {
+public class DelegatingEntityService<E extends AbstractIdEntity> implements EntityService<E> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CachingStore.class);
+    private static final Logger logger = LoggerFactory.getLogger(DelegatingEntityService.class);
     private final Map<Comparable, E> keyMap = Collections.synchronizedMap(new TreeMap());
     private final Map<Long, E> idMap = Collections.synchronizedMap(new TreeMap());
     private final SynchronousQueue<E> evictQueue = new SynchronousQueue();
     EntityService<E> delegate;
     int capacity;
 
-    public CachingStore(int capacity, EntityService delegate) {
+    public DelegatingEntityService(int capacity) {
         this.capacity = capacity;
-        this.delegate = delegate;
     }
 
+    public void setDelegate(EntityService<E> delegate) {
+        this.delegate = delegate;
+    }
+    
     public synchronized void clear() {
         keyMap.clear();
         idMap.clear();
@@ -80,8 +83,8 @@ public abstract class CachingStore<E extends AbstractIdEntity> implements Entity
     }
 
     @Override
-    public boolean contains(Comparable key) throws StorageException {
-        return delegate.contains(key);
+    public boolean containsKey(Comparable key) throws StorageException {
+        return delegate.containsKey(key);
     }
 
     @Override
@@ -119,5 +122,10 @@ public abstract class CachingStore<E extends AbstractIdEntity> implements Entity
     @Override
     public Collection<E> list() throws StorageException {
         return delegate.list();
+    }
+
+    @Override
+    public Collection<E> list(Comparable key) throws StorageException {
+        return delegate.list(key);
     }
 }

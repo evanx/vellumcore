@@ -61,7 +61,7 @@ public abstract class MapEntityService<E extends AbstractEntity> implements Enti
     }
 
     @Override
-    public boolean contains(Comparable key) throws StorageException {
+    public boolean containsKey(Comparable key) throws StorageException {
         logger.debug("containsKey {}", key, keyMap.containsKey(key));
         return keyMap.containsKey(key);
     }

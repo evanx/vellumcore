@@ -32,7 +32,7 @@ public interface EntityService<E extends AbstractEntity> {
     
     public void replace(E entity) throws StorageException;
 
-    public boolean contains(Comparable key) throws StorageException ;
+    public boolean containsKey(Comparable key) throws StorageException ;
     
     public void remove(Comparable key) throws StorageException;
 

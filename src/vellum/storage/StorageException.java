@@ -20,12 +20,15 @@
  */
 package vellum.storage;
 
+import vellum.util.Args;
+
 /**
  * 
  * @author evan.summers
  */
 public class StorageException extends Exception {
     StorageExceptionType exceptionType;
+    Class entityType;
     Comparable key;
             
     public StorageException(StorageExceptionType exceptionType) {
@@ -43,11 +46,18 @@ public class StorageException extends Exception {
         this.exceptionType = exceptionType;
     }
     
-    public StorageException(Exception cause, StorageExceptionType exceptionType, Comparable key) {
+    public StorageException(Exception cause, StorageExceptionType exceptionType, 
+            Class entityType, Comparable key) {
         this(cause, exceptionType);
         this.key = key;
+        this.entityType = entityType;
     }
-    
+
+    @Override
+    public String getMessage() {
+        return Args.format(exceptionType, entityType, key, getCause().getMessage());
+    }
+        
     public StorageExceptionType getExceptionType() {
         return exceptionType;
     }
@@ -55,4 +65,8 @@ public class StorageException extends Exception {
     public Comparable getKey() {
         return key;
     }                
+
+    public Class getEntityType() {
+        return entityType;
+    }        
 }

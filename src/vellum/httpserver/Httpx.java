@@ -43,6 +43,8 @@ import vellum.jx.JMaps;
 import vellum.parameter.Entry;
 import vellum.parameter.StringMap;
 import vellum.parameter.Parameters;
+import vellum.storage.StorageException;
+import vellum.storage.StorageExceptionType;
 import vellum.util.JsonStrings;
 import vellum.util.Lists;
 import vellum.util.Streams;
@@ -321,6 +323,11 @@ public class Httpx {
     
     public void sendError(Exception e) {
         if (e instanceof DisplayException) {
+        } else if (e instanceof StorageException) {
+            StorageException se = (StorageException) e;
+            if (se.getExceptionType() == StorageExceptionType.SQL) {
+                logger.warn("sql {}", se.getCause().getMessage());
+            }
         } else {
             e.printStackTrace(System.err);
         }

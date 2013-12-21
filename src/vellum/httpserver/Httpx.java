@@ -20,6 +20,7 @@
  */
 package vellum.httpserver;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.net.ssl.SSLPeerUnverifiedException;
@@ -34,7 +36,6 @@ import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.data.Maps;
 import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
@@ -44,7 +45,6 @@ import vellum.parameter.Entry;
 import vellum.parameter.StringMap;
 import vellum.parameter.Parameters;
 import vellum.storage.StorageException;
-import vellum.storage.StorageExceptionType;
 import vellum.util.JsonStrings;
 import vellum.util.Lists;
 import vellum.util.Streams;
@@ -56,18 +56,16 @@ import vellum.util.Strings;
  */
 public class Httpx {
 
-    private static Logger logger = LoggerFactory.getLogger(Httpx.class);
+    private static final Logger logger = LoggerFactory.getLogger(Httpx.class);
     HttpExchange delegate;
     PrintStream out;
     JMap parameterMap;
     JMap cookieMap;
     JMap dataMap;
+    JMap headerMap;
     String urlQuery;
     String requestBody;
     String[] args;
-    boolean headersParsed = false;
-    boolean acceptGzip = false;
-    boolean agentWget = false;
 
     public Httpx(HttpExchange httpExchange) {
         this.delegate = httpExchange;
@@ -217,39 +215,10 @@ public class Httpx {
         return null;
     }
 
-    public void parseHeaders() {
-        headersParsed = true;
-        for (String key : delegate.getRequestHeaders().keySet()) {
-            List<String> values = delegate.getRequestHeaders().get(key);
-            logger.trace("parseHeaders {} {}", key, values);
-            if (key.equals("Accept-encoding")) {
-                if (values.contains("gzip")) {
-                    acceptGzip = true;
-                }
-            } else if (key.equals("User-agent")) {
-                for (String value : values) {
-                    if (value.toLowerCase().contains("wget")) {
-                        agentWget = true;
-                    }
-                }
-            }
-        }
-    }
-
-    public boolean isAgentWget() {
-        if (!headersParsed) {
-            parseHeaders();
-        }
-        return agentWget;
-    }
-
-    public boolean isAcceptGzip() {
-        if (!headersParsed) {
-            parseHeaders();
-        }
-        return acceptGzip;
-    }
-
+    public Headers getRequestHeaders() {
+        return delegate.getRequestHeaders();
+    }    
+    
     public String getPathString(int index) {
         return getPathString(index, null);
     }
@@ -283,7 +252,7 @@ public class Httpx {
     }
 
     public void sendResponse(String contentType, String string) throws IOException {
-        logger.info("sendResponse {} string [{}]", contentType, string);
+        logger.trace("sendResponse {} string [{}]", contentType, string.trim());
         sendResponse(contentType, string.getBytes());
     }
     
@@ -328,11 +297,6 @@ public class Httpx {
     public void sendError(Exception e) {
         if (e instanceof DisplayException) {
         } else if (e instanceof StorageException) {
-            StorageException se = (StorageException) e;
-            if (se.getExceptionType() == StorageExceptionType.SQL) {
-                logger.warn("sql {}", se.getCause().getMessage());
-                e = se;
-            }
         } else {
             e.printStackTrace(System.err);
         }

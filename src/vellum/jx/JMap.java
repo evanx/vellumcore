@@ -21,7 +21,6 @@ public class JMap extends HashMap<String, Object> {
     }
 
     public JMap(String text) {
-        logger.info("string [{}]", text);
         this.text = text;
     }
     

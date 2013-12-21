@@ -21,10 +21,10 @@
 package vellum.storage;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.TreeMap;
-import java.util.concurrent.SynchronousQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory;
 public class CachingEntityService<E extends AbstractIdEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(CachingEntityService.class);
-    protected final Map<Comparable, E> keyMap = Collections.synchronizedMap(new TreeMap());
-    private final Map<Long, E> idMap = Collections.synchronizedMap(new TreeMap());
-    private final SynchronousQueue<E> evictQueue = new SynchronousQueue();
+    protected final Map<Comparable, E> keyMap = new TreeMap();
+    private final Map<Long, E> idMap = new TreeMap();
+    private final Queue<E> evictQueue = new LinkedList();
     int capacity;
     EntityMatcher matcher;
     long seq = 1;
@@ -66,7 +66,7 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
         return entities;
     }
     
-    private synchronized void evict() {
+    private void evict() {
         while (evictQueue.size() > capacity) {
             E evictEntity = evictQueue.poll();
             if (evictEntity != null) {
@@ -75,54 +75,58 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
         }
     }
     
-    private synchronized void remove(E entity) {
+    private void remove(E entity) {
         assert(entity.getId() != null);
         idMap.remove(entity.getId());
         keyMap.remove(entity.getKey());
     }
 
     @Override
-    public void add(E entity) throws StorageException {
+    public synchronized void add(E entity) throws StorageException {
         assert(entity.getId() == null);
         entity.setId(seq++);
         put(entity);
     }
 
     @Override
-    public void replace(E entity) throws StorageException {
+    public synchronized void replace(E entity) throws StorageException {
         assert(entity.getId() != null);
         put(entity);
     }
 
     @Override
-    public boolean containsKey(Comparable key) throws StorageException {
+    public synchronized boolean containsKey(Comparable key) throws StorageException {
         if (key instanceof Long) {
             return idMap.containsKey((Long) key);
         }
         return keyMap.containsKey(key);
     }
 
-    public boolean contains(E entity) throws StorageException {
+    public synchronized boolean contains(E entity) throws StorageException {
         assert(idMap.containsKey(entity.getId()) == keyMap.containsKey(entity.getKey()));
         return idMap.containsKey(entity.getId());
     }
 
     
     @Override
-    public void remove(Comparable key) throws StorageException {
+    public synchronized void remove(Comparable key) throws StorageException {
         clear();
     }
 
     @Override
-    public E find(Comparable key) throws StorageException {
+    public synchronized E find(Comparable key) throws StorageException {
         if (key instanceof Long) {
             return idMap.get((Long) key);
         }
         return keyMap.get(key);
     }
 
+    public synchronized E findId(Long id) throws StorageException {
+        return idMap.get(id);
+    }
+    
     @Override
-    public E retrieve(Comparable key) throws StorageException {
+    public synchronized E retrieve(Comparable key) throws StorageException {
         E entity = find(key);
         if (entity == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);
@@ -131,12 +135,12 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
     }
 
     @Override
-    public Collection<E> list() throws StorageException {
+    public synchronized Collection<E> list() throws StorageException {
         return keyMap.values();
     }
     
     @Override
-    public Collection<E> list(Comparable key) throws StorageException {
+    public synchronized Collection<E> list(Comparable key) throws StorageException {
         return matcher.matches(list(), key);
     }
     

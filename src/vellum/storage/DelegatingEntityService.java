@@ -21,6 +21,9 @@
 package vellum.storage;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +34,8 @@ import org.slf4j.LoggerFactory;
 public class DelegatingEntityService<E extends AbstractIdEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(DelegatingEntityService.class);
-    CachingEntityService<E> cache;
-    EntityService<E> delegate;
+    final CachingEntityService<E> cache;
+    final EntityService<E> delegate;
             
     public DelegatingEntityService(CachingEntityService<E> cache, EntityService<E> delegate) {
         this.cache = cache;
@@ -42,10 +45,12 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     @Override
     public void add(E entity) throws StorageException {
         assert(entity.getId() == null);
-        assert(!cache.containsKey(entity.getKey()));
-        delegate.add(entity);
-        cache.put(entity);
-        assert(cache.contains(entity));
+        synchronized(cache) {
+            assert(!cache.containsKey(entity.getKey()));
+            delegate.add(entity);
+            cache.put(entity);
+            assert(cache.contains(entity));
+        }
     }
 
     @Override
@@ -94,11 +99,25 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
 
     @Override
     public Collection<E> list() throws StorageException {
-        return cache.putAll(delegate.list());
+        return cache.list();
     }
 
     @Override
     public Collection<E> list(Comparable key) throws StorageException {
-        return cache.putAll(delegate.list(key));
+        Set<E> set = new HashSet(delegate.list(key));
+        LinkedList list = new LinkedList();
+        for (E entity : set) {
+            E cachedEntity = cache.findId(entity.getId());
+            if (cachedEntity != null) {
+                assert(cachedEntity.getKey().equals(entity.getKey()));
+                list.add(cachedEntity);
+            } else {
+                cache.put(entity);
+                list.add(entity);
+            }
+        }
+        Collection<E> cachedList = cache.list(key);
+        assert(list.size() == cachedList.size());
+        return list;
     }
 }

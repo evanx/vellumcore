@@ -29,7 +29,7 @@ import vellum.util.Comparables;
 public abstract class AbstractEntity implements Comparable<AbstractEntity> {
 
     public abstract Comparable getKey();
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AbstractEntity) {
@@ -41,18 +41,23 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity> {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        if (getKey() == null) {
+            return super.hashCode();
+        }
+        return getKey().hashCode();
     }
-    
+
     @Override
     public int compareTo(AbstractEntity o) {
         return Comparables.compareTo(getKey(), o.getKey());
     }
-    
+
     @Override
     public String toString() {
-        if (getKey() == null) return getClass().getSimpleName();
+        if (getKey() == null) {
+            return getClass().getSimpleName();
+        }
         return getKey().toString();
     }
-        
+
 }

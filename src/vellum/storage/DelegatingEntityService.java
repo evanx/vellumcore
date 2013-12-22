@@ -26,6 +26,8 @@ import java.util.LinkedList;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.type.Enabled;
+import vellum.type.Labelled;
 
 /**
  *
@@ -109,7 +111,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
         for (E entity : set) {
             E cachedEntity = cache.findId(entity.getId());
             if (cachedEntity != null) {
-                assert(cachedEntity.getKey().equals(entity.getKey()));
+                assertEquals(cachedEntity, entity);
                 list.add(cachedEntity);
             } else {
                 cache.put(entity);
@@ -120,4 +122,26 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
         assert(list.size() == cachedList.size());
         return list;
     }
+    
+    private void assertEquals(E cachedEntity, E entity) {
+        assert(cachedEntity.getKey().equals(entity.getKey()));
+        assert(cachedEntity.getId().equals(entity.getId()));
+        assert(cachedEntity.toString().equals(entity.toString()));
+        assert(cachedEntity.hashCode() == entity.hashCode());
+        assert(cachedEntity.compareTo(entity) == 0);
+        if (entity instanceof Labelled) {
+            assertEquals((Labelled) cachedEntity, (Labelled) entity);
+        }
+        if (entity instanceof Enabled) {
+            assertEquals((Enabled) cachedEntity, (Enabled) entity);
+        }
+    }
+
+    private void assertEquals(Enabled cachedEntity, Enabled entity) {
+        assert(cachedEntity.isEnabled() == entity.isEnabled());
+    }
+    
+    private void assertEquals(Labelled cachedEntity, Labelled entity) {
+        assert(cachedEntity.getLabel().equals(entity.getLabel()));
+    }    
 }

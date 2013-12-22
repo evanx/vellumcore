@@ -43,6 +43,13 @@ public class ArgFormats {
         this.displayable = displayable;
         this.delimiter = delimiter;
     }
+
+    public String formatThrowable(Throwable arg) {
+        if (!Strings.isEmpty(arg.getMessage())) {
+            return arg.getMessage();
+        }
+        return arg.getClass().getSimpleName();
+    }
     
     public String format(Object arg) {
         if (arg == null) {
@@ -50,6 +57,8 @@ public class ArgFormats {
             return "null";
         } else if (arg instanceof Class) {
             return ((Class) arg).getSimpleName();
+        } else if (arg instanceof Throwable) {
+            return formatThrowable((Throwable) arg);
         } else if (arg instanceof Date) {
             return CalendarFormats.timestampFormat.format((Date) arg);
         } else if (Strings.isEmpty(arg.toString())) {

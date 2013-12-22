@@ -39,14 +39,18 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
     private final Map<Long, E> idMap = new TreeMap();
     private final Queue<E> evictQueue = new LinkedList();
     int capacity;
-    EntityMatcher matcher;
+    EntityMatcher<E> matcher;
     long seq = 1;
     
-    public CachingEntityService(int capacity, EntityMatcher matcher) {
+    public CachingEntityService(int capacity, EntityMatcher<E> matcher) {
         this.capacity = capacity;
         this.matcher = matcher;
     }
 
+    public EntityMatcher<E> getMatcher() {
+        return matcher;
+    }
+    
     public synchronized void clear() {
         keyMap.clear();
         idMap.clear();

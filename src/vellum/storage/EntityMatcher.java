@@ -29,4 +29,7 @@ import java.util.Collection;
 public interface EntityMatcher<E> {
     
     public Collection<E> matches(Collection<E> entities, Comparable key) throws StorageException;
+    public boolean matches(Comparable key, E entity);
+    public Collection<Comparable> getKeys(E entity);
+    
 }

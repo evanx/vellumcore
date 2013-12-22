@@ -38,7 +38,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     private static final Logger logger = LoggerFactory.getLogger(DelegatingEntityService.class);
     final CachingEntityService<E> cache;
     final EntityService<E> delegate;
-            
+
     public DelegatingEntityService(CachingEntityService<E> cache, EntityService<E> delegate) {
         this.cache = cache;
         this.delegate = delegate;
@@ -46,12 +46,12 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
 
     @Override
     public void persist(E entity) throws StorageException {
-        assert(entity.getId() == null);
-        synchronized(cache) {
-            assert(!cache.retrievable(entity.getKey()));
+        assert (entity.getId() == null);
+        synchronized (cache) {
+            assert (!cache.retrievable(entity.getKey()));
             delegate.persist(entity);
             cache.put(entity);
-            assert(cache.contains(entity));
+            assert (cache.contains(entity));
         }
     }
 
@@ -64,7 +64,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     @Override
     public boolean retrievable(Comparable key) throws StorageException {
         if (cache.retrievable(key)) {
-            assert(delegate.retrievable(key));
+            assert (delegate.retrievable(key));
             return true;
         }
         return delegate.retrievable(key);
@@ -80,7 +80,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     public E find(Comparable key) throws StorageException {
         E entity = cache.find(key);
         if (entity != null) {
-            assert(delegate.find(key) != null);
+            assert (delegate.find(key) != null);
             return entity;
         }
         entity = delegate.find(key);
@@ -91,7 +91,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     }
 
     @Override
-    public E retrieve(Comparable key) throws StorageException {        
+    public E retrieve(Comparable key) throws StorageException {
         E entity = find(key);
         if (entity == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);
@@ -119,29 +119,32 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
             }
         }
         Collection<E> cachedList = cache.list(key);
-        assert(list.size() == cachedList.size());
+        assert (list.size() == cachedList.size());
         return list;
     }
-    
+
     private void assertEquals(E cachedEntity, E entity) {
-        assert(cachedEntity.getKey().equals(entity.getKey()));
-        assert(cachedEntity.getId().equals(entity.getId()));
-        assert(cachedEntity.toString().equals(entity.toString()));
-        assert(cachedEntity.hashCode() == entity.hashCode());
-        assert(cachedEntity.compareTo(entity) == 0);
+        assert (cachedEntity.getKey().equals(entity.getKey()));
+        assert (cachedEntity.getId().equals(entity.getId()));
+        assert (cachedEntity.toString().equals(entity.toString()));
+        assert (cachedEntity.hashCode() == entity.hashCode());
+        assert (cachedEntity.compareTo(entity) == 0);
         if (entity instanceof Labelled) {
             assertEquals((Labelled) cachedEntity, (Labelled) entity);
         }
         if (entity instanceof Enabled) {
             assertEquals((Enabled) cachedEntity, (Enabled) entity);
         }
+        for (Comparable key : cache.getMatcher().getKeys(cachedEntity)) {
+            assert (cache.getMatcher().matches(key, entity));
+        }
     }
 
     private void assertEquals(Enabled cachedEntity, Enabled entity) {
-        assert(cachedEntity.isEnabled() == entity.isEnabled());
+        assert (cachedEntity.isEnabled() == entity.isEnabled());
     }
-    
+
     private void assertEquals(Labelled cachedEntity, Labelled entity) {
-        assert(cachedEntity.getLabel().equals(entity.getLabel()));
-    }    
+        assert (cachedEntity.getLabel().equals(entity.getLabel()));
+    }
 }

@@ -43,29 +43,29 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     }
 
     @Override
-    public void add(E entity) throws StorageException {
+    public void persist(E entity) throws StorageException {
         assert(entity.getId() == null);
         synchronized(cache) {
-            assert(!cache.containsKey(entity.getKey()));
-            delegate.add(entity);
+            assert(!cache.retrievable(entity.getKey()));
+            delegate.persist(entity);
             cache.put(entity);
             assert(cache.contains(entity));
         }
     }
 
     @Override
-    public void replace(E entity) throws StorageException {
-        delegate.replace(entity);
+    public void update(E entity) throws StorageException {
+        delegate.update(entity);
         cache.put(entity);
     }
 
     @Override
-    public boolean containsKey(Comparable key) throws StorageException {
-        if (cache.containsKey(key)) {
-            assert(delegate.containsKey(key));
+    public boolean retrievable(Comparable key) throws StorageException {
+        if (cache.retrievable(key)) {
+            assert(delegate.retrievable(key));
             return true;
         }
-        return delegate.containsKey(key);
+        return delegate.retrievable(key);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
         }
         entity = delegate.find(key);
         if (entity != null) {
-            cache.add(entity);
+            cache.persist(entity);
         }
         return entity;
     }

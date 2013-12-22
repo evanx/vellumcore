@@ -38,7 +38,7 @@ public abstract class AbstractMapEntityService<E extends AbstractEntity> impleme
     private long idSequence = 1;
     
     @Override
-    public void add(E entity) throws StorageException {
+    public void persist(E entity) throws StorageException {
         logger.info("insert {} {}", entity.getKey(), !keyMap.containsKey(entity.getKey()));
         if (keyMap.put(entity.getKey(), entity) != null) {
             throw new StorageException(StorageExceptionType.ALREADY_EXISTS, entity.getKey());
@@ -53,7 +53,7 @@ public abstract class AbstractMapEntityService<E extends AbstractEntity> impleme
     }
 
     @Override
-    public void replace(E entity) throws StorageException {
+    public void update(E entity) throws StorageException {
         logger.info("update {} {}", entity.getKey(), keyMap.containsKey(entity.getKey()));
         if (keyMap.put(entity.getKey(), entity) == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, entity.getKey());            
@@ -61,7 +61,7 @@ public abstract class AbstractMapEntityService<E extends AbstractEntity> impleme
     }
 
     @Override
-    public boolean containsKey(Comparable key) throws StorageException {
+    public boolean retrievable(Comparable key) throws StorageException {
         logger.debug("containsKey {}", key, keyMap.containsKey(key));
         return keyMap.containsKey(key);
     }

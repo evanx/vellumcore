@@ -25,5 +25,8 @@ package vellum.validation;
  * @author evan.summers
  */
 public enum ValidationExceptionType {
-    INVALID_URL
+    INVALID_DOMAIN,
+    INVALID_URL,
+    INVALID_EMAIL
+    
 }

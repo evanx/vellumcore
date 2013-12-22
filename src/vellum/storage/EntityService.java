@@ -28,18 +28,18 @@ import java.util.Collection;
  */
 public interface EntityService<E extends AbstractEntity> {
     
-    public void add(E entity) throws StorageException;
+    public void persist(E entity) throws StorageException;
     
-    public void replace(E entity) throws StorageException;
+    public void update(E entity) throws StorageException;
 
-    public boolean containsKey(Comparable key) throws StorageException ;
-    
     public void remove(Comparable key) throws StorageException;
 
     public E find(Comparable key) throws StorageException ;
     
     public E retrieve(Comparable key) throws StorageException;
-
+    
+    public boolean retrievable(Comparable key) throws StorageException ;
+    
     public Collection<E> list(Comparable key) throws StorageException ;
     
     public Collection<E> list() throws StorageException ;

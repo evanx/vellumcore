@@ -82,20 +82,20 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
     }
 
     @Override
-    public synchronized void add(E entity) throws StorageException {
+    public synchronized void persist(E entity) throws StorageException {
         assert(entity.getId() == null);
         entity.setId(seq++);
         put(entity);
     }
 
     @Override
-    public synchronized void replace(E entity) throws StorageException {
+    public synchronized void update(E entity) throws StorageException {
         assert(entity.getId() != null);
         put(entity);
     }
 
     @Override
-    public synchronized boolean containsKey(Comparable key) throws StorageException {
+    public synchronized boolean retrievable(Comparable key) throws StorageException {
         if (key instanceof Long) {
             return idMap.containsKey((Long) key);
         }

@@ -38,31 +38,32 @@ import vellum.util.Streams;
 public class WebHttpHandler implements HttpHandler {
 
     Logger logger = LoggerFactory.getLogger(WebHttpHandler.class);
+    Map<String, String> mimeTypes = new HashMap();
     Map<String, byte[]> cache = new HashMap();
     String webPath;
     
     public WebHttpHandler(String webPath) {
         this.webPath = webPath;
+        mimeTypes.put("txt", "text/plain");
+        mimeTypes.put("html", "text/html");
+        mimeTypes.put("png", "image/png");
+        mimeTypes.put("css", "text/css");
+        mimeTypes.put("js", "text/javascript");
+        mimeTypes.put("sh", "text/x-shellscript");
+        mimeTypes.put("woff", "application/font-woff");
+        mimeTypes.put("pem", "application/x-pem-file");
     }
     
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String path = httpExchange.getRequestURI().getPath();
-        String contentType = "text/html";
-        if (httpExchange.getRequestURI().getPath().endsWith(".html")) {
-        } else if (httpExchange.getRequestURI().getPath().endsWith(".png")) {
-            contentType = "image/png";
-        } else if (httpExchange.getRequestURI().getPath().endsWith(".css")) {
-            contentType = "text/css";
-        } else if (httpExchange.getRequestURI().getPath().endsWith(".js")) {
-            contentType = "text/javascript";
-        } else if (httpExchange.getRequestURI().getPath().endsWith(".sh")) {
-            contentType = "text/x-shellscript";
-        } else if (httpExchange.getRequestURI().getPath().endsWith(".txt")) {
-            contentType = "text/plain";
-        } else if (path.endsWith(".woff")) {
-            contentType = "application/font-woff";
-        } else {
+        String contentType = null;
+        int index = path.lastIndexOf(".");
+        if (index > 0) {
+            contentType = mimeTypes.get(path.substring(index + 1));
+        }
+        if (contentType == null) {
+            contentType = "text/html";
             path = "app.html";
         }
         try {

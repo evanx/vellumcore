@@ -28,16 +28,16 @@ import vellum.util.Args;
  */
 public class StorageException extends Exception {
     StorageExceptionType exceptionType;
-    Comparable key;
+    Object[] parameters;
             
     public StorageException(StorageExceptionType exceptionType) {
         super(exceptionType.name());
         this.exceptionType = exceptionType;
     }
     
-    public StorageException(StorageExceptionType exceptionType, Comparable key) {
+    public StorageException(StorageExceptionType exceptionType, Object... parameters) {
         this(exceptionType);
-        this.key = key;
+        this.parameters = parameters;
     }
 
     public StorageException(Exception cause, StorageExceptionType exceptionType) {
@@ -45,21 +45,17 @@ public class StorageException extends Exception {
         this.exceptionType = exceptionType;
     }
     
-    public StorageException(Exception cause, StorageExceptionType exceptionType, Comparable key) {
+    public StorageException(Exception cause, StorageExceptionType exceptionType, Object... parameters) {
         this(cause, exceptionType);
-        this.key = key;
+        this.parameters = parameters;
     }
 
     @Override
     public String getMessage() {
-        return Args.format(exceptionType, key, getCause());
+        return Args.format(exceptionType, getCause(), Args.format(parameters));
     }
         
     public StorageExceptionType getExceptionType() {
         return exceptionType;
     }
-
-    public Comparable getKey() {
-        return key;
-    }                
 }

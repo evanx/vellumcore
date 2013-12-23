@@ -80,12 +80,12 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     public E find(Comparable key) throws StorageException {
         E entity = cache.find(key);
         if (entity != null) {
-            assert (delegate.find(key) != null);
+            assert delegate.find(key) != null;
             return entity;
         }
         entity = delegate.find(key);
         if (entity != null) {
-            cache.persist(entity);
+            cache.put(entity);
         }
         return entity;
     }
@@ -106,20 +106,26 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
 
     @Override
     public Collection<E> list(Comparable key) throws StorageException {
-        Set<E> set = new HashSet(delegate.list(key));
+        Collection<E> entities = delegate.list(key);
         LinkedList list = new LinkedList();
-        for (E entity : set) {
-            E cachedEntity = cache.findId(entity.getId());
-            if (cachedEntity != null) {
-                assertEquals(cachedEntity, entity);
-                list.add(cachedEntity);
-            } else {
-                cache.put(entity);
-                list.add(entity);
+        synchronized (cache) {
+            for (E entity : entities) {
+                E cachedEntity = cache.findId(entity.getId());
+                if (cachedEntity != null) {
+                    assertEquals(cachedEntity, entity);
+                    list.add(cachedEntity);
+                    logger.trace("cached {}", entity);
+                } else {
+                    cache.put(entity);
+                    list.add(entity);
+                }
+            }
+            Collection<E> cachedList = cache.list(key);
+            if (entities.size() != cachedList.size()) {
+                logger.warn("list assertion {} {}", entities.size(), key);
+                new Throwable().printStackTrace(System.err);
             }
         }
-        Collection<E> cachedList = cache.list(key);
-        assert (list.size() == cachedList.size());
         return list;
     }
 

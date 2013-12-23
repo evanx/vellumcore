@@ -27,7 +27,7 @@ package vellum.storage;
 public enum StorageExceptionType {
     INVALID_KEY,
     ALREADY_EXISTS,
-    NOT_INSERTED,
+    NOT_PERSISTED,
     NOT_UPDATED,
     MULTIPLE_UPDATE,
     NOT_DELETED,

@@ -78,12 +78,12 @@ public class Comparables {
         return compareTo(comparable, other) == 0;
     }
 
+    public static ComparableTuple tuple(Comparable ... values) {
+        return new ComparableTuple(values);        
+    }
+    
     public static String toString(String comparable) {
         if (comparable == null) return "null";
         return comparable.toString();
-    }
-
-    public static ComparableTuple tuple(Comparable ... values) {
-        return new ComparableTuple(values);        
     }
 }

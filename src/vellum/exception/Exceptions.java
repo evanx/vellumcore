@@ -42,7 +42,7 @@ public class Exceptions {
         return new ArgsRuntimeException(args);
     }
 
-    public static String printStackTrace(Exception exception) {
+    public static String printStackTrace(Throwable exception) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         try {

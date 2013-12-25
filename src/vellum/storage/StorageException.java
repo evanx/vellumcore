@@ -29,7 +29,7 @@ import vellum.util.Args;
 public class StorageException extends Exception {
     StorageExceptionType exceptionType;
     Object[] parameters;
-            
+    
     public StorageException(StorageExceptionType exceptionType) {
         super(exceptionType.name());
         this.exceptionType = exceptionType;

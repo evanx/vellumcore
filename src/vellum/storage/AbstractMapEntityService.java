@@ -30,33 +30,28 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public abstract class AbstractMapEntityService<E extends AbstractEntity> implements EntityService<E> {
+public abstract class AbstractMapEntityService<E extends VellumEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractMapEntityService.class);
     protected final Map<Comparable, E> keyMap = new TreeMap();
-    private final Map<Long, E> idMap = new TreeMap();
     private long idSequence = 1;
     
     @Override
     public void persist(E entity) throws StorageException {
-        logger.info("insert {} {}", entity.getKey(), !keyMap.containsKey(entity.getKey()));
-        if (keyMap.put(entity.getKey(), entity) != null) {
-            throw new StorageException(StorageExceptionType.ALREADY_EXISTS, entity.getKey());
-        }
-        if (entity instanceof AbstractIdEntity) {
-            AbstractIdEntity idEntity = (AbstractIdEntity) entity;
+        logger.info("insert {} {}", entity.getId(), !keyMap.containsKey(entity.getId()));
+        if (entity instanceof AutoIdEntity) {
+            AutoIdEntity idEntity = (AutoIdEntity) entity;
             idEntity.setId(idSequence++);
-            if (idMap.put(idEntity.getId(), entity) != null) {
-                throw new StorageException(StorageExceptionType.ALREADY_EXISTS, idEntity.getId());
-            }
+        }
+        if (keyMap.put(entity.getId(), entity) != null) {
+            throw new StorageException(StorageExceptionType.ALREADY_EXISTS, entity.getId());
         }
     }
 
     @Override
     public void update(E entity) throws StorageException {
-        logger.info("update {} {}", entity.getKey(), keyMap.containsKey(entity.getKey()));
-        if (keyMap.put(entity.getKey(), entity) == null) {
-            throw new StorageException(StorageExceptionType.NOT_FOUND, entity.getKey());            
+        if (keyMap.put(entity.getId(), entity) == null) {
+            throw new StorageException(StorageExceptionType.NOT_FOUND, entity.getId());
         }
     }
 
@@ -82,9 +77,6 @@ public abstract class AbstractMapEntityService<E extends AbstractEntity> impleme
 
     @Override
     public E retrieve(Comparable key) throws StorageException {
-        if (key instanceof Long) {
-            return findId((Long) key);
-        }
         E entity = find(key);
         if (entity == null) {
             throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
@@ -92,14 +84,6 @@ public abstract class AbstractMapEntityService<E extends AbstractEntity> impleme
         return entity;
     }
 
-    public E findId(Long id) throws StorageException {
-        E entity = idMap.get(id);
-        if (entity == null) {
-            throw new StorageException(StorageExceptionType.NOT_FOUND, id);           
-        }
-        return entity;
-    }
-    
     @Override
     public Collection<E> list() throws StorageException {
         return keyMap.values();

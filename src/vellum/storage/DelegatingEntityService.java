@@ -31,7 +31,7 @@ import vellum.type.Labelled;
  *
  * @author evan.summers
  */
-public class DelegatingEntityService<E extends AbstractIdEntity> implements EntityService<E> {
+public class DelegatingEntityService<E extends AutoIdEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(DelegatingEntityService.class);
     final CachingEntityService<E> cache;
@@ -46,7 +46,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     public void persist(E entity) throws StorageException {
         assert (entity.getId() == null);
         synchronized (cache) {
-            assert (!cache.retrievable(entity.getKey()));
+            assert (!cache.retrievable(entity.getId()));
             delegate.persist(entity);
             cache.put(entity);
             assert (cache.contains(entity));
@@ -108,7 +108,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
         LinkedList list = new LinkedList();
         synchronized (cache) {
             for (E entity : entities) {
-                E cachedEntity = cache.findId(entity.getId());
+                E cachedEntity = cache.find(entity.getId());
                 if (cachedEntity != null) {
                     assertEquals(cachedEntity, entity);
                     list.add(cachedEntity);
@@ -128,7 +128,7 @@ public class DelegatingEntityService<E extends AbstractIdEntity> implements Enti
     }
 
     private void assertEquals(E cachedEntity, E entity) {
-        assert (cachedEntity.getKey().equals(entity.getKey()));
+        assert (cachedEntity.getId().equals(entity.getId()));
         assert (cachedEntity.getId().equals(entity.getId()));
         assert (cachedEntity.toString().equals(entity.toString()));
         assert (cachedEntity.hashCode() == entity.hashCode());

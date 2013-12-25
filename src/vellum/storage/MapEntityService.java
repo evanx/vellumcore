@@ -26,7 +26,7 @@ import java.util.Collection;
  *
  * @author evan.summers
  */
-public class MapEntityService<E extends AbstractEntity> extends AbstractMapEntityService<E> {
+public class MapEntityService<E extends VellumEntity> extends AbstractMapEntityService<E> {
     EntityMatcher<E> matcher;
     
     public MapEntityService(EntityMatcher matcher) {

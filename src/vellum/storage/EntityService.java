@@ -26,7 +26,7 @@ import java.util.Collection;
  * 
  * @author evan.summers
  */
-public interface EntityService<E extends AbstractEntity> {
+public interface EntityService<E extends VellumEntity> {
     
     public void persist(E entity) throws StorageException;
     

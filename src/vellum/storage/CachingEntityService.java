@@ -32,11 +32,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public class CachingEntityService<E extends AbstractIdEntity> implements EntityService<E> {
+public class CachingEntityService<E extends VellumEntity> implements EntityService<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(CachingEntityService.class);
     protected final Map<Comparable, E> keyMap = new TreeMap();
-    private final Map<Long, E> idMap = new TreeMap();
     private final Queue<E> evictQueue = new LinkedList();
     int capacity;
     EntityMatcher<E> matcher;
@@ -53,13 +52,11 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
     
     public synchronized void clear() {
         keyMap.clear();
-        idMap.clear();
         evictQueue.clear();                
     }
 
     public synchronized void put(E entity) {
-        idMap.put(entity.getId(), entity);
-        keyMap.put(entity.getKey(), entity);
+        keyMap.put(entity.getId(), entity);
         evict();
     }
 
@@ -80,35 +77,29 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
     }
     
     private void remove(E entity) {
-        assert(entity.getId() != null);
-        idMap.remove(entity.getId());
-        keyMap.remove(entity.getKey());
+        keyMap.remove(entity.getId());
     }
 
     @Override
     public synchronized void persist(E entity) throws StorageException {
-        assert(entity.getId() == null);
-        entity.setId(seq++);
+        if (entity instanceof AutoIdEntity) {
+            ((AutoIdEntity) entity).setId(seq++);
+        }
         put(entity);
     }
 
     @Override
     public synchronized void update(E entity) throws StorageException {
-        assert(entity.getId() != null);
         put(entity);
     }
 
     @Override
     public synchronized boolean retrievable(Comparable key) throws StorageException {
-        if (key instanceof Long) {
-            return idMap.containsKey((Long) key);
-        }
         return keyMap.containsKey(key);
     }
 
     public synchronized boolean contains(E entity) throws StorageException {
-        assert(idMap.containsKey(entity.getId()) == keyMap.containsKey(entity.getKey()));
-        return idMap.containsKey(entity.getId());
+        return keyMap.containsKey(entity.getId());
     }
 
     
@@ -119,16 +110,9 @@ public class CachingEntityService<E extends AbstractIdEntity> implements EntityS
 
     @Override
     public synchronized E find(Comparable key) throws StorageException {
-        if (key instanceof Long) {
-            return idMap.get((Long) key);
-        }
         return keyMap.get(key);
     }
 
-    public synchronized E findId(Long id) throws StorageException {
-        return idMap.get(id);
-    }
-    
     @Override
     public synchronized E retrieve(Comparable key) throws StorageException {
         E entity = find(key);

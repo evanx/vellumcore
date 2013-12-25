@@ -26,35 +26,38 @@ import vellum.util.Comparables;
  *
  * @author evan.summers
  */
-public abstract class AbstractIdEntity extends AbstractEntity {
+public abstract class VellumEntity implements Comparable<VellumEntity> {
 
-    public abstract Long getId();
-    public abstract void setId(Long id);
-    
-    @Override
-    public int hashCode() {
-        if (getId() != null) {
-            return getId().hashCode();
-        }
-        return super.hashCode();
-    }
-    
-    @Override
-    public int compareTo(AbstractEntity o) {
-        if (o instanceof AbstractIdEntity) {
-            AbstractIdEntity other = (AbstractIdEntity) o;
-            return Comparables.compareTo(getId(), other.getId());
-        }
-        return super.compareTo(o);
-    }
+    public abstract Comparable getId();
 
     @Override
-    public boolean equals(Object object) {
-        if (object instanceof AbstractIdEntity) {
-            AbstractIdEntity other = (AbstractIdEntity) object;
+    public boolean equals(Object obj) {
+        if (obj instanceof VellumEntity) {
+            VellumEntity other = (VellumEntity) obj;
             return Comparables.equals(getId(), other.getId());
         }
         return false;
     }
-    
+
+    @Override
+    public int hashCode() {
+        if (getId() == null) {
+            return super.hashCode();
+        }
+        return getId().hashCode();
+    }
+
+    @Override
+    public int compareTo(VellumEntity o) {
+        return Comparables.compareTo(getId(), o.getId());
+    }
+
+    @Override
+    public String toString() {
+        if (getId() == null) {
+            return getClass().getSimpleName();
+        }
+        return getId().toString();
+    }
+
 }

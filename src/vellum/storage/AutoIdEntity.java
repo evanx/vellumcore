@@ -20,44 +20,12 @@
  */
 package vellum.storage;
 
-import vellum.util.Comparables;
-
 /**
  *
  * @author evan.summers
  */
-public abstract class AbstractEntity implements Comparable<AbstractEntity> {
+public abstract class AutoIdEntity extends VellumEntity {
 
-    public abstract Comparable getKey();
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof AbstractEntity) {
-            AbstractEntity other = (AbstractEntity) obj;
-            return Comparables.equals(getKey(), other.getKey());
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        if (getKey() == null) {
-            return super.hashCode();
-        }
-        return getKey().hashCode();
-    }
-
-    @Override
-    public int compareTo(AbstractEntity o) {
-        return Comparables.compareTo(getKey(), o.getKey());
-    }
-
-    @Override
-    public String toString() {
-        if (getKey() == null) {
-            return getClass().getSimpleName();
-        }
-        return getKey().toString();
-    }
-
+    public abstract void setId(Long id);
+    
 }

@@ -11,12 +11,15 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class JMaps {
+    final static Logger logger = LoggerFactory.getLogger(JMaps.class);
     
     public static Object parse(JsonElement element) {
         if (element.isJsonArray()) {
@@ -68,6 +71,12 @@ public class JMaps {
         return map;
     }
 
+    public static JMap map(String key, Iterable<? extends JMapped> iterable) {
+        JMap map = new JMap();
+        map.add(key, list(iterable));
+        return map;
+    }
+        
     public static JEntry entryValue(String key, Object value) {
         return new JEntry(key, value);
     }    
@@ -76,17 +85,12 @@ public class JMaps {
         return entryValue(key, list(iterable));
     }
     
-    public static JMap map(String key, Iterable<? extends JMapped> iterable) {
-        JMap map = new JMap();
-        map.add(key, list(iterable));
-        return map;
-    }
-    
     public static Collection<JMap> list(Iterable<? extends JMapped> iterable) {
         List<JMap> list = new LinkedList();
         for (JMapped mapped : iterable) {
             list.add(mapped.getMap());
         }
+        logger.info("list mapped {}", list.size());
         return list;
     }
 }

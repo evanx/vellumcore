@@ -20,16 +20,16 @@
  */
 package vellum.util;
 
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class Threads {
-    public static Logr logger = LogrFactory.getLogger(Threads.class);
+    public static Logger logger = LoggerFactory.getLogger(Threads.class);
 
     public static void sleep(long duration, TimeUnit timeUnit) {
         sleep(timeUnit.toMillis(duration));
@@ -39,7 +39,7 @@ public class Threads {
         try {
             Thread.sleep(millis);
         } catch (Exception e) {
-            logger.warn(e, null);
+            logger.warn("sleep", e);
         }
     }
     

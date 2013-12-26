@@ -18,23 +18,46 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package vellum.storage;
+package vellum.entity;
 
-import java.util.Collection;
+import vellum.util.Comparables;
 
 /**
  *
  * @author evan.summers
  */
-public class MapEntityService<E extends VellumEntity> extends AbstractMapEntityService<E> {
-    EntityMatcher<E> matcher;
-    
-    public MapEntityService(EntityMatcher matcher) {
-        this.matcher = matcher;
+public abstract class ComparableEntity implements Comparable<ComparableEntity> {
+
+    public abstract Comparable getId();
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ComparableEntity) {
+            ComparableEntity other = (ComparableEntity) obj;
+            return Comparables.equals(getId(), other.getId());
+        }
+        return false;
     }
 
     @Override
-    public Collection<E> list(Comparable key) throws StorageException {
-        return matcher.matches(list(), key);
+    public int hashCode() {
+        if (getId() == null) {
+            return super.hashCode();
+        }
+        return getId().hashCode();
     }
+
+    @Override
+    public int compareTo(ComparableEntity o) {
+        return Comparables.compareTo(getId(), o.getId());
+    }
+
+    @Override
+    public String toString() {
+        if (getId() == null) {
+            return getClass().getSimpleName();
+        }
+        return getId().toString();
+    }
+
 }

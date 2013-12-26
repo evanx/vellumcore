@@ -30,16 +30,16 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.data.Millis;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class PasswordHash {
-    private static Logr logger = LogrFactory.getLogger(PasswordHash.class);
+    private static Logger logger = LoggerFactory.getLogger(PasswordHash.class);
     private static final int VERSION_OBJECT_STREAM = 120;
     private static final int VERSION = VERSION_OBJECT_STREAM;
     int iterationCount;

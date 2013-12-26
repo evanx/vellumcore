@@ -24,8 +24,8 @@ import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import java.net.InetSocketAddress;
 import javax.net.ssl.*;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -34,7 +34,7 @@ import vellum.logr.LogrFactory;
  */
 public class HttpsConfiguratorFactory {
 
-    static Logr logger = LogrFactory.getLogger(HttpsConfiguratorFactory.class);
+    static Logger logger = LoggerFactory.getLogger(HttpsConfiguratorFactory.class);
 
     public static HttpsConfigurator createHttpsConfigurator(
             SSLContext sslContext, final boolean needClientAuth) throws Exception {

@@ -25,8 +25,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Map.Entry;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.parameter.StringMap;
 
 /**
@@ -34,7 +34,7 @@ import vellum.parameter.StringMap;
  * @author evan.summers
  */
 public class JsonStrings {
-    static Logr logger = LogrFactory.getLogger(JsonStrings.class);
+    static Logger logger = LoggerFactory.getLogger(JsonStrings.class);
 
     public static String get(String json, String key) {
         return getAsJsonObject(json).get(key).getAsString();

@@ -21,16 +21,16 @@
 package vellum.system;
 
 import java.net.InetAddress;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class Systems {
-    public static Logr logger = LogrFactory.getLogger(Systems.class);
+    public static Logger logger = LoggerFactory.getLogger(Systems.class);
 
     public static final String osName = System.getProperty("os.name");
     public static final String userDir = System.getProperty("user.dir");
@@ -48,7 +48,7 @@ public class Systems {
         try {
             Thread.sleep(millis);
         } catch (Exception e) {
-            logger.warn(e, null);
+            logger.warn("sleep", e);
         }
     }
    

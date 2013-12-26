@@ -23,15 +23,14 @@ package vellum.io;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.Socket;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellum.logging.ArgsLogger;
 
 /**
  *
  * @author evan.summers
  */
 public class JsonSockets {
-    static Logr logger = LogrFactory.getThreadLogger(JsonSockets.class);
+    static ArgsLogger logger = ArgsLogger.getLogger(JsonSockets.class);
     public static final String CHARSET = "UTF8";
      
     public static void write(Socket socket, Object message) throws IOException {

@@ -27,14 +27,14 @@ import org.apache.log4j.Logger;
  *
  * @author evan.summers
  */
-public class ArrayLogger {
+public class ArgsLogger {
     private Logger logger;
 
-    public static ArrayLogger getLogger(Class source) {
-        return new ArrayLogger(Logger.getLogger(source));
+    public static ArgsLogger getLogger(Class source) {
+        return new ArgsLogger(Logger.getLogger(source));
     }
     
-    private ArrayLogger(Logger logger) {
+    private ArgsLogger(Logger logger) {
         this.logger = logger;
     }
             

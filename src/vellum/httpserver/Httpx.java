@@ -20,6 +20,7 @@
  */
 package vellum.httpserver;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
@@ -28,7 +29,6 @@ import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.net.ssl.SSLPeerUnverifiedException;
@@ -45,7 +45,6 @@ import vellum.parameter.Entry;
 import vellum.parameter.StringMap;
 import vellum.parameter.Parameters;
 import vellum.storage.StorageException;
-import vellum.util.JsonStrings;
 import vellum.util.Lists;
 import vellum.util.Streams;
 import vellum.util.Strings;
@@ -325,7 +324,7 @@ public class Httpx {
 
     public void sendResponse(StringMap map) throws IOException {
         sendResponse("text/json", true);
-        getPrintStream().println(JsonStrings.buildJson(map));
+        getPrintStream().println(new Gson().toJson(map));
     }
 
     public void sendResponse(JMap map) throws IOException {

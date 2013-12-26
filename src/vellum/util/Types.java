@@ -79,7 +79,7 @@ public class Types {
     public static <T> T newInstance(Class<T> type) {
         try {
             return (T) type.newInstance();
-        } catch (Exception e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             throw new IllegalArgumentException(type.getName(), e);
         }
     }

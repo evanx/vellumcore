@@ -195,8 +195,7 @@ public class Streams {
     }
 
     public static void process(LineProcessor processor, InputStream stream) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             while (true) {
                 String line = reader.readLine();
                 if (line == null) {
@@ -204,8 +203,6 @@ public class Streams {
                 }
                 processor.processLine(line);
             }
-        } finally {
-            reader.close();
         }
     }
 

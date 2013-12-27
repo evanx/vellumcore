@@ -117,7 +117,7 @@ public class SSLContexts {
                 trustManagerFactory.getTrustManagers(), new SecureRandom());
         return sslContext;
     }
-
+    
     public static SSLContext create(ExtendedProperties properties, 
             X509TrustManager trustManager) throws GeneralSecurityException, IOException {
         char[] pass = properties.getPassword("pass");
@@ -125,6 +125,12 @@ public class SSLContexts {
                 properties.getString("keyStoreLocation"), pass);
         return create(keyStore, pass, trustManager);
     }
+
+    public static SSLContext create(String keyStoreLocation, char[] pass, X509TrustManager trustManager) 
+             throws GeneralSecurityException, IOException {
+        KeyStore keyStore = KeyStores.loadKeyStore("JKS", keyStoreLocation, pass);
+        return create(keyStore, pass, new X509TrustManager[] {trustManager});
+    }    
     
     public static SSLContext create(KeyStore keyStore, char[] keyPass,
             X509TrustManager trustManager) throws GeneralSecurityException {

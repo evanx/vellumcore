@@ -46,13 +46,13 @@ public class OpenTrustManager implements X509TrustManager {
     public void checkClientTrusted(X509Certificate[] certs, String authType) 
         throws CertificateException {
         String dname = certs[0].getSubjectDN().getName();
-        logger.info("checkClientTrusted {}", dname);
+        logger.debug("checkClientTrusted {}", dname);
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] certs, String authType) 
         throws CertificateException {
         String dname = certs[0].getSubjectDN().getName();
-        logger.info("checkServerTrusted {}", dname);
+        logger.debug("checkServerTrusted {}", dname);
     }
 }

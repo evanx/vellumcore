@@ -43,12 +43,16 @@ public class JMap extends HashMap<String, Object> {
         return (JMap) super.get(key);
     }
 
-    public String getString(String key) throws JMapException {
+    public Object getObject(String key) throws JMapException {
         Object value = super.get(key);
         if (value == null) {
             throw new JMapException(key);
         }
-        return value.toString();
+        return value;
+    }
+    
+    public String getString(String key) throws JMapException {
+        return getObject(key).toString();
     }
 
     public boolean isEmpty(String... keys) {
@@ -80,22 +84,22 @@ public class JMap extends HashMap<String, Object> {
         return Convertors.coerceInt(super.get(key), defaultValue);
     }
 
+    public int getInt(String key) throws JMapException {
+        return Convertors.coerceInt(super.get(key));
+    }
+    
+    public long getLong(String key) throws JMapException {
+        return Convertors.coerceLong(getObject(key).toString());
+    }
+    
     public long getLong(String key, long defaultValue) {
         return Convertors.coerceLong(super.get(key), defaultValue);
     }
 
-    public long getLong(String key) throws JMapException {
-        Object value = super.get(key);
-        if (value == null) {
-            throw new JMapException(key);
-        }
-        return Long.parseLong(value.toString());
+    public Integer getInteger(String key) throws JMapException {
+        return Convertors.coerceInt(getObject(key));
     }
-
-    public Integer getInteger(String key) {
-        return Convertors.coerceInteger(super.get(key), null);
-    }
-
+    
     public Integer getInteger(String key, Integer value) {
         return Convertors.coerceInteger(super.get(key), value);
     }

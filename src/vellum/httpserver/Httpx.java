@@ -282,11 +282,26 @@ public class Httpx {
         delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
 
+    public void sendPlainError(String responseString, Object... args) {
+        try {
+            responseString = String.format(responseString, args) + "\n";
+            byte[] responseBytes = responseString.getBytes();
+            delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK,
+                    responseBytes.length);
+            delegate.getResponseHeaders().set("Content-type", "text/plain");
+            delegate.getResponseBody().write(responseBytes);
+        } catch (IOException e) {
+            logger.warn("sendPlainError", e);
+        } finally {
+            delegate.close();
+        }
+    }
+    
     public void sendPlainResponse(String responseString, Object ... args) 
             throws IOException {
         responseString = String.format(responseString, args) + "\n";
         byte[] responseBytes = responseString.getBytes();
-        delegate.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR,
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK,
                 responseBytes.length);
         delegate.getResponseHeaders().set("Content-type", "text/plain");
         delegate.getResponseBody().write(responseBytes);

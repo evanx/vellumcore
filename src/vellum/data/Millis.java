@@ -64,6 +64,10 @@ public class Millis {
         return TimeUnit.DAYS.toMillis(days);
     }
 
+    public static int timestampMinutes(long timestamp) {
+        return (int) ((timestamp % Millis.fromHours(1))/Millis.fromMinutes(1));
+    }
+
     public static boolean isElapsed(long startMillis, long millis) {
         return elapsed(startMillis) > millis;
     }

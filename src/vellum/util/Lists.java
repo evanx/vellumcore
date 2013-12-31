@@ -282,7 +282,7 @@ public class Lists {
         return false;
     }
 
-    public static <T> List<T> asList(Enumeration<T> en) {
+    public static <T> List<T> list(Enumeration<T> en) {
         List list = new ArrayList();
         while (en.hasMoreElements()) {
             list.add(en.nextElement());
@@ -296,8 +296,13 @@ public class Lists {
         return list.subList(fromIndex, array.length);
     }
 
-    public static <E> SortedSet<E> asSortedSet(Enumeration<E> enumeration) {
+    public static <E> SortedSet<E> sortedSet(Enumeration<E> enumeration) {
         return new TreeSet(Collections.list(enumeration));
     }
-    
+
+    public static <E> SortedSet<E> sortedSet(Collection<E> collection, Comparator<E> comparator) {
+        SortedSet sortedSet = new TreeSet(comparator);
+        sortedSet.addAll(collection);
+        return sortedSet;
+    }
 }

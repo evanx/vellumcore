@@ -164,6 +164,7 @@ public class Streams {
         }
     }
 
+    
     public static byte[] readBytes(InputStream stream) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         while (true) {

@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import vellum.exception.ParseRuntimeException;
 
 /**
@@ -52,11 +53,13 @@ public class SafeDateFormat {
       return dateFormat.format(date);
    }
 
-   public synchronized String format(long timestamp) {
+   public synchronized String format(TimeZone timeZone, long timestamp) {
       if (timestamp == 0) {
          return "";
       }
-      return dateFormat.format(new Date(timestamp));
+      Calendar calendar = Calendar.getInstance(timeZone);
+      calendar.setTimeInMillis(timestamp);
+      return dateFormat.format(calendar);
    }
    
    public synchronized Date parse(String string){

@@ -18,6 +18,7 @@ public class CalendarFormats {
     public static final SafeDateFormat dateFormat = new SafeDateFormat("yyyy-MM-dd");
     public static final SafeDateFormat shortDateFormat = new SafeDateFormat("yyMMdd");
     public static final SafeDateFormat timestampFormat = new SafeDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+    public static final SafeDateFormat timestampZoneFormat = new SafeDateFormat("yyyy-MM-dd HH:mm:ss,SSS Z");
     public static final SafeDateFormat millisTimestampFormat = 
             new SafeDateFormat(millisTimestampPattern);
     public static final SafeDateFormat timeFormat = new SafeDateFormat("HH:mm:ss");

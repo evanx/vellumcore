@@ -56,7 +56,7 @@ public class SafeDateFormat {
       if (timestamp == 0) {
          return "";
       }
-      return dateFormat.format(new Date(time));
+      return dateFormat.format(new Date(timestamp));
    }
    
    public synchronized Date parse(String string){

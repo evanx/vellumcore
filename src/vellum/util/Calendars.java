@@ -24,6 +24,9 @@ import static java.util.Calendar.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.data.SafeDateFormat;
 
 /**
@@ -31,7 +34,8 @@ import vellum.data.SafeDateFormat;
  * @author evan.summers
  */
 public class Calendars {
-
+    static Logger logger = LoggerFactory.getLogger(Calendars.class);
+    
     public static long getIntervalMillis(Date from, Date to) {
         return Math.abs(to.getTime() - from.getTime());
     }
@@ -122,4 +126,21 @@ public class Calendars {
         Calendar timeCal = newCalendar(time);
         setTime(calendar, timeCal.get(HOUR_OF_DAY), timeCal.get(MINUTE), timeCal.get(SECOND));
     }
+    
+    public static TimeZone getTimeZone(String timeZoneId) {
+        if (timeZoneId == null) {
+            logger.warn("getTimeZone null");            
+        } else if (timeZoneId.isEmpty()) {
+            logger.warn("getTimeZone empty");            
+        } else {
+            for (String id : TimeZone.getAvailableIDs()) {
+                if (timeZoneId.equals(id)) {
+                    return TimeZone.getTimeZone(id);
+                }
+            }
+        }
+        logger.warn("getTimeZone {}", timeZoneId);
+        return TimeZone.getDefault();
+    }
+
 }

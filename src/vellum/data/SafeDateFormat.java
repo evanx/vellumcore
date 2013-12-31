@@ -59,7 +59,7 @@ public class SafeDateFormat {
       }
       Calendar calendar = Calendar.getInstance(timeZone);
       calendar.setTimeInMillis(timestamp);
-      return dateFormat.format(calendar);
+      return dateFormat.format(calendar.getTime());
    }
    
    public synchronized Date parse(String string){

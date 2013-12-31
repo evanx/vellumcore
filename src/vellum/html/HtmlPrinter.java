@@ -1,5 +1,5 @@
 /*
- * Source https://code.google.com/p/vellum by @evanxsummers 2011, iPay (Pty) Ltd
+ Source https://code.google.com/p/vellum by @evanxsummers 2011, iPay (Pty) Ltd
  */
 package vellum.html;
 

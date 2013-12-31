@@ -1,5 +1,5 @@
 /*
- * Source https://code.google.com/p/vellum by @evanxsummers
+ Source https://code.google.com/p/vellum by @evanxsummers
  * 
  */
 package vellum.type;

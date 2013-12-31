@@ -159,7 +159,7 @@ public class Streams {
                 }
                 outputStream.write(b);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw Exceptions.newRuntimeException(e);
         }
     }

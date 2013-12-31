@@ -163,7 +163,6 @@ public class Streams {
             throw Exceptions.newRuntimeException(e);
         }
     }
-
     
     public static byte[] readBytes(InputStream stream) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

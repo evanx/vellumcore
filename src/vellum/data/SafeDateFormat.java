@@ -52,6 +52,13 @@ public class SafeDateFormat {
       return dateFormat.format(date);
    }
 
+   public synchronized String format(long timestamp) {
+      if (timestamp == 0) {
+         return "";
+      }
+      return dateFormat.format(new Date(time));
+   }
+   
    public synchronized Date parse(String string){
        return parse(string, null);
        

@@ -121,9 +121,4 @@ public class Millis {
         }  
         throw new ParseRuntimeException(string);
     }
-
-    public static String formatTime(long time) {
-        if (time == 0) return "";
-        return CalendarFormats.timeFormat.format(new Date(time));
-    }
 }

@@ -64,7 +64,7 @@ public class Millis {
         return TimeUnit.DAYS.toMillis(days);
     }
 
-    public static int timestampMinutes(long timestamp) {
+    public static int timestampMinute(long timestamp) {
         return (int) ((timestamp % Millis.fromHours(1))/Millis.fromMinutes(1));
     }
 

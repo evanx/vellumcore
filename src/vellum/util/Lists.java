@@ -305,4 +305,9 @@ public class Lists {
         sortedSet.addAll(collection);
         return sortedSet;
     }
+
+    public static String[] array(Collection<String> lines) {
+        return lines.toArray(new String[lines.size()]);
+    }
+
 }

@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.crypto.genkeypair.GenKeyPair;
 
 /**
  *
@@ -116,16 +115,6 @@ public class KeyStores {
         return clientCertificateMap;
     }    
     
-    public static KeyStore createKeyStore(String type, String commonName, char[] keyPassword,
-            int validityDays, GenKeyPair keyPair) throws Exception {
-        KeyStore keyStore = KeyStore.getInstance(type);
-        keyStore.load(null, null);
-        keyPair.generate("CN=" + commonName, new Date(), validityDays, TimeUnit.DAYS);
-        X509Certificate[] chain = new X509Certificate[]{keyPair.getCertificate()};
-        keyStore.setKeyEntry(commonName, keyPair.getPrivateKey(), keyPassword, chain);
-        return keyStore;
-    }
-
     public static X509Certificate findPrivateKeyCertificate(KeyStore keyStore, 
             String keyAlias) throws KeyStoreException {
         if (!keyStore.entryInstanceOf(keyAlias, KeyStore.PrivateKeyEntry.class)) {

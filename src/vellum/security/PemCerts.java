@@ -22,13 +22,10 @@ package vellum.security;
 
 import java.security.Key;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-import sun.security.provider.X509Factory;
-import sun.security.x509.X509CertImpl;
 import vellum.exception.Exceptions;
+import vellum.util.Base64;
 
 /**
  *
@@ -48,10 +45,9 @@ public class PemCerts {
     
     public static String buildKeyPem(Key privateKey) throws Exception, CertificateException {
         StringBuilder builder = new StringBuilder();
-        BASE64Encoder encoder = new BASE64Encoder();
         builder.append(BEGIN_PRIVATE_KEY);
         builder.append('\n');
-        builder.append(encoder.encodeBuffer(privateKey.getEncoded()));
+        builder.append(Base64.encode(privateKey.getEncoded()));
         builder.append(END_PRIVATE_KEY);
         builder.append('\n');
         return builder.toString();
@@ -60,14 +56,13 @@ public class PemCerts {
     public static String buildCertPem(Certificate cert) {
         try {
             StringBuilder builder = new StringBuilder();
-            builder.append(X509Factory.BEGIN_CERT);
+            builder.append(BEGIN_CERT);
             builder.append('\n');
-            BASE64Encoder encoder = new BASE64Encoder();
-            builder.append(encoder.encodeBuffer(cert.getEncoded()));
-            builder.append(X509Factory.END_CERT);
+            builder.append(Base64.encode(cert.getEncoded()));
+            builder.append(END_CERT);
             builder.append('\n');
             return builder.toString();
-        } catch (Exception e) {
+        } catch (CertificateEncodingException e) {
             throw Exceptions.newRuntimeException(e);
         }
     }
@@ -81,10 +76,7 @@ public class PemCerts {
             index = pem.lastIndexOf(dashes);
             pem = pem.substring(index + dashes.length());
         }
-        return new BASE64Decoder().decodeBuffer(pem);
+        return Base64.decode(pem);
     }
 
-    public static X509Certificate parseCert(String pem) throws Exception {
-        return new X509CertImpl(decodePemDer(pem));
-    }        
 }

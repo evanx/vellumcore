@@ -347,7 +347,9 @@ public class Httpx {
     }
 
     public JMap parseJsonMap() throws IOException {
-        return JMaps.parse(readString());
+        String string = readString();
+        logger.info("parseJsonMap {}", string);
+        return JMaps.parse(string);
     }
 
     public void close() {

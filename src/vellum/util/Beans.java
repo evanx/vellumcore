@@ -25,6 +25,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +72,7 @@ public class Beans {
         }
     }
 
-    public static void parse(Object bean, PropertyDescriptor property, String string) {
+    public static void parse(Object bean, PropertyDescriptor property, String string) throws ParseException {
         Object value = Types.parse(property.getPropertyType(), string);
         try {
             property.getWriteMethod().invoke(bean, value);
@@ -80,7 +81,7 @@ public class Beans {
         }
     }
 
-    public static void convert(Object bean, PropertyDescriptor property, Object value) {
+    public static void convert(Object bean, PropertyDescriptor property, Object value) throws ParseException {
         value = Types.convert(property.getPropertyType(), value);
         try {
             property.getWriteMethod().invoke(bean, value);
@@ -89,7 +90,7 @@ public class Beans {
         }
     }
     
-    public static void setBean(Object bean, JMap map) {
+    public static void setBean(Object bean, JMap map) throws ParseException {
         for (PropertyDescriptor property : Beans.getPropertyMap(bean.getClass()).values()) {
             String stringValue = map.getString(property.getName(), null);
             if (stringValue != null) {

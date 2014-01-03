@@ -22,11 +22,14 @@ package vellum.util;
 
 import vellum.exception.Exceptions;
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +57,7 @@ public class Beans {
                 map.put(property.getName(), property);
             }
             return map;
-        } catch (Exception e) {
+        } catch (IntrospectionException e) {
             throw Exceptions.newRuntimeException(e);
         }
     }
@@ -63,9 +66,7 @@ public class Beans {
         List<PropertyDescriptor> list = new ArrayList();
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
-            for (PropertyDescriptor property : beanInfo.getPropertyDescriptors()) {
-                list.add(property);
-            }
+            list.addAll(Arrays.asList(beanInfo.getPropertyDescriptors()));
             return list;
         } catch (Exception e) {
             throw Exceptions.newRuntimeException(e);
@@ -76,7 +77,7 @@ public class Beans {
         Object value = Types.parse(property.getPropertyType(), string);
         try {
             property.getWriteMethod().invoke(bean, value);
-        } catch (Exception e) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw Exceptions.newRuntimeException(e);
         }
     }
@@ -85,7 +86,7 @@ public class Beans {
         value = Types.convert(property.getPropertyType(), value);
         try {
             property.getWriteMethod().invoke(bean, value);
-        } catch (Exception e) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw Exceptions.newRuntimeException(e);
         }
     }

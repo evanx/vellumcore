@@ -20,6 +20,7 @@
  */
 package vellum.util;
 
+import java.text.ParseException;
 import vellum.format.ArgFormats;
 
 /**
@@ -30,10 +31,6 @@ import vellum.format.ArgFormats;
  */
 public class Types {
 
-    /**
-     * Null-safe equals.
-     *
-     */
     public static boolean equals(Object object, Object other) {
         if (object == null && other == null) {
             return true;
@@ -47,10 +44,6 @@ public class Types {
         return object.equals(other);
     }
 
-    /**
-     * Null-safe equals any of given values.
-     *
-     */
     public static boolean equalsAny(Object value, Object... args) {
         for (Object arg : args) {
             if (Types.equals(value, arg)) {
@@ -60,18 +53,10 @@ public class Types {
         return false;
     }
 
-    /**
-     * Displayable {@code toString()} returning empty string for {@literal null}.
-     *
-     */
     public static String formatDisplay(Object object) {
         return ArgFormats.displayFormatter.format(object);
     }
 
-    /**
-     * Printable {@code toString()} indicating empty and null values.
-     *
-     */
     public static String formatPrint(Object object) {
         return ArgFormats.formatter.format(object);
     }
@@ -84,11 +69,11 @@ public class Types {
         }
     }
 
-    public static Object parse(Class propertyType, String string) {
+    public static Object parse(Class propertyType, String string) throws ParseException {
         return Convertors.parse(propertyType, string);
     }
 
-    public static Object convert(Class propertyType, Object value) {
+    public static Object convert(Class propertyType, Object value) throws ParseException {
         return Convertors.convert(propertyType, value);
     }
 

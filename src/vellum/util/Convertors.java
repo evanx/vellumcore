@@ -23,6 +23,7 @@ package vellum.util;
 import vellum.format.CalendarFormats;
 import vellum.exception.ArgsRuntimeException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -31,14 +32,14 @@ import java.util.Date;
  */
 public class Convertors {
 
-   public static Object convert(Class propertyType, Object value) {
+   public static Object convert(Class propertyType, Object value) throws ParseException {
       if (value == null) {
          return null;
       }
       return parse(propertyType, value.toString());
    }
 
-   public static Object parse(Class propertyType, String string) {
+   public static Object parse(Class propertyType, String string) throws ParseException {
       if (string == null || string.isEmpty()) {
          return null;
       } else if (propertyType.isPrimitive()) {

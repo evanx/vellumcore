@@ -20,6 +20,7 @@
  */
 package vellum.util;
 
+import java.text.ParseException;
 import static java.util.Calendar.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -94,7 +95,7 @@ public class Calendars {
         return new Date();
     }
 
-    public static Calendar parseCalendar(SafeDateFormat dateFormat, String string) {
+    public static Calendar parseCalendar(SafeDateFormat dateFormat, String string) throws ParseException {
         return Calendars.newCalendar(dateFormat.parse(string, null));
     }
     

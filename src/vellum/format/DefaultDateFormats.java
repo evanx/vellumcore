@@ -20,6 +20,7 @@
  */
 package vellum.format;
 
+import java.text.ParseException;
 import vellum.data.SafeDateFormat;
 import java.util.Date;
 
@@ -40,7 +41,7 @@ public class DefaultDateFormats {
         return dateTimeSecondsFormat.format(new Date(millis));
     }
     
-    public static Date parseTimestampMillis(String string) {
+    public static Date parseTimestampMillis(String string) throws ParseException {
         SafeDateFormat format = DefaultDateFormats.timeMillisFormat;
         if (string.length() > format.getPattern().length()) {
             string = string.substring(0, format.getPattern().length());
@@ -48,7 +49,7 @@ public class DefaultDateFormats {
         return format.parse(string);
     }
 
-    public static Date parseTimestamp(String string) {
+    public static Date parseTimestamp(String string) throws ParseException {
         SafeDateFormat format = DefaultDateFormats.timeMillisFormat;
         if (string.length() > format.getPattern().length()) {
             string = string.substring(0, format.getPattern().length());
@@ -56,7 +57,7 @@ public class DefaultDateFormats {
         return format.parse(string);
     }
 
-    public static Date parseDate(String string) {
+    public static Date parseDate(String string) throws ParseException {
         if (string.length() > DefaultDateFormats.timeMillisFormat.getPattern().length()) {
             string = string.substring(0, DefaultDateFormats.timeMillisFormat.getPattern().length());
         }

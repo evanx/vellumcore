@@ -4,6 +4,7 @@
  */
 package vellum.format;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import vellum.data.SafeDateFormat;
@@ -24,11 +25,11 @@ public class CalendarFormats {
     public static final SafeDateFormat timeFormat = new SafeDateFormat("HH:mm:ss");
     public static final SafeDateFormat shortTimeFormat = new SafeDateFormat("HH:mm");
     
-    public static Date parse(SafeDateFormat dateFormat, String string) {
+    public static Date parse(SafeDateFormat dateFormat, String string) throws ParseException {
         return dateFormat.parse(string);
     }
 
-    public static Date parseTimestampMillis(String string) {
+    public static Date parseTimestampMillis(String string) throws ParseException {
         SafeDateFormat format = millisTimestampFormat;
         if (string.length() > format.getPattern().length()) {
             string = string.substring(0, format.getPattern().length());
@@ -36,7 +37,7 @@ public class CalendarFormats {
         return parse(format, string);
     }
 
-    public static Date parseTimestamp(String string) {
+    public static Date parseTimestamp(String string) throws ParseException {
         SafeDateFormat format = timestampFormat;
         if (string.length() > format.getPattern().length()) {
             string = string.substring(0, format.getPattern().length());
@@ -44,7 +45,7 @@ public class CalendarFormats {
         return parse(format, string);
     }
 
-    public static Date parseDate(String string) {
+    public static Date parseDate(String string) throws ParseException {
         if (string.length() > timestampFormat.getPattern().length()) {
             string = string.substring(0, timestampFormat.getPattern().length());
         }

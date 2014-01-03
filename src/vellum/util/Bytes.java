@@ -56,7 +56,7 @@ public class Bytes {
         return "{" + builder.toString() + "}";
     }
 
-    public static Long parseConfig(String string, Long defaultValue) {
+    public static Long parseConfig(String string, Long defaultValue) throws ParseException {
         if (string == null) return defaultValue;
         if (string.length() >= 2 &&
                 Character.isLowerCase(string.charAt(string.length() - 1)) && 

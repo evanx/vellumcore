@@ -165,14 +165,14 @@ public class Streams {
     }
     
     public static byte[] readBytes(InputStream stream) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        while (true) {
-            int b = stream.read();
-            if (b < 0) {
-                stream.close();
-                return outputStream.toByteArray();
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            while (true) {
+                int b = stream.read();
+                if (b < 0) {
+                    return outputStream.toByteArray();
+                }
+                outputStream.write(b);
             }
-            outputStream.write(b);
         }
     }
 

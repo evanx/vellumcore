@@ -27,6 +27,8 @@ import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -80,6 +82,10 @@ public class Httpx {
 
     public String getReferer() {
         return getRequestHeader("Referer");
+    }
+    
+    public boolean isLocalhost() throws UnknownHostException {
+        return delegate.getLocalAddress().getAddress().getHostAddress().equals("127.0.0.1");        
     }
     
     public String getRemoteHostName() {

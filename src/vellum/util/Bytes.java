@@ -22,7 +22,7 @@ package vellum.util;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import vellum.exception.ParseRuntimeException;
+import vellum.exception.ParseException;
 
 /**
  *
@@ -72,7 +72,7 @@ public class Bytes {
                 return value*1024*1024*1024;
             }
         }
-        throw new ParseRuntimeException(string);
+        throw new ParseException(string);
     }  
     
     public static char[] toCharArray(byte[] bytes) {

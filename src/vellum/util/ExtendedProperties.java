@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.data.Millis;
+import vellum.exception.ParseException;
 
 /**
  *
@@ -73,7 +74,7 @@ public class ExtendedProperties extends Properties {
         return value;
     } 
 
-    public long getMillis(String key, long defaultValue) {
+    public long getMillis(String key, long defaultValue) throws ParseException {
         String value = super.getProperty(key);
         if (value == null) {
             return defaultValue;

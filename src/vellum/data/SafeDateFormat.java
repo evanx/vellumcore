@@ -26,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import vellum.exception.ParseRuntimeException;
 
 /**
  *
@@ -62,22 +61,18 @@ public class SafeDateFormat {
       return dateFormat.format(calendar.getTime());
    }
    
-   public synchronized Date parse(String string){
+   public synchronized Date parse(String string) throws ParseException{
        return parse(string, null);
        
    }
    
-   public synchronized Date parse(String string, Date defaultValue) {
+   public synchronized Date parse(String string, Date defaultValue) throws ParseException {
       if (string == null || string.isEmpty()) {
          return defaultValue;
       }
       if (string.length() > pattern.length()) {
           string = string.substring(0, pattern.length());
       }
-        try {
-            return dateFormat.parse(string);
-        } catch (ParseException e) {
-            throw new ParseRuntimeException(string, e);
-        }
+      return dateFormat.parse(string);
    }
 }

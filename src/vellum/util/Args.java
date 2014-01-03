@@ -20,7 +20,7 @@
  */
 package vellum.util;
 
-import vellum.format.ArgFormats;
+import vellum.format.Delimiters;
 
 /**
  * Utility methods related to classes.
@@ -30,30 +30,36 @@ import vellum.format.ArgFormats;
  */
 public class Args {
 
-    /**
-     * Used in toString() methods.
-     * 
-     */
     public static String format(Object ... args) {
-        return ArgFormats.formatter.formatArray(args);
+        return formatDelimiter(Delimiters.COMMA, args);
+    }
+
+    public static String formatDelimiter(String delimiter, Object... args) {
+        return Strings.join(delimiter, args);
     }
     
-    /**
-     * Determine if any of the args equal the given object. 
-     */
+    public static String formatDelimiterSquash(String delimiter, Object... args) {
+        StringBuilder builder = new StringBuilder();
+        for (Object arg : args) {
+            if (arg != null && arg.toString() != null && !arg.toString().isEmpty()) {
+                if (builder.length() > 0) {
+                    builder.append(delimiter);
+                }
+                builder.append(arg);
+            }
+        }
+        return builder.toString();
+    }
+    
     public static boolean equals(Object object, Object... args) {
         for (Object arg : args) {
             if (arg != null && arg.equals(object)) {
                 return true;
             }
-
         }
         return false;
     }
 
-    /**
-     * Determine if any of the args equal the given object. 
-     */
     public static boolean equalsIdentity(Object object, Object... args) {
         for (Object arg : args) {
             if (arg != null && arg == object) {

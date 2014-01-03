@@ -14,15 +14,15 @@ import vellum.util.Types;
  */
 public class ListFormats {
 
-    public static final String SPACE_DELIMITER = " ";
-    public static final String COMMA_DELIMITER = ", ";
-    public static final String DASHED_DELIMITER = "-";
-    public static final String BAR_DELIMITER = "|";
+    private static final String SPACE_DELIMITER = " ";
+    private static final String COMMA_DELIMITER = ", ";
+    private static final String DASHED_DELIMITER = "-";
+    private static final String BAR_DELIMITER = "|";
     
-    public static final String SINGLE_QUOTE = "'";
-    public static final String DOUBLE_QUOTE = "\"";
+    private static final String SINGLE_QUOTE = "'";
+    private static final String DOUBLE_QUOTE = "\"";
 
-    public static final String DEFAULT_DELIMITER = COMMA_DELIMITER;
+    private static final String DEFAULT_DELIMITER = COMMA_DELIMITER;
     
     public static ListFormats formatter = new ListFormats(false, COMMA_DELIMITER);
     public static ListFormats displayFormatter = new ListFormats(true, COMMA_DELIMITER);

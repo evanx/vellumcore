@@ -56,10 +56,6 @@ public class Strings {
     private Strings() {
     }
 
-    /**
-     * Return first argument that is not null.
-     *
-     */
     public static String coalesce(String... args) {
         for (String arg : args) {
             if (arg != null) {
@@ -69,40 +65,20 @@ public class Strings {
         return null;
     }
 
-    /**
-     * Format args using pattern.
-     *
-     */
-    public static String format(String string, Object[] args) {
-        List list = new ArrayList();
-        for (Object arg : args) {
-            if (arg instanceof Date) {
-                arg = DefaultDateFormats.timeMillisFormat.format((Date) arg);
-            }
-            list.add(arg);
-        }
-        return String.format(string, list.toArray());
-    }
-    
-    public static String join(String delimiter, Iterable<String> lineList) {
+    public static String join(String delimiter, Iterable<String> iterable) {
         StringBuilder builder = new StringBuilder();
-        for (String line : lineList) {
+        for (String string : iterable) {
             if (builder.length() > 0) {
                 builder.append(delimiter);
             }
-            builder.append(line);
+            builder.append(string);
         }
         return builder.toString();
     }
 
-    /**
-     * Join list of lines.
-     *
-     * @return
-     */
-    public static String join(String delimiter, String[] args) {
+    public static String join(String delimiter, Object[] args) {
         StringBuilder builder = new StringBuilder();
-        for (String arg : args) {
+        for (Object arg : args) {
             if (builder.length() > 0) {
                 builder.append(delimiter);
             }
@@ -111,23 +87,6 @@ public class Strings {
         return builder.toString();
     }
 
-    public static String joinNotNullArgs(String delimiter, String... args) {
-        StringBuilder builder = new StringBuilder();
-        for (String arg : args) {
-            if (!isEmpty(arg)) {
-                if (builder.length() > 0) {
-                    builder.append(delimiter);
-                }
-                builder.append(arg);
-            }
-        }
-        return builder.toString();
-    }
-
-    /**
-     * check equality.
-     *
-     */
     public static boolean equals(List<String> list, List<String> otherList) {
         if (list == null || otherList == null || list.size() != otherList.size()) {
             return false;

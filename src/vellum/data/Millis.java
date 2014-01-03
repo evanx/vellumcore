@@ -21,8 +21,9 @@
 package vellum.data;
 
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import vellum.exception.ParseRuntimeException;
+import vellum.exception.ParseException;
 import vellum.format.CalendarFormats;
 import vellum.util.Strings;
 
@@ -98,7 +99,7 @@ public class Millis {
         return String.format("%02d:%02d:%02d,%03d", hour, minute, second, millisecond);
     }
     
-    public static long parse(String string) {
+    public static long parse(String string) throws ParseException {
         int index = string.indexOf(" ");
         if (index > 0) {
             return TimeUnit.valueOf(string.substring(index + 1)).
@@ -119,6 +120,10 @@ public class Millis {
         } else if (Strings.isDigits(string)) {
             return Long.parseLong(string);
         }  
-        throw new ParseRuntimeException(string);
+        throw new ParseException(string);
+    }
+
+    public static String formatDefaultTimeZone(long timestamp) {
+        return CalendarFormats.timestampFormat.format(TimeZone.getDefault(), timestamp);
     }
 }

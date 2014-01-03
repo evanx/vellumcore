@@ -8,13 +8,13 @@ package vellum.exception;
  *
  * @author evan.summers
  */
-public class ParseRuntimeException extends RuntimeException {
+public class ParseException extends Exception {
 
-    public ParseRuntimeException(String message) {
+    public ParseException(String message) {
         super(message);
     }
 
-    public ParseRuntimeException(String message, Throwable cause) {
+    public ParseException(String message, Throwable cause) {
         super(message, cause);
     }
     

@@ -85,6 +85,12 @@ public class Calendars {
         calendar.setTime(new Date(time));
         return calendar;
     }
+
+    public static Calendar newCalendar(TimeZone timeZone, long time) {
+        Calendar calendar = Calendar.getInstance(timeZone);
+        calendar.setTime(new Date(time));
+        return calendar;
+    }
     
     public static Calendar newCalendar() {
         Calendar calendar = Calendar.getInstance();

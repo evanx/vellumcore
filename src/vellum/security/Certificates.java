@@ -20,7 +20,6 @@
  */
 package vellum.security;
 
-import java.io.IOException;
 import java.security.KeyStore;
 import java.security.Principal;
 import java.security.cert.Certificate;
@@ -37,29 +36,6 @@ import javax.naming.ldap.Rdn;
  * @author evan.summers
  */
 public class Certificates {
-    public static final String LOCAL_DNAME = 
-            "CN=localhost, OU=local, O=local, L=local, S=local, C=local";
-
-    public static String formatDname(String cn, String ou, String o, String l, 
-            String s, String c) {
-        StringBuilder builder = new StringBuilder();
-        appendf(builder, "", "cn=%s", cn);
-        appendf(builder, "", "ou=%s", ou);
-        appendf(builder, "", "o=%s", o);
-        appendf(builder, "", "l=%s", l);
-        appendf(builder, "", "s=%s", s);
-        appendf(builder, "", "c=%s", c);
-        return builder.toString();
-    }
-
-    public static void appendf(StringBuilder builder, String delimiter, String format, Object arg) {
-        if (arg != null) {
-            if (builder.length() > 0) {
-                builder.append(delimiter);
-            }
-            builder.append(String.format(format, arg));
-        }
-    }
     
     public static X509Certificate findRootCert(KeyStore keyStore, String alias) throws Exception {
         return findRootCert(keyStore.getCertificateChain(alias));
@@ -77,33 +53,29 @@ public class Certificates {
         return null;
     }
 
-    public static String getCommonName(Principal principal) throws CertificateException {
-        return get("CN", principal);
-    }    
-    
-    public static String getOrgUnit(Principal principal) throws CertificateException {
-        return get("OU", principal);
-    }    
-    
-    public static String getOrg(Principal principal) throws CertificateException {
-        return get("O", principal);
-    }    
 
-    public static String get(String type, Principal principal) throws CertificateException {
-        String dname = principal.getName();
+    public static String getCommonName(String subject) throws CertificateException {
+        return get(DnameType.CN, subject);
+    }
+
+    public static String get(DnameType type, Principal principal) throws CertificateException {
+        return get(type, principal.getName());
+    }
+
+    public static String get(DnameType type, String dname) throws CertificateException {
         try {
             LdapName ln = new LdapName(dname);
             for (Rdn rdn : ln.getRdns()) {
-                if (rdn.getType().equalsIgnoreCase(type)) {
+                if (rdn.getType().equalsIgnoreCase(type.name())) {
                     return rdn.getValue().toString();
                 }
             }
             throw new InvalidNameException(dname);
-        } catch (Exception e) {
+        } catch (InvalidNameException e) {
             throw new CertificateException(e.getMessage());
         }
-    }    
-    
+    }
+
     public static boolean equals(X509Certificate cert, X509Certificate other) {
         if (cert.getSubjectDN().equals(other.getSubjectDN())) {
             if (Arrays.equals(cert.getPublicKey().getEncoded(),
@@ -113,13 +85,13 @@ public class Certificates {
         }
         return false;
     }
-    
+
     public static X509Certificate[] toArray(Collection<X509Certificate> certificates) {
         X509Certificate[] array = new X509Certificate[certificates.size()];
         int index = 0;
-        for (X509Certificate certificate: certificates) {
+        for (X509Certificate certificate : certificates) {
             array[index++] = certificate;
         }
         return array;
-    }       
+    }
 }

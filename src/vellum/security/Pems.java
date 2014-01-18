@@ -31,7 +31,7 @@ import vellum.util.Base64;
  *
  * @author evan.summers
  */
-public class PemCerts {
+public class Pems {
 
     public static final String BEGIN_PRIVATE_KEY = formatPem("BEGIN PRIVATE KEY");
     public static final String END_PRIVATE_KEY = formatPem("END PRIVATE KEY");

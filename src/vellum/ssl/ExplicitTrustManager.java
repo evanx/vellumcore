@@ -32,6 +32,7 @@ import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.security.Certificates;
+import vellum.security.DnameType;
 import vellum.security.KeyStores;
 
 /**
@@ -47,7 +48,7 @@ public class ExplicitTrustManager implements X509TrustManager {
         this.delegate = KeyStores.findX509TrustManager(trustStore);
         for (String alias : Collections.list(trustStore.aliases())) {
             X509Certificate certificate = (X509Certificate) trustStore.getCertificate(alias);
-            String commonName = Certificates.getCommonName(certificate.getSubjectDN());
+            String commonName = Certificates.get(DnameType.CN, certificate.getSubjectDN());
             certificateMap.put(commonName, certificate);
         }
     }
@@ -63,7 +64,7 @@ public class ExplicitTrustManager implements X509TrustManager {
             throw new CertificateException("Invalid cert chain length");
         }
         X509Certificate trustedCertificate = certificateMap.get(
-                Certificates.getCommonName(chain[0].getSubjectDN()));
+                Certificates.get(DnameType.CN, chain[0].getSubjectDN()));
         if (trustedCertificate == null) {
             throw new CertificateException("Untrusted peer certificate");
         }

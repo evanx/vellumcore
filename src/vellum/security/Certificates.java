@@ -54,8 +54,12 @@ public class Certificates {
     }
 
 
-    public static String getCommonName(String subject) throws CertificateException {
-        return get(DnameType.CN, subject);
+    public static String getCommonName(String subject) {
+        try {
+            return get(DnameType.CN, subject);
+        } catch (CertificateException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     public static String get(DnameType type, Principal principal) throws CertificateException {

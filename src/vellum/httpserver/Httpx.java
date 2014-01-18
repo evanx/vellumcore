@@ -275,15 +275,6 @@ public class Httpx {
         delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
 
-    public void sendResponse(String contentType, boolean ok) throws IOException {
-        delegate.getResponseHeaders().set("Content-type", contentType);
-        if (ok) {
-            delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-        } else {
-            delegate.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-        }
-    }
-
     public void sendEmptyOkResponse() throws IOException {
         delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
@@ -291,7 +282,7 @@ public class Httpx {
     public void sendPlainError(String responseString) {
         try {
             byte[] responseBytes = responseString.getBytes();
-            delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK,
+            delegate.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST,
                     responseBytes.length);
             delegate.getResponseHeaders().set("Content-type", "text/plain");
             delegate.getResponseBody().write(responseBytes);
@@ -336,11 +327,6 @@ public class Httpx {
             out = new PrintStream(delegate.getResponseBody());
         }
         return out;
-    }
-
-    public void sendResponse(StringMap map) throws IOException {
-        sendResponse("text/json", true);
-        getPrintStream().println(new Gson().toJson(map));
     }
 
     public void sendResponse(JMap map) throws IOException {

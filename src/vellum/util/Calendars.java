@@ -74,6 +74,12 @@ public class Calendars {
         return calendar.getTime();
     }
 
+    public static Date newDate(int days) {
+        Calendar calendar = newCalendar();
+        calendar.add(Calendar.DATE, days);
+        return calendar.getTime();
+    }
+    
     public static Calendar newCalendar(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

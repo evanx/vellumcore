@@ -121,6 +121,18 @@ public class KeyStores {
         return (X509Certificate) keyStore.getCertificate(keyAlias);
     }
 
+    public static PrivateKey findPrivateKey(KeyStore keyStore, char[] pass) 
+            throws GeneralSecurityException {
+        if (countKeys(keyStore) == 1) {
+            for (String alias : Collections.list(keyStore.aliases())) {
+                if (keyStore.entryInstanceOf(alias, KeyStore.PrivateKeyEntry.class)) {
+                    return (PrivateKey) keyStore.getKey(alias, pass);
+                }
+            }
+        }
+        throw new KeyStoreException("No sole private key found in keystore");
+    }
+
     public static X509Certificate findPrivateKeyCertificate(KeyStore keyStore) 
             throws KeyStoreException {
         if (countKeys(keyStore) == 1) {

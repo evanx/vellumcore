@@ -98,7 +98,7 @@ public class Lists {
      *
      */
     public static String format(Collection collection) {
-        return ListFormats.formatter.formatArray(collection);
+        return ListFormats.formatter.formatCollection(collection);
     }
     
     /**
@@ -308,6 +308,10 @@ public class Lists {
 
     public static String[] array(Collection<String> lines) {
         return lines.toArray(new String[lines.size()]);
+    }
+
+    public static String toString(Collection collection) {
+        return ListFormats.formatter.formatCollection(collection);
     }
 
 }

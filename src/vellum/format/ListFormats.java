@@ -50,7 +50,7 @@ public class ListFormats {
     }
     
     
-    public String formatArray(Collection collection) {
+    public String formatCollection(Collection collection) {
         return formatArray(collection.toArray());
     }
 

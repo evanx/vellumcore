@@ -20,17 +20,16 @@
  */
 package vellum.httpserver;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.net.ssl.SSLPeerUnverifiedException;
@@ -44,7 +43,6 @@ import vellum.jx.JMap;
 import vellum.jx.JMapException;
 import vellum.jx.JMaps;
 import vellum.parameter.Entry;
-import vellum.parameter.StringMap;
 import vellum.parameter.Parameters;
 import vellum.storage.StorageException;
 import vellum.util.Lists;
@@ -165,13 +163,14 @@ public class Httpx {
         for (String key : keys) {
             delegate.getResponseHeaders().add("Set-cookie",
                     String.format("%s=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", key));
-
         }
     }
 
     public void setCookie(JMap map, long ageMillis) throws JMapException {
-        Object path = map.getString("path", null);
-        String version = map.getString("version", null);
+        setCookie(map, null, null, ageMillis);
+    }
+    
+    public void setCookie(JMap map, String path, String version, long ageMillis) throws JMapException {
         for (String key : map.keySet()) {
             Object value = map.get(key);
             StringBuilder builder = new StringBuilder();
@@ -197,6 +196,7 @@ public class Httpx {
         cookieMap = new JMap();
         if (cookies != null) {
             for (String cookie : cookies) {
+                logger.trace("parseCookieMap cookie {}", cookie);
                 int index = cookie.indexOf("=");
                 if (index > 0) {
                     String key = cookie.substring(0, index);
@@ -220,6 +220,16 @@ public class Httpx {
         return null;
     }
 
+    public Map<String, String> parseFirstRequestHeaders() {
+        Map<String, String> map = new HashMap();
+        for (String key : delegate.getRequestHeaders().keySet()) {
+            String valueString = delegate.getRequestHeaders().getFirst(key);
+            logger.trace("first request header: {}: {}", key, valueString);
+            map.put(key, valueString);
+        }
+        return map;
+    }
+    
     public Headers getRequestHeaders() {
         return delegate.getRequestHeaders();
     }    
@@ -359,4 +369,5 @@ public class Httpx {
     public X509Certificate getPeerCertficate() throws SSLPeerUnverifiedException {
         return ((HttpsExchange) delegate).getSSLSession().getPeerCertificateChain()[0];        
     }
+
 }

@@ -30,8 +30,10 @@ import java.security.KeyStoreException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Properties;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
@@ -115,6 +117,13 @@ public class SSLContexts {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(keyManagerFactory.getKeyManagers(),
                 trustManagerFactory.getTrustManagers(), new SecureRandom());
+        return sslContext;
+    }
+
+    public static SSLContext create(X509TrustManager trustManager) 
+            throws GeneralSecurityException, IOException {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(new KeyManager[0], new TrustManager[] {trustManager}, new SecureRandom());
         return sslContext;
     }
     

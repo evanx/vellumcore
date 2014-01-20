@@ -22,7 +22,8 @@ package vellum.data;
 
 import java.util.*;
 import java.util.Map.Entry;
-import vellum.jx.JMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,7 +31,8 @@ import vellum.jx.JMap;
  * @author evan.summers
  */
 public class Maps {
-
+    static Logger logger = LoggerFactory.getLogger(Maps.class);
+    
     public static <K, V extends Comparable> V getMinimumValue(Map<K, V> map) {
         return getMinimumValueEntry(map).getValue();
     }
@@ -119,10 +121,15 @@ public class Maps {
         return map;
     }
 
-    public static String getPlain(JMap map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    public static boolean containsKeys(Map map, Object ... keys) {
+        for (Object key : keys) {
+            if (!map.containsKey(key)) {
+                logger.warn("containsKeys {}", key);
+                return false;
+            }
+        }
+        return true;
+    }    
 }
 
 class EntryAscendingComparator<K, V extends Comparable> implements Comparator<Entry<K, V>> {

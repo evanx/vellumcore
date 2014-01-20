@@ -55,19 +55,6 @@ public class JMap extends HashMap<String, Object> {
         return getObject(key).toString();
     }
 
-    public boolean isEmpty(String... keys) {
-        for (String key : keys) {
-            Object value = super.get(key);
-            if (value == null) {
-                return true;
-            }
-            if (value.toString().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public String getString(String key, String defaultValue) {
         Object value = super.get(key);
         if (value == null) {

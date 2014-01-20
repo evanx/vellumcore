@@ -174,6 +174,7 @@ public class Httpx {
         for (String key : map.keySet()) {
             Object value = map.get(key);
             StringBuilder builder = new StringBuilder();
+            if (value == null) value = "";
             builder.append(String.format("%s=%s; Max-age=%d", key, value, ageMillis / 1000));
             if (path != null) {
                 builder.append("; Path=").append(path);
@@ -266,6 +267,10 @@ public class Httpx {
         return delegate.getRequestHeaders().getFirst(key);
     }
 
+    public List<String> listRequestHeaders(String key) {
+        return delegate.getRequestHeaders().get(key);
+    }
+    
     public void sendResponse(String contentType, String string) throws IOException {
         logger.trace("sendResponse {} string [{}]", contentType, string.trim());
         sendResponse(contentType, string.getBytes());

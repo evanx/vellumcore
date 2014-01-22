@@ -315,7 +315,7 @@ public class Httpx {
         delegate.getResponseBody().write(responseBytes);
     }
     
-    public void sendError(Exception e) {
+    public void sendError(Throwable e) {
         if (e instanceof DisplayException) {
         } else if (e instanceof StorageException) {
         } else {

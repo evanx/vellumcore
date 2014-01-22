@@ -24,6 +24,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsServer;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
@@ -39,13 +40,14 @@ import vellum.util.ExtendedProperties;
  *
  * @author evan.summers
  */
-public class VellumHttpsServer implements Shutdownable {
+public class VellumHttpsServer implements Shutdownable, RejectedExecutionHandler {
 
     Logger logger = LoggerFactory.getLogger(VellumHttpsServer.class);
     SSLContext sslContext;
     HttpsServer httpsServer;
     ExtendedProperties properties; 
     ThreadPoolExecutor executor;
+    String name; 
     
     public VellumHttpsServer() {
     }
@@ -58,8 +60,10 @@ public class VellumHttpsServer implements Shutdownable {
 
     public void start(HttpsServerProperties properties, SSLContext sslContext,
             HttpHandler handler) throws Exception {
-        executor = new ThreadPoolExecutor(10, 15, 0, TimeUnit.MILLISECONDS, 
+        executor = new ThreadPoolExecutor(100, 200, 60, TimeUnit.SECONDS, 
             new ArrayBlockingQueue<Runnable>(10));
+        name = handler.getClass().getSimpleName();
+        executor.setRejectedExecutionHandler(this);        
         InetSocketAddress socketAddress = new InetSocketAddress(properties.getPort());
         httpsServer = HttpsServer.create(socketAddress, 4);
         httpsServer.setHttpsConfigurator(HttpsConfiguratorFactory.
@@ -82,6 +86,11 @@ public class VellumHttpsServer implements Shutdownable {
         }  
     }
 
+    @Override
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+        logger.error("rejectedExecution {}", name);
+    }
+    
     @Override
     public String toString() {
         return executor.toString();

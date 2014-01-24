@@ -308,6 +308,9 @@ public class Httpx {
     
     public void sendPlainResponse(String responseString) 
             throws IOException {
+        if (!responseString.endsWith("\n")) {
+            responseString += "\n";
+        }
         byte[] responseBytes = responseString.getBytes();
         delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK,
                 responseBytes.length);

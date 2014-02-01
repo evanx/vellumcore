@@ -270,6 +270,10 @@ public class Httpx {
     public List<String> listRequestHeaders(String key) {
         return delegate.getRequestHeaders().get(key);
     }
+
+    public Collection<String> listRequestHeaders() {
+        return delegate.getRequestHeaders().keySet();
+    }
     
     public void sendResponse(String contentType, String string) throws IOException {
         logger.trace("sendResponse {} string [{}]", contentType, string.trim());

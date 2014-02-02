@@ -33,16 +33,26 @@ public class Patterns {
     
     private static final String USERNAME_CONTENT = 
             "[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*";
+    
     private static final String DOMAIN_CONTENT = 
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})";
+
+    private static final String IP_CONTENT = 
+            "[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+";
     
     public static Pattern USERNAME = 
             Pattern.compile(String.format("^%s$", USERNAME_CONTENT));
+    
     public static Pattern DOMAIN = 
             Pattern.compile(String.format("^%s$", DOMAIN_CONTENT));
+    
+    public static Pattern IP = 
+            Pattern.compile(String.format("^%s$", IP_CONTENT));
+    
     public static Pattern EMAIL = 
             Pattern.compile(String.format("^%s@%s$", 
             USERNAME_CONTENT, DOMAIN_CONTENT));
+    
     public static Pattern INTEGER = 
             Pattern.compile(String.format("^[0-9]+$", DOMAIN_CONTENT));
 
@@ -51,7 +61,7 @@ public class Patterns {
     }
     
     public static boolean matchesDomain(String string) {
-        return DOMAIN.matcher(string).matches();
+        return DOMAIN.matcher(string).matches() || IP.matcher(string).matches();
     }
     
     public static boolean matchesEmail(String string) {

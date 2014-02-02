@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import vellum.exception.ArgsRuntimeException;
 import vellum.exception.Exceptions;
 import java.net.ServerSocket;
@@ -345,5 +346,4 @@ public class Streams {
     public static void println(OutputStream outputStream, Object data) {
         new PrintWriter(outputStream).println(data);
     }
-    
 }

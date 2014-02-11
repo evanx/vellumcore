@@ -150,9 +150,13 @@ public class Streams {
     }
 
     public static byte[] readBytes(String filePath) {
+        return readBytes(new File(filePath));
+    }
+    
+    public static byte[] readBytes(File file) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            FileInputStream stream = new FileInputStream(filePath);
+            FileInputStream stream = new FileInputStream(file);
             while (true) {
                 int b = stream.read();
                 if (b < 0) {

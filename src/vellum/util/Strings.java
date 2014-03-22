@@ -82,7 +82,7 @@ public class Strings {
             if (builder.length() > 0) {
                 builder.append(delimiter);
             }
-            builder.append(arg);
+            builder.append(Types.formatDisplay(arg));
         }
         return builder.toString();
     }

@@ -5,6 +5,7 @@
 package vellum.format;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +60,9 @@ public class ArgFormats {
             return ((Class) arg).getSimpleName();
         } else if (arg instanceof Throwable) {
             return formatThrowable((Throwable) arg);
+        } else if (arg instanceof Calendar) {
+            Calendar calendar = (Calendar) arg;
+            return CalendarFormats.timestampZoneFormat.format(calendar.getTime());
         } else if (arg instanceof Date) {
             return CalendarFormats.timestampFormat.format((Date) arg);
         } else if (Strings.isEmpty(arg.toString())) {

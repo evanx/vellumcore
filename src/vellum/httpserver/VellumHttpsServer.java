@@ -65,7 +65,7 @@ public class VellumHttpsServer implements Shutdownable, RejectedExecutionHandler
         name = handler.getClass().getSimpleName();
         executor.setRejectedExecutionHandler(this);        
         InetSocketAddress socketAddress = new InetSocketAddress(properties.getPort());
-        httpsServer = HttpsServer.create(socketAddress, 4);
+        httpsServer = HttpsServer.create(socketAddress, 16);
         httpsServer.setHttpsConfigurator(HttpsConfiguratorFactory.
                 createHttpsConfigurator(sslContext, properties.isClientAuth()));
         httpsServer.setExecutor(executor);

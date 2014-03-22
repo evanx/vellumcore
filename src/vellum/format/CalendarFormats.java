@@ -5,7 +5,6 @@
 package vellum.format;
 
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 import vellum.data.SafeDateFormat;
 

@@ -84,7 +84,6 @@ public class WebHttpHandler implements HttpHandler {
             logger.trace("path", path, bytes.length);
         } catch (IOException e) {
             logger.warn(e.getMessage(), e);
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         } finally {
             httpExchange.close();
         }

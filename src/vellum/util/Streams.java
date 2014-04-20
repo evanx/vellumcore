@@ -20,11 +20,15 @@
  */
 package vellum.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,6 +39,8 @@ import vellum.exception.ArgsRuntimeException;
 import vellum.exception.Exceptions;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -135,6 +141,10 @@ public class Streams {
         } catch (IOException e) {
             throw Exceptions.newRuntimeException(e, parent, resourceName);
         }
+    }
+
+    public static byte[] readResourceBytes(Class parent, String resourceName) throws IOException {
+        return readBytes(getResourceAsStream(parent, resourceName));
     }
     
     public static String readResourceString(Class parent, String resourceName) throws IOException {
@@ -336,6 +346,11 @@ public class Streams {
         return fileName;
     }
 
+    public static void transmit(InputStream inputStream, File file) 
+            throws IOException {
+        transmit(inputStream, new FileOutputStream(file));
+    }
+    
     public static void transmit(InputStream inputStream, OutputStream outputStream) 
             throws IOException {
         while (true) {
@@ -350,4 +365,73 @@ public class Streams {
     public static void println(OutputStream outputStream, Object data) {
         new PrintWriter(outputStream).println(data);
     }
+    
+    public static String parseFileName(String urlString) {
+        int index = urlString.lastIndexOf('/');
+        if (index >= 0) {
+            return urlString.substring(index + 1);            
+        } else {
+            return urlString;
+        }        
+    }
+    
+    public static byte[] readContent(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        URLConnection connection = url.openConnection();
+        connection.setDoOutput(false);
+        connection.setDoInput(true);
+        connection.connect();
+        int length = connection.getContentLength();
+        byte[] content = readBytes(new BufferedInputStream(connection.getInputStream()));
+        if (content.length < length) {
+            throw new IOException(String.format("Read only %d of %d for %s", content.length, length, urlString));
+        }
+        return content;
+    }
+
+    public static void write(byte[] content, File file) 
+            throws FileNotFoundException, IOException {
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(content);
+        outputStream.close();
+    }    
+
+    public static void postHttp(byte[] content, URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        try {
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "plain/text");
+            connection.setDoOutput(true);
+            connection.setDoInput(false);
+            InputStream inputStream = new ByteArrayInputStream(content);
+            transmit(inputStream, connection.getOutputStream());
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    public static String getContentType(String path) {
+        if (path.endsWith(".png")) {
+            return "image/png";
+        } else if (path.endsWith(".jpg")) {
+            return "image/jpeg";
+        } else if (path.endsWith(".html")) {
+            return "text/html";
+        } else if (path.endsWith(".css")) {
+            return "text/css";
+        } else if (path.endsWith(".js")) {
+            return "text/javascript";
+        } else if (path.endsWith(".txt")) {
+            return "text/plain";
+        } else if (path.endsWith(".json")) {
+            return "text/json";
+        } else if (path.endsWith(".html")) {
+            return "text/html";
+        } else if (path.endsWith(".ico")) {
+            return "image/x-icon";
+        } else {
+            logger.warn(path);
+            return "text/html";
+        }
+    }        
 }

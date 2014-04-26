@@ -391,9 +391,9 @@ public class Streams {
 
     public static void write(byte[] content, File file) 
             throws FileNotFoundException, IOException {
-        FileOutputStream outputStream = new FileOutputStream(file);
-        outputStream.write(content);
-        outputStream.close();
+        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+            outputStream.write(content);
+        }
     }    
 
     public static void postHttp(byte[] content, URL url) throws IOException {
@@ -413,6 +413,8 @@ public class Streams {
     public static String getContentType(String path) {
         if (path.endsWith(".png")) {
             return "image/png";
+        } else if (path.endsWith(".jpeg")) {
+            return "image/jpeg";
         } else if (path.endsWith(".jpg")) {
             return "image/jpeg";
         } else if (path.endsWith(".html")) {

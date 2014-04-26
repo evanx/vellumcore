@@ -40,8 +40,8 @@ public class VellumHttpServer implements Shutdownable {
     HttpServer delegate;
     HttpServerProperties properties; 
     ThreadPoolExecutor executor = 
-            new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
-            new ArrayBlockingQueue<Runnable>(4));
+            new ThreadPoolExecutor(16, 96, 0, TimeUnit.MILLISECONDS, 
+            new ArrayBlockingQueue<Runnable>(32));
     
     public VellumHttpServer() {
     }
@@ -50,6 +50,7 @@ public class VellumHttpServer implements Shutdownable {
             throws Exception {
         start(new HttpServerProperties(properties), httpHandler);
     }
+    
     public void start(HttpServerProperties properties, HttpHandler httpHandler) 
             throws Exception {
         InetSocketAddress socketAddress = new InetSocketAddress(properties.getPort());

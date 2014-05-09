@@ -199,6 +199,10 @@ public class Streams {
         return new String(readBytes(stream));
     }
 
+    public static String readString(File file) throws IOException {
+        return new String(readBytes(new FileInputStream(file)));
+    }
+    
     public static char[] readChars(InputStream stream) throws IOException {
         return Bytes.toCharArray(readBytes(stream));
     }
@@ -431,8 +435,18 @@ public class Streams {
             return "text/html";
         } else if (path.endsWith(".ico")) {
             return "image/x-icon";
+        } else if (path.endsWith(".woff")) {
+            return "application/font-woff";
+        } else if (path.endsWith(".svg")) {
+            return "image/svg+xml";
+        } else if (path.endsWith(".ttf")) {
+            return "application/font-sfnt";
+        } else if (path.endsWith(".otf")) {
+            return "application/font-sfnt";
+        } else if (path.endsWith(".eot")) {
+            return "application/vnd.ms-fontobject";
         } else {
-            logger.warn(path);
+            logger.warn("getContentType {}", path);
             return "text/html";
         }
     }        

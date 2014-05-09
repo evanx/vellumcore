@@ -1,11 +1,29 @@
 package vellum.jx;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author evan.summers
  */
 public class Convertors {
-
+    final static Logger logger = LoggerFactory.getLogger(Convertors.class);
+    
+    public static boolean coerceBoolean(Object value, boolean defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof String) {
+            return Boolean.parseBoolean((String) value);
+        }
+        if (value instanceof Boolean) {
+            return (boolean) value;
+        }
+        logger.warn("coerceBoolean {} {}", value.getClass(), value.toString());
+        return defaultValue;
+    }
+    
     public static Integer coerceInteger(Object value, Integer defaultValue) {
         if (value == null) {
             return defaultValue;
@@ -14,12 +32,12 @@ public class Convertors {
             return Integer.parseInt((String) value);
         }
         if (value instanceof Integer) {
-            return ((Integer) value).intValue();
+            return (Integer) value;
         }
+        logger.warn("coerceInteger {} {}", value.getClass(), value.toString());
         return defaultValue;
     }
-    
-    
+        
     public static int coerceInt(Object value, int defaultValue) {
         if (value == null) {
             return defaultValue;
@@ -28,8 +46,9 @@ public class Convertors {
             return Integer.parseInt((String) value);
         }
         if (value instanceof Integer) {
-            return ((Integer) value).intValue();
+            return (Integer) value;
         }
+        logger.warn("coerceIntr {} {}", value.getClass(), value.toString());
         return defaultValue;
     }
 
@@ -56,6 +75,7 @@ public class Convertors {
         if (value instanceof Number) {
             return ((Number) value).longValue();
         }
+        logger.warn("coerceLong {} {}", value.getClass(), value.toString());
         return defaultValue;
     }
     
@@ -70,6 +90,5 @@ public class Convertors {
             return ((Number) value).longValue();
         }
         throw new JMapException("Not long integer: " + value);
-    }    
-
+    }
 }

@@ -26,6 +26,7 @@ import vellum.exception.ParseException;
 import vellum.jx.JMap;
 import vellum.jx.JMapException;
 import vellum.jx.JMaps;
+import vellum.util.Args;
 import vellum.util.ExtendedProperties;
 import vellum.util.Strings;
 
@@ -68,7 +69,8 @@ public class JsonObjectDelegate {
     public JMap getMap(String key) {
         JMap map = new JMap();
         for (Entry<String, JsonElement> entry : object.get(key).getAsJsonObject().entrySet()) {
-            map.put(entry.getKey(), entry.getValue());
+            logger.info(Args.format(entry.getKey(), entry.getValue(), entry.getValue().getClass()));
+            map.put(entry.getKey(), JMaps.parse(entry.getValue()));
         }
         return map;
     }

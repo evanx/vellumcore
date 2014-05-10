@@ -48,7 +48,10 @@ public class Convertors {
         if (value instanceof Integer) {
             return (Integer) value;
         }
-        logger.warn("coerceIntr {} {}", value.getClass(), value.toString());
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        logger.warn("coerceInt {} {}", value.getClass(), value.toString());
         return defaultValue;
     }
 

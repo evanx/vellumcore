@@ -2,9 +2,11 @@
  */
 package vellum.jx;
 
+import com.google.gson.JsonPrimitive;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.exception.ArgsRuntimeException;
 import vellum.util.MockableConsole;
 
 /**
@@ -51,8 +53,10 @@ public class JConsoleMap extends JMap {
             return (char[]) object;
         } else if (object instanceof String) {
             return object.toString().toCharArray();
+        } else if (object instanceof JsonPrimitive) {
+            return object.toString().toCharArray();
         } else {
-            throw new RuntimeException("Invalid password property type: " + key);
+            throw new ArgsRuntimeException("Invalid password property type", key, object.getClass());
         }
     }
     
@@ -63,6 +67,8 @@ public class JConsoleMap extends JMap {
         } else if (object instanceof char[]) {
             return (char[]) object;
         } else if (object instanceof String) {
+            return object.toString().toCharArray();
+        } else if (object instanceof JsonPrimitive) {
             return object.toString().toCharArray();
         } else {
             throw new RuntimeException("Invalid password property type: " + key);

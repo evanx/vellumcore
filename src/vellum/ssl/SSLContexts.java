@@ -38,6 +38,8 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.jx.JConsoleMap;
+import vellum.jx.JMapException;
 import vellum.security.KeyStores;
 
 /**
@@ -125,6 +127,14 @@ public class SSLContexts {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(new KeyManager[0], new TrustManager[] {trustManager}, new SecureRandom());
         return sslContext;
+    }
+
+    public static SSLContext create(JConsoleMap properties, 
+            X509TrustManager trustManager) throws GeneralSecurityException, IOException, JMapException {
+        char[] pass = properties.getPassword("pass");
+        KeyStore keyStore = KeyStores.loadKeyStore(properties.getString("keyStoreType", "JKS"),
+                properties.getString("keyStoreLocation"), pass);
+        return create(keyStore, pass, trustManager);
     }
     
     public static SSLContext create(ExtendedProperties properties, 

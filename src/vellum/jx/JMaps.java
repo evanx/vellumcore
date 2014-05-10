@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,4 +95,35 @@ public class JMaps {
         logger.info("list mapped {}", list.size());
         return list;
     }
+
+    public static JMap map(Properties properties) {
+        JMap map = new JMap();
+        for (Map.Entry entry : properties.entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue());
+        }
+        return map;
+    }
+
+    public static JMap map(JEntry... entries) {
+        JMap map = new JMap();
+        for (JEntry entry : entries) {
+            map.put(entry.getKey(), entry.getValue());
+        }
+        return map;
+    }
+
+    public static JMap map(String section, Properties properties) {
+        JMap map = new JMap();
+        for (Object key : properties.keySet()) {
+            String name = key.toString();
+            if (name.startsWith(section)) {
+                if (name.charAt(section.length()) == '.') {
+                    name = name.substring(section.length() + 1);
+                    map.put(name, properties.get(key));
+                    logger.info("property {} {}", name, properties.get(key));
+                }
+            }
+        }
+        return map;
+    }    
 }

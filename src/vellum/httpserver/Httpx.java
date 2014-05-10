@@ -353,11 +353,7 @@ public class Httpx {
 
     public void sendResponse(JMap map) throws IOException {
         logger.trace("sendResponse map {}", map);
-        if (map.getText() != null) {
-            sendResponse("text/plain", map.getText());
-        } else {
-            sendResponse("text/json", map.toJson());
-        }
+        sendResponse("text/json", map.toJson());
     }
 
     public JMap parseJsonMap() throws IOException {

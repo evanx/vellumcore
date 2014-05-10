@@ -5,7 +5,6 @@ package vellum.jx;
 import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +23,12 @@ public class JMap extends HashMap<String, Object> {
     public JMap(String text) {
         this.text = text;
     }
+
+    public JMap(Collection<JEntry> entries) {
+        for (JEntry entry : entries) {
+            super.put(entry.getKey(), entry.getValue());
+        }
+    }
     
     public JMap(JEntry... entries) {
         for (JEntry entry : entries) {
@@ -31,25 +36,6 @@ public class JMap extends HashMap<String, Object> {
         }
     }
 
-    public JMap(Properties properties) {
-        for (Object key : properties.keySet()) {
-            put(key.toString(), properties.get(key));
-        }
-    }
-
-    public JMap(String section, Properties properties) {
-        for (Object key : properties.keySet()) {
-            String name = key.toString();
-            if (name.startsWith(section)) {
-                if (name.charAt(section.length()) == '.') {
-                    name = name.substring(section.length() + 1);
-                    put(name, properties.get(key));
-                    logger.info("property {} {}", name, properties.get(key));
-                }
-            }
-        }
-    }
-    
     public Collection getCollection(String key) {
         return (Collection) super.get(key);
     }

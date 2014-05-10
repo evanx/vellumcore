@@ -22,6 +22,7 @@ package vellum.httphandler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -29,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.jx.JMap;
+import vellum.util.MimeTypes;
 import vellum.util.Streams;
 
 /**
@@ -36,22 +39,16 @@ import vellum.util.Streams;
  * @author evan.summers
  */
 public class WebHttpHandler implements HttpHandler {
-
     Logger logger = LoggerFactory.getLogger(WebHttpHandler.class);
-    Map<String, String> mimeTypes = new HashMap();
     Map<String, byte[]> cache = new HashMap();
-    String webPath;
+    String appPackage;
+    String appDir;
+    boolean caching = false;
     
-    public WebHttpHandler(String webPath) {
-        this.webPath = webPath;
-        mimeTypes.put("txt", "text/plain");
-        mimeTypes.put("html", "text/html");
-        mimeTypes.put("png", "image/png");
-        mimeTypes.put("css", "text/css");
-        mimeTypes.put("js", "text/javascript");
-        mimeTypes.put("sh", "text/x-shellscript");
-        mimeTypes.put("woff", "application/font-woff");
-        mimeTypes.put("pem", "application/x-pem-file");
+    public WebHttpHandler(String appPackage, JMap properties) {
+        this.appPackage = appPackage;
+        this.caching = properties.getBoolean("caching", false);
+        this.appDir = properties.getString("appDir", null);
     }
     
     @Override
@@ -60,33 +57,54 @@ public class WebHttpHandler implements HttpHandler {
         String contentType = null;
         int index = path.lastIndexOf(".");
         if (index > 0) {
-            contentType = mimeTypes.get(path.substring(index + 1));
+            contentType = MimeTypes.mimeTypes.get(path.substring(index + 1));
         }
         if (contentType == null) {
             contentType = "text/html";
-            path = "app.html";
+            path = "index.html";
         }
+        logger.info("handle {} {}", path, contentType);
         try {
             httpExchange.getResponseHeaders().set("Content-type", contentType);
-            byte[] bytes = cache.get(path);
-            if (bytes == null) {
-                String resourcePath = webPath + '/' + path;
-                if (path.startsWith("/")) {
-                    resourcePath = webPath + path;
-                } 
-                logger.trace("get {}", resourcePath);
-                InputStream resourceStream = getClass().getResourceAsStream(resourcePath);
-                bytes = Streams.readBytes(resourceStream);
-                cache.put(path, bytes);
-            }
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+            byte[] bytes = get(path);
             httpExchange.getResponseBody().write(bytes);
             logger.trace("path", path, bytes.length);
         } catch (IOException e) {
-            logger.warn(e.getMessage(), e);
+            logger.warn("handle {} {}", path, e.getMessage());
+        } catch (Throwable t) {
+            logger.warn("handle: " + path, t);
         } finally {
             httpExchange.close();
         }
-        logger.info("handle {} [{}]", path, contentType);
     }
+
+    private byte[] get(String path) throws IOException {
+        if (caching) {
+            byte[] bytes = cache.get(path);
+            if (bytes != null) {
+                return bytes;
+            }
+            bytes = getBytes(path);
+            cache.put(path, bytes);
+            return bytes;
+        }             
+        return getBytes(path);
+    }
+    
+    private byte[] getBytes(String path) throws IOException {
+        File file = new File(appDir, path);
+        if (file.exists()) {
+            byte[] bytes = Streams.readBytes(file);
+            return bytes;
+        }
+        String resourcePath = appPackage + '/' + path;
+        if (path.startsWith("/")) {
+            resourcePath = appPackage + path;
+        }
+        logger.trace("get {}", resourcePath);
+        InputStream resourceStream = getClass().getResourceAsStream(resourcePath);
+        return Streams.readBytes(resourceStream);
+    }
+    
 }

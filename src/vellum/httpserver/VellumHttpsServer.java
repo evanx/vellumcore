@@ -31,6 +31,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.jx.JConsoleMap;
 import vellum.lifecycle.Shutdownable;
 import vellum.security.HttpsConfiguratorFactory;
 import vellum.ssl.SSLContexts;
@@ -52,14 +53,15 @@ public class VellumHttpsServer implements Shutdownable, RejectedExecutionHandler
     public VellumHttpsServer() {
     }
 
-    public void start(ExtendedProperties properties, X509TrustManager trustManager,
+    public void start(JConsoleMap properties, X509TrustManager trustManager,
             HttpHandler handler) throws Exception {
         start(new HttpsServerProperties(properties), 
                 SSLContexts.create(properties, trustManager), handler);
     }
-
+    
     public void start(HttpsServerProperties properties, SSLContext sslContext,
             HttpHandler handler) throws Exception {
+        logger.info("start {}", properties);
         executor = new ThreadPoolExecutor(100, 200, 60, TimeUnit.SECONDS, 
             new ArrayBlockingQueue<Runnable>(10));
         name = handler.getClass().getSimpleName();

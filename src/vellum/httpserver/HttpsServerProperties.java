@@ -20,8 +20,8 @@
  */
 package vellum.httpserver;
 
+import vellum.jx.JMap;
 import vellum.util.Args;
-import vellum.util.ExtendedProperties;
 
 /**
  *
@@ -32,10 +32,10 @@ public class HttpsServerProperties {
     boolean enabled = true;
     boolean clientAuth = false;
 
-    public HttpsServerProperties(ExtendedProperties props) {
-        this(props.getInt("port", 8443),
-                props.getBoolean("clientAuth", false),
-                props.getBoolean("enabled", true));
+    public HttpsServerProperties(JMap properties) {
+        this(properties.getInt("port", 8443),
+                properties.getBoolean("clientAuth", false),
+                properties.getBoolean("enabled", true));
     }
     
     public HttpsServerProperties(int port) {

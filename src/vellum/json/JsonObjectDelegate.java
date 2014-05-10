@@ -65,6 +65,14 @@ public class JsonObjectDelegate {
         return JMaps.parse(object);
     }
     
+    public JMap getMap(String key) {
+        JMap map = new JMap();
+        for (Entry<String, JsonElement> entry : object.get(key).getAsJsonObject().entrySet()) {
+            map.put(entry.getKey(), entry.getValue());
+        }
+        return map;
+    }
+    
     public ExtendedProperties getProperties() {
         ExtendedProperties properties = new ExtendedProperties();
         for (Entry<String, JsonElement> entry : object.entrySet()) {
@@ -74,7 +82,7 @@ public class JsonObjectDelegate {
         }
         return properties;
     }
-    
+
     public ExtendedProperties getProperties(String key) {
         ExtendedProperties properties = new ExtendedProperties();
         for (Entry<String, JsonElement> entry : object.get(key).getAsJsonObject().entrySet()) {

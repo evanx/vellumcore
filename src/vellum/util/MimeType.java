@@ -20,34 +20,31 @@
  */
 package vellum.util;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *
  * @author evan.summers
  */
-public class MimeTypes {
-    public static final Map<String, String> mimeTypes = map();
+public enum MimeType {
+        JSON("text/json"),
+        TXT("text/plain"),
+        HTML("text/html"),
+        ICO("image/x-icon"),
+        PNG("image/png"),
+        JPG("image/jpeg"),
+        JPEG("image/jpeg"),
+        CSS("text/css"),
+        JS("text/javascript"),
+        SH("text/x-shellscript"),
+        WOFF("application/font-woff"),
+        SVG("image/svg+xml"),
+        OTF("application/font-sfnt"),
+        TTF("application/font-sfnt"),
+        EOT("application/vnd.ms-fontobject");
 
-    private static Map map() {
-        Map<String, String> map = new HashMap();
-        map.put("json", "text/json");
-        map.put("txt", "text/plain");
-        map.put("html", "text/html");
-        map.put("ico", "image/x-icon");
-        map.put("png", "image/png");
-        map.put("jpg", "image/jpeg");
-        map.put("jpeg", "image/jpeg");
-        map.put("css", "text/css");
-        map.put("js", "text/javascript");
-        map.put("sh", "text/x-shellscript");
-        map.put("woff", "application/font-woff");
-        map.put("svg", "image/svg+xml");
-        map.put("otf", "application/font-sfnt");
-        map.put("ttf", "application/font-sfnt");
-        map.put("eot", "application/vnd.ms-fontobject");
-        return Collections.unmodifiableMap(map);
-    }
+    String mimeType;
+        
+    private MimeType(String mimeType) {
+        this.mimeType = mimeType;                
+    }        
+        
 }

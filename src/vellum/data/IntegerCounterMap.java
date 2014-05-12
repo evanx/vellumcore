@@ -29,11 +29,10 @@ import java.util.TreeMap;
  */
 public class IntegerCounterMap<K> extends TreeMap<K, Integer> {
 
-
     private int sum = 0;
     private Integer minimumValue = null;
     private Integer maximumValue = null;
-    private Integer defaultValue = new Integer(0);
+    private Integer defaultValue = 0;
 
     public IntegerCounterMap() {
     }

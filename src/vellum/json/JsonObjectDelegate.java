@@ -69,7 +69,7 @@ public class JsonObjectDelegate {
     public JMap getMap(String key) {
         JMap map = new JMap();
         for (Entry<String, JsonElement> entry : object.get(key).getAsJsonObject().entrySet()) {
-            logger.info(Args.format(entry.getKey(), entry.getValue(), entry.getValue().getClass()));
+            logger.info(Args.format(entry.getKey(), JMaps.parse(entry.getValue()), entry.getValue(), entry.getValue().getClass()));
             map.put(entry.getKey(), JMaps.parse(entry.getValue()));
         }
         return map;

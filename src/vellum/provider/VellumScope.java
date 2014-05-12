@@ -37,13 +37,18 @@ public class VellumScope {
     }
 
     public void put(Object instance) {
-        map.put(instance.getClass(), instance);
+        Class type = instance.getClass();
+        if (map.containsKey(type)) {
+            logger.warn("put {}", type);
+        }
+        map.put(type, instance);
     }
     
     public <T> T get(Class<T> type) {
         try {
             T instance = (T) map.get(type);
             if (instance == null) {
+                logger.warn("get {}", type);
                 instance = type.newInstance();
                 map.put(type, instance);
             }

@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.data.Millis;
+import vellum.exception.ParseException;
 
 /**
  *
@@ -85,6 +87,18 @@ public class JMap extends HashMap<String, Object> {
         return Convertors.coerceLong(getObject(key).toString());
     }
 
+    public long getMillis(String key) throws ParseException, JMapException {
+        return Millis.parse(getString(key));
+    }    
+    
+    public long getMillis(String key, long defaultValue) throws ParseException {
+        String string = getString(key, null);
+        if (string == null) {
+            return defaultValue;
+        }
+        return Millis.parse(string);
+    }    
+    
     public boolean getBoolean(String key, boolean defaultValue) {
         return Convertors.coerceBoolean(super.get(key), defaultValue);
     }

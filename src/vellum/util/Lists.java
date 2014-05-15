@@ -24,6 +24,7 @@ import vellum.data.MapEntryComparator;
 import vellum.data.MapValueComparator;
 import vellum.format.ListFormats;
 import java.util.*;
+import sun.net.ftp.FtpDirEntry;
 
 /**
  * Utility methods related to classes.
@@ -312,6 +313,14 @@ public class Lists {
 
     public static String toString(Collection collection) {
         return ListFormats.formatter.formatCollection(collection);
+    }
+
+    public static <T> List<T> list(Iterator<T> iterator) {
+        List list = new ArrayList();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
+        }
+        return list;
     }
 
 }

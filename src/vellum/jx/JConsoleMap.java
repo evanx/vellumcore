@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.exception.ArgsRuntimeException;
+import vellum.system.NullConsole;
 import vellum.util.MockableConsole;
 
 /**
@@ -88,5 +89,9 @@ public class JConsoleMap extends JMap {
     @Override
     public String toString() {
         return toJson();
+    }
+    
+    public static JConsoleMap map(JMap properties, String key) {
+        return new JConsoleMap(new NullConsole(), properties.getMap(key));
     }
 }

@@ -48,7 +48,12 @@ public class JMap extends HashMap<String, Object> {
     }
 
     public JMap getMap(String key) {
-        return (JMap) super.get(key);
+        if (!containsKey(key)) {
+            logger.warn("empty {}", key);
+            return new JMap();
+        } else {
+            return (JMap) super.get(key);
+        }
     }
 
     public Object getObject(String key) throws JMapException {

@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ public class JMaps {
         return map;
     }
     
-    public static JMap parse(String json) {
+    public static JMap parse(String json) throws JsonSyntaxException {
         return parse(new JsonParser().parse(json).getAsJsonObject());
     }
 

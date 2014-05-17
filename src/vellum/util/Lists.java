@@ -24,7 +24,6 @@ import vellum.data.MapEntryComparator;
 import vellum.data.MapValueComparator;
 import vellum.format.ListFormats;
 import java.util.*;
-import sun.net.ftp.FtpDirEntry;
 
 /**
  * Utility methods related to classes.
@@ -211,7 +210,7 @@ public class Lists {
         return Arrays.asList(array).toArray();
     }
 
-    public static List toList(byte[] array) {
+    public static List asList(byte[] array) {
         List list = new ArrayList();
         for (byte element : array) {
             list.add(element);
@@ -219,6 +218,14 @@ public class Lists {
         return list;
     }
 
+    public static List asList(Object[] array) {
+        List list = new ArrayList();
+        for (Object element : array) {
+            list.add(element);
+        }
+        return list;
+    }
+    
     public static <T> List<String> toStringList(T[] array) {
         List<String> list = new ArrayList();
         for (T element : array) {
@@ -293,7 +300,7 @@ public class Lists {
 
     public static List<String> subList(String[] array, int fromIndex) {
         List<String> list = new ArrayList();
-        list.addAll(asList(array));
+        list.addAll(Lists.asList(array));
         return list.subList(fromIndex, array.length);
     }
 
@@ -321,6 +328,13 @@ public class Lists {
             list.add(iterator.next());
         }
         return list;
+    }
+
+    public static Object[] concatenate(Object[] array, Object[] other) {
+        List list = new ArrayList();
+        list.addAll(asList(array));
+        list.addAll(asList(other));
+        return list.toArray();
     }
 
 }

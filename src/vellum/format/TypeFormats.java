@@ -41,7 +41,7 @@ public class TypeFormats {
         } else if (Strings.isEmpty(arg.toString())) {
             return "empty";
         } else if (arg instanceof byte[]) {
-            return String.format("[%s]", Lists.format(Lists.toList((byte[]) arg)));
+            return String.format("[%s]", Lists.format(Lists.asList((byte[]) arg)));
         } else if (arg instanceof Object[]) {
             return String.format("[%s]", Lists.format((Object[]) arg));
         } else if (arg instanceof String[]) {

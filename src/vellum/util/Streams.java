@@ -1,22 +1,22 @@
 /*
  Source https://code.google.com/p/vellum by @evanxsummers
 
-       Licensed to the Apache Software Foundation (ASF) under one
-       or more contributor license agreements. See the NOTICE file
-       distributed with this work for additional information
-       regarding copyright ownership. The ASF licenses this file to
-       you under the Apache License, Version 2.0 (the "License").
-       You may not use this file except in compliance with the
-       License. You may obtain a copy of the License at:
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership. The ASF licenses this file to
+ you under the Apache License, Version 2.0 (the "License").
+ You may not use this file except in compliance with the
+ License. You may obtain a copy of the License at:
 
-         http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-       Unless required by applicable law or agreed to in writing,
-       software distributed under the License is distributed on an
-       "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-       KIND, either express or implied.  See the License for the
-       specific language governing permissions and limitations
-       under the License.  
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.  
  */
 package vellum.util;
 
@@ -36,7 +36,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import vellum.exception.ArgsRuntimeException;
-import vellum.exception.Exceptions;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
@@ -53,6 +52,7 @@ import vellum.exception.SizeRuntimeException;
  * @author evan.summers
  */
 public class Streams {
+
     private final static Logger logger = LoggerFactory.getLogger(Streams.class);
 
     public static final String fileSeparator = System.getProperty("file.separator");
@@ -62,91 +62,21 @@ public class Streams {
         return new BufferedReader(new InputStreamReader(inputStream));
     }
 
-    public static BufferedReader newBufferedGzip(String fileName) {
-        try {
-            File file = newFile(fileName);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    new GZIPInputStream(new FileInputStream(file))));
-            return reader;
-        } catch (IOException e) {
-            throw new ArgsRuntimeException(e, null, fileName);
-        }
+    public static BufferedReader newBufferedGzip(String fileName) throws FileNotFoundException, IOException {
+        File file = new File(fileName);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new GZIPInputStream(new FileInputStream(file))));
+        return reader;
     }
 
-    public static BufferedReader newBufferedReader(String fileName) {
-        if (fileName.endsWith(".gz")) {
-            return newBufferedGzip(fileName);
-        }
-        try {
-            File file = newFile(fileName);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(file)));
-            return reader;
-        } catch (IOException e) {
-            throw new ArgsRuntimeException(e, null, fileName);
-        }
-    }
-
-    public static BufferedReader newBufferedReaderTail(String fileName, long length) {
-        try {
-            String command = String.format("tail -%d %s", length, fileName);
-            InputStream inputStream = exec(command);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            return reader;
-        } catch (IOException e) {
-            throw new ArgsRuntimeException(e, null, fileName);
-        }
-    }
-
-    public static BufferedReader newBufferedReaderTailFollow(String fileName, long length) {
-        try {
-            String command = String.format("tail -f %s", fileName);
-            InputStream inputStream = exec(command);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            return reader;
-        } catch (IOException e) {
-            throw new ArgsRuntimeException(e, null, fileName);
-        }
-    }
-
-    public static BufferedReader newBufferedReaderEnd(String fileName, long length) {
-        try {
-            File file = newFile(fileName);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(file)));
-            if (file.length() > length) {
-                reader.skip(file.length() - length);
-            }
-            reader.readLine();
-            return reader;
-        } catch (IOException e) {
-            throw new ArgsRuntimeException(e, null, fileName);
-        }
-    }
-
-    public static File newFile(String fileName) {
-        if (true) {
-            return new File(fileName);
-        }
-        if (fileName.startsWith("/")) {
-            return new File(fileName);
-        } else {
-            return new File(userHomeDir, fileName);
-        }
-    }
-
-    public static String loadResourceString(Class parent, String resourceName) {
-        try {
-            return readString(getResourceAsStream(parent, resourceName));
-        } catch (IOException e) {
-            throw Exceptions.newRuntimeException(e, parent, resourceName);
-        }
+    public static String loadResourceString(Class parent, String resourceName) throws IOException {
+        return readString(getResourceAsStream(parent, resourceName));
     }
 
     public static byte[] readResourceBytes(Class parent, String resourceName) throws IOException {
         return readBytes(getResourceAsStream(parent, resourceName));
     }
-    
+
     public static String readResourceString(Class parent, String resourceName) throws IOException {
         return readString(getResourceAsStream(parent, resourceName));
     }
@@ -159,26 +89,22 @@ public class Streams {
         return stream;
     }
 
-    public static byte[] readBytes(String filePath) {
+    public static byte[] readBytes(String filePath) throws IOException {
         return readBytes(new File(filePath));
     }
-    
-    public static byte[] readBytes(File file) {
+
+    public static byte[] readBytes(File file) throws FileNotFoundException, IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            FileInputStream stream = new FileInputStream(file);
-            while (true) {
-                int b = stream.read();
-                if (b < 0) {
-                    return outputStream.toByteArray();
-                }
-                outputStream.write(b);
+        FileInputStream stream = new FileInputStream(file);
+        while (true) {
+            int b = stream.read();
+            if (b < 0) {
+                return outputStream.toByteArray();
             }
-        } catch (IOException e) {
-            throw Exceptions.newRuntimeException(e);
+            outputStream.write(b);
         }
     }
-    
+
     public static byte[] readBytes(InputStream stream) throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             while (true) {
@@ -202,7 +128,7 @@ public class Streams {
     public static String readString(File file) throws IOException {
         return new String(readBytes(new FileInputStream(file)));
     }
-    
+
     public static char[] readChars(InputStream stream) throws IOException {
         return Bytes.toCharArray(readBytes(stream));
     }
@@ -230,7 +156,7 @@ public class Streams {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -240,7 +166,7 @@ public class Streams {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -250,7 +176,7 @@ public class Streams {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -262,100 +188,55 @@ public class Streams {
         srcFile.renameTo(destFile);
     }
 
-    public static List<String> readLineList(InputStream stream, int capacity) {
+    public static List<String> readLineList(InputStream stream, int capacity) throws IOException {
         List<String> lineList = new ArrayList();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         while (true) {
-            try {
-                String line = reader.readLine();
-                if (line == null) {
-                    return lineList;
-                }
-                lineList.add(line);
-                if (capacity > 0 && lineList.size() > capacity) {
-                    throw new SizeRuntimeException(lineList.size());
-                }
-            } catch (Exception e) {
-                throw Exceptions.newRuntimeException(e);
+            String line = reader.readLine();
+            if (line == null) {
+                return lineList;
+            }
+            lineList.add(line);
+            if (capacity > 0 && lineList.size() > capacity) {
+                throw new SizeRuntimeException(lineList.size());
             }
         }
     }
 
-    public static void read(InputStream stream, StringBuilder builder) {
+    public static void read(InputStream stream, StringBuilder builder) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         while (true) {
-            try {
-                String line = reader.readLine();
-                if (line == null) {
-                    return;
-                }
-                if (builder != null) {
-                    builder.append(line);
-                    builder.append("\n");
-                }
-            } catch (Exception e) {
-                throw Exceptions.newRuntimeException(e);
+            String line = reader.readLine();
+            if (line == null) {
+                return;
             }
+            builder.append(line);
+            builder.append("\n");
         }
     }
 
-    public static String readString(InputStream stream, long capacity) {
+    public static String readString(InputStream stream, long capacity) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         StringBuilder builder = new StringBuilder();
         while (true) {
-            try {
-                String line = reader.readLine();
-                if (line == null) {
-                    return builder.toString();
-                }
-                builder.append(line);
-                builder.append("\n");
-                if (capacity > 0 && builder.length() > capacity) {
-                    throw new SizeRuntimeException(builder.length());
-                }
-            } catch (Exception e) {
-                throw Exceptions.newRuntimeException(e);
+            String line = reader.readLine();
+            if (line == null) {
+                return builder.toString();
+            }
+            builder.append(line);
+            builder.append("\n");
+            if (capacity > 0 && builder.length() > capacity) {
+                throw new SizeRuntimeException(builder.length());
             }
         }
     }
 
-    public static PrintWriter newPrintWriter(OutputStream outputStream) {
-        return new PrintWriter(outputStream);
-    }
-
-    public static String baseName(String fileName) {
-        int index = fileName.lastIndexOf(fileSeparator);
-        if (index >= 0) {
-            return fileName.substring(index + 1);
-        }
-        return fileName;
-    }
-
-    public static String removeFileNameExtension(File file) {
-        return removeExtension(file.getName());
-
-    }
-
-    public static String removeExtension(String fileName) {
-        if (fileName != null) {
-            int index = fileName.lastIndexOf('.');
-            if (index > 0) {
-                fileName = fileName.substring(0, index);
-                index = fileName.lastIndexOf('/');
-                if (index >= 0) {
-                    fileName = fileName.substring(index + 1);
-                }
-            }
-        }
-        return fileName;
-    }
-
-    public static void transmit(InputStream inputStream, File file) 
+    public static void transmit(InputStream inputStream, File file)
             throws IOException {
         transmit(inputStream, new FileOutputStream(file));
     }
-    
-    public static void transmit(InputStream inputStream, OutputStream outputStream) 
+
+    public static void transmit(InputStream inputStream, OutputStream outputStream)
             throws IOException {
         while (true) {
             int b = inputStream.read();
@@ -365,20 +246,20 @@ public class Streams {
             outputStream.write(b);
         }
     }
-    
+
     public static void println(OutputStream outputStream, Object data) {
         new PrintWriter(outputStream).println(data);
     }
-    
+
     public static String parseFileName(String urlString) {
         int index = urlString.lastIndexOf('/');
         if (index >= 0) {
-            return urlString.substring(index + 1);            
+            return urlString.substring(index + 1);
         } else {
             return urlString;
-        }        
+        }
     }
-    
+
     public static byte[] readContent(String urlString) throws IOException {
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
@@ -393,12 +274,12 @@ public class Streams {
         return content;
     }
 
-    public static void write(byte[] content, File file) 
+    public static void write(byte[] content, File file)
             throws FileNotFoundException, IOException {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(content);
         }
-    }    
+    }
 
     public static void postHttp(byte[] content, URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -425,5 +306,5 @@ public class Streams {
         }
         logger.warn("getContentType {}", path);
         return "text/html";
-    }        
+    }
 }

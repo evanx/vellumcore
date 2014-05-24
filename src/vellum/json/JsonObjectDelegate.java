@@ -63,7 +63,7 @@ public class JsonObjectDelegate {
     }
 
     public JMap getMap() {
-        return JMaps.parse(object);
+        return JMaps.map(object);
     }
     
     public JMap getMap(String key) {

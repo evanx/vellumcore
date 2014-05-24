@@ -22,41 +22,47 @@ import org.slf4j.LoggerFactory;
  * @author evan.summers
  */
 public class JMaps {
+
     final static Logger logger = LoggerFactory.getLogger(JMaps.class);
-    
+
     public static Object parse(JsonElement element) {
         if (element.isJsonArray()) {
-            JsonArray array = element.getAsJsonArray();
-            List list = new ArrayList();
-            for (int i = 0; i < array.size(); i++) {
-                JsonElement arrayElement = array.get(i);
-                list.add(parse(arrayElement));
-            }
-            return list;
+            return list(element.getAsJsonArray());
         } else if (element.isJsonObject()) {
-            JsonObject object = element.getAsJsonObject();
-            return parse(object);
+            return map(element.getAsJsonObject());
         } else if (element.isJsonNull()) {
             return null;
         } else if (element.isJsonPrimitive()) {
-            String string = element.toString();
-            if (string.equals("true")) {
-                return element.getAsBoolean();
-            } else if (string.equals("false")) {
-                return element.getAsBoolean();
-            } else if (string.startsWith("\"")) {
-                return string.substring(1, string.length() - 1);
-            } else if (string.contains(".")) {
-                return element.getAsDouble();
-            } else if (string.matches("[0-9]*")) {
-                return element.getAsLong();
-            }
-            return element.getAsString();
+            return parsePrimitive(element);
         }
         return element.toString();
     }
 
-    public static JMap parse(JsonObject object) {
+    public static Object parsePrimitive(JsonElement element) {
+        String string = element.toString();
+        if (string.equals("true")) {
+            return element.getAsBoolean();
+        } else if (string.equals("false")) {
+            return element.getAsBoolean();
+        } else if (string.startsWith("\"")) {
+            return string.substring(1, string.length() - 1);
+        } else if (string.contains(".")) {
+            return element.getAsDouble();
+        } else if (string.matches("[0-9]*")) {
+            return element.getAsLong();
+        }
+        return element.getAsString();
+    }
+        
+    public static List list(JsonArray array) {
+        List list = new ArrayList();
+        for (int i = 0; i < array.size(); i++) {
+            list.add(parse(array.get(i)));
+        }
+        return list;
+    }
+
+    public static JMap map(JsonObject object) {
         JMap map = new JMap();
         for (Entry<String, JsonElement> entry : object.entrySet()) {
             map.put(entry.getKey(), parse(entry.getValue()));
@@ -64,8 +70,28 @@ public class JMaps {
         return map;
     }
     
+    public static List<JMap> listMap(JsonArray array) {
+        List list = new ArrayList();
+        for (int i = 0; i < array.size(); i++) {
+            list.add(map(array.get(i).getAsJsonObject()));
+        }
+        return list;
+    }
+
+    public static JsonArray parseJsonArray(String json) throws JsonSyntaxException {
+        return new JsonParser().parse(json).getAsJsonArray();
+    }
+
+    public static List<JMap> listMap(String json) throws JsonSyntaxException {
+        return listMap(parseJsonArray(json));
+    }
+
+    public static List list(String json) throws JsonSyntaxException {
+        return list(parseJsonArray(json));
+    }
+
     public static JMap parse(String json) throws JsonSyntaxException {
-        return parse(new JsonParser().parse(json).getAsJsonObject());
+        return map(new JsonParser().parse(json).getAsJsonObject());
     }
 
     public static JMap mapValue(String key, Object value) {
@@ -74,20 +100,20 @@ public class JMaps {
         return map;
     }
 
+    public static JEntry entryValue(String key, Object value) {
+        return new JEntry(key, value);
+    }
+
+    public static JEntry entry(String key, Iterable<? extends JMapped> iterable) {
+        return entryValue(key, list(iterable));
+    }
+
     public static JMap map(String key, Iterable<? extends JMapped> iterable) {
         JMap map = new JMap();
         map.add(key, list(iterable));
         return map;
     }
-        
-    public static JEntry entryValue(String key, Object value) {
-        return new JEntry(key, value);
-    }    
 
-    public static JEntry entry(String key, Iterable<? extends JMapped> iterable) {
-        return entryValue(key, list(iterable));
-    }
-    
     public static Collection<JMap> list(Iterable<? extends JMapped> iterable) {
         List<JMap> list = new LinkedList();
         for (JMapped mapped : iterable) {
@@ -97,18 +123,18 @@ public class JMaps {
         return list;
     }
 
-    public static JMap map(Properties properties) {
-        JMap map = new JMap();
-        for (Map.Entry entry : properties.entrySet()) {
-            map.put(entry.getKey().toString(), entry.getValue());
-        }
-        return map;
-    }
-
     public static JMap map(JEntry... entries) {
         JMap map = new JMap();
         for (JEntry entry : entries) {
             map.put(entry.getKey(), entry.getValue());
+        }
+        return map;
+    }
+
+    public static JMap map(Properties properties) {
+        JMap map = new JMap();
+        for (Map.Entry entry : properties.entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue());
         }
         return map;
     }
@@ -126,8 +152,8 @@ public class JMaps {
             }
         }
         return map;
-    }    
-    
+    }
+
     public static List<JMap> list(JMap map, String key) {
         List<JMap> list = new LinkedList();
         for (Object item : map.listMap(key)) {
@@ -136,5 +162,4 @@ public class JMaps {
         logger.info("listMap {}", list.size());
         return list;
     }
-    
 }

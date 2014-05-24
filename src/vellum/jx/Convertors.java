@@ -8,8 +8,22 @@ import org.slf4j.LoggerFactory;
  * @author evan.summers
  */
 public class Convertors {
+
     final static Logger logger = LoggerFactory.getLogger(Convertors.class);
-    
+
+    public static boolean coerceBoolean(Object value) throws JMapException {
+        if (value == null) {
+            throw new JMapException("Null boolean");
+        }
+        if (value instanceof String) {
+            return Boolean.parseBoolean((String) value);
+        }
+        if (value instanceof Boolean) {
+            return (boolean) value;
+        }
+        throw new JMapException("Not boolean: " + value);
+    }
+
     public static boolean coerceBoolean(Object value, boolean defaultValue) {
         if (value == null) {
             return defaultValue;
@@ -23,7 +37,7 @@ public class Convertors {
         logger.warn("coerceBoolean {} {}", value.getClass(), value.toString());
         return defaultValue;
     }
-    
+
     public static Integer coerceInteger(Object value, Integer defaultValue) {
         if (value == null) {
             return defaultValue;
@@ -37,7 +51,7 @@ public class Convertors {
         logger.warn("coerceInteger {} {}", value.getClass(), value.toString());
         return defaultValue;
     }
-        
+
     public static int coerceInt(Object value, int defaultValue) {
         if (value == null) {
             return defaultValue;
@@ -57,7 +71,7 @@ public class Convertors {
 
     public static int coerceInt(Object value) throws JMapException {
         if (value == null) {
-            throw new JMapException("Null integer");            
+            throw new JMapException("Null integer");
         }
         if (value instanceof String) {
             return Integer.parseInt((String) value);
@@ -81,7 +95,7 @@ public class Convertors {
         logger.warn("coerceLong {} {}", value.getClass(), value.toString());
         return defaultValue;
     }
-    
+
     public static long coerceLong(Object value) throws JMapException {
         if (value == null) {
             throw new JMapException("Null long integer");

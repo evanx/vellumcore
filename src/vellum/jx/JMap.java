@@ -104,6 +104,10 @@ public class JMap extends HashMap<String, Object> {
         return Millis.parse(string);
     }    
     
+    public boolean getBoolean(String key) throws JMapException {
+        return Convertors.coerceBoolean(super.get(key));
+    }
+        
     public boolean getBoolean(String key, boolean defaultValue) {
         return Convertors.coerceBoolean(super.get(key), defaultValue);
     }

@@ -156,7 +156,7 @@ public class JMaps {
 
     public static List<JMap> list(JMap map, String key) {
         List<JMap> list = new LinkedList();
-        for (Object item : map.listMap(key)) {
+        for (Object item : map.getListMap(key)) {
             list.add((JMap) item);
         }
         logger.info("listMap {}", list.size());

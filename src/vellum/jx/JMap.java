@@ -33,23 +33,23 @@ public class JMap extends HashMap<String, Object> {
             super.put(entry.getKey(), entry.getValue());
         }
     }
-    
+
     public JMap(JEntry... entries) {
         for (JEntry entry : entries) {
             super.put(entry.getKey(), entry.getValue());
         }
     }
-
-    public Collection getCollection(String key) {
-        return (Collection) super.get(key);
-    }
-
+    
     public JMap add(String key, Object value) {
         super.put(key, value);
         return this;
     }
+    
+    public List getList(String key) {
+        return (List) super.get(key);
+    }
 
-    public JMap map(String key) {
+    public JMap getMap(String key) {
         if (!containsKey(key)) {
             logger.warn("empty {}", key);
             return new JMap();
@@ -58,7 +58,7 @@ public class JMap extends HashMap<String, Object> {
         }
     }
 
-    public List<JMap> listMap(String key) {
+    public List<JMap> getListMap(String key) {
         if (!containsKey(key)) {
             logger.warn("empty {}", key);
             return new ArrayList();

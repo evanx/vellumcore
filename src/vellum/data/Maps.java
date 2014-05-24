@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.jx.JConsoleMap;
 
 
 /**
@@ -130,6 +131,10 @@ public class Maps {
         }
         return true;
     }    
+
+    public static Object list(JConsoleMap properties, String clients) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 
 class EntryAscendingComparator<K, V extends Comparable> implements Comparator<Entry<K, V>> {

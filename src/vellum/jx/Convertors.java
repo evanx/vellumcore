@@ -21,7 +21,7 @@ public class Convertors {
         if (value instanceof Boolean) {
             return (boolean) value;
         }
-        throw new JMapException("Not boolean: " + value);
+        throw new JMapException("Not boolean: " + value.getClass());
     }
 
     public static boolean coerceBoolean(Object value, boolean defaultValue) {
@@ -79,7 +79,7 @@ public class Convertors {
         if (value instanceof Number) {
             return ((Number) value).intValue();
         }
-        throw new JMapException("Not integer: " + value);
+        throw new JMapException("Not integer: " + value.getClass());
     }
 
     public static long coerceLong(Object value, long defaultValue) {
@@ -106,6 +106,6 @@ public class Convertors {
         if (value instanceof Number) {
             return ((Number) value).longValue();
         }
-        throw new JMapException("Not long integer: " + value);
+        throw new JMapException("Not long integer: " + value.getClass());
     }
 }

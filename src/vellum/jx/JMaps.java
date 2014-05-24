@@ -127,4 +127,14 @@ public class JMaps {
         }
         return map;
     }    
+    
+    public static List<JMap> list(JMap map, String key) {
+        List<JMap> list = new LinkedList();
+        for (Object item : map.listMap(key)) {
+            list.add((JMap) item);
+        }
+        logger.info("listMap {}", list.size());
+        return list;
+    }
+    
 }

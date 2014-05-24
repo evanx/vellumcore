@@ -3,8 +3,10 @@
 package vellum.jx;
 
 import com.google.gson.Gson;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.data.Millis;
@@ -47,17 +49,26 @@ public class JMap extends HashMap<String, Object> {
         return this;
     }
 
-    public JMap getMap(String key) {
+    public JMap map(String key) {
         if (!containsKey(key)) {
             logger.warn("empty {}", key);
             return new JMap();
         } else {
-            return (JMap) super.get(key);
+            return (JMap) get(key);
         }
     }
 
+    public List<JMap> listMap(String key) {
+        if (!containsKey(key)) {
+            logger.warn("empty {}", key);
+            return new ArrayList();
+        } else {
+            return (List<JMap>) get(key);
+        }
+    }
+    
     public Object getObject(String key) throws JMapException {
-        Object value = super.get(key);
+        Object value = get(key);
         if (value == null) {
             throw new JMapException(key);
         }
@@ -69,7 +80,7 @@ public class JMap extends HashMap<String, Object> {
     }
 
     public String getString(String key, String defaultValue) {
-        Object value = super.get(key);
+        Object value = get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -81,15 +92,15 @@ public class JMap extends HashMap<String, Object> {
     }
 
     public int getInt(String key, int defaultValue) {
-        return Convertors.coerceInt(super.get(key), defaultValue);
+        return Convertors.coerceInt(get(key), defaultValue);
     }
 
     public int getInt(String key) throws JMapException {
-        return Convertors.coerceInt(super.get(key));
+        return Convertors.coerceInt(get(key));
     }
     
     public long getLong(String key) throws JMapException {
-        return Convertors.coerceLong(getObject(key).toString());
+        return Convertors.coerceLong(get(key));
     }
 
     public long getMillis(String key) throws ParseException, JMapException {
@@ -97,35 +108,35 @@ public class JMap extends HashMap<String, Object> {
     }    
     
     public long getMillis(String key, long defaultValue) throws ParseException {
-        String string = getString(key, null);
-        if (string == null) {
+        Object value = get(key);
+        if (value == null) {
             return defaultValue;
         }
-        return Millis.parse(string);
+        return Millis.parse(value.toString());
     }    
     
     public boolean getBoolean(String key) throws JMapException {
-        return Convertors.coerceBoolean(super.get(key));
+        return Convertors.coerceBoolean(getObject(key));
     }
         
     public boolean getBoolean(String key, boolean defaultValue) {
-        return Convertors.coerceBoolean(super.get(key), defaultValue);
+        return Convertors.coerceBoolean(get(key), defaultValue);
     }
     
     public long getLong(String key, long defaultValue) {
-        return Convertors.coerceLong(super.get(key), defaultValue);
+        return Convertors.coerceLong(get(key), defaultValue);
     }
 
     public Integer getInteger(String key) throws JMapException {
         return Convertors.coerceInt(getObject(key));
     }
     
-    public Integer getInteger(String key, Integer value) {
-        return Convertors.coerceInteger(super.get(key), value);
+    public Integer getInteger(String key, Integer defaultValue) {
+        return Convertors.coerceInteger(get(key), defaultValue);
     }
 
-    public Integer getInteger(String key, int value) {
-        return Convertors.coerceInteger(super.get(key), value);
+    public Integer getInteger(String key, int defaultValue) {
+        return Convertors.coerceInteger(get(key), defaultValue);
     }
 
     public String toJson() {

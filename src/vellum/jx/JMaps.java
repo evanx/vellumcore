@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.system.NullConsole;
 
 /**
  *
@@ -180,4 +181,13 @@ public class JMaps {
         logger.info("listMap {}", list.size());
         return list;
     }
+
+    public static JConsoleMap nullConsole(JMap map) {
+        return new JConsoleMap(new NullConsole(), map);
+    }
+    
+    public static JConsoleMap nullConsole(String json) {
+        return nullConsole(parse(json));
+    }
+    
 }

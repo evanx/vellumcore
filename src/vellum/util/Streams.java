@@ -298,17 +298,4 @@ public class Streams {
             connection.disconnect();
         }
     }
-
-    public static String getContentType(String path) {
-        int index = path.lastIndexOf(".");
-        if (index > 0) {
-            String ext = path.substring(index + 1);
-            String type = MimeTypes.mimeTypes.get(ext);
-            if (type != null) {
-                return type;
-            }
-        }
-        logger.warn("getContentType {}", path);
-        return "text/html";
-    }
 }

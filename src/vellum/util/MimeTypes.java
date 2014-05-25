@@ -50,4 +50,16 @@ public class MimeTypes {
         map.put("eot", "application/vnd.ms-fontobject");
         return Collections.unmodifiableMap(map);
     }
+    
+    public static String getContentType(String path, String defaultContentType) {
+        int index = path.lastIndexOf(".");
+        if (index > 0) {
+            String ext = path.substring(index + 1);
+            String type = MimeTypes.mimeTypes.get(ext);
+            if (type != null) {
+                return type;
+            }
+        }
+        return defaultContentType;
+    }
 }

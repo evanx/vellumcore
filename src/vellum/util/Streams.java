@@ -128,6 +128,10 @@ public class Streams {
     public static String readString(File file) throws IOException {
         return new String(readBytes(new FileInputStream(file)));
     }
+    
+    public static String readString(String fileName) throws IOException {
+        return new String(readBytes(new FileInputStream(fileName)));
+    }    
 
     public static char[] readChars(InputStream stream) throws IOException {
         return Bytes.toCharArray(readBytes(stream));

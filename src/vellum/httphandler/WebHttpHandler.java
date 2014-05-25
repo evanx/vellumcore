@@ -43,14 +43,14 @@ public class WebHttpHandler implements HttpHandler {
     Map<String, byte[]> cache = new HashMap();
     String appPackage;
     String appDir;
-    String defaultPath;
+    String defaultPath = "index.html";
     boolean caching = false;
     
     public WebHttpHandler(String appPackage, JMap properties) {
         this.appPackage = appPackage;
         this.caching = properties.getBoolean("caching", false);
         this.appDir = properties.getString("appDir", null);
-        this.defaultPath = properties.getString("defaultPath", null);
+        this.defaultPath = properties.getString("defaultPath", defaultPath);
     }
     
     @Override

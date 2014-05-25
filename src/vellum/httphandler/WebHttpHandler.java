@@ -43,12 +43,14 @@ public class WebHttpHandler implements HttpHandler {
     Map<String, byte[]> cache = new HashMap();
     String appPackage;
     String appDir;
+    String defaultPath;
     boolean caching = false;
     
     public WebHttpHandler(String appPackage, JMap properties) {
         this.appPackage = appPackage;
         this.caching = properties.getBoolean("caching", false);
         this.appDir = properties.getString("appDir", null);
+        this.defaultPath = properties.getString("defaultPath", null);
     }
     
     @Override
@@ -61,7 +63,7 @@ public class WebHttpHandler implements HttpHandler {
         }
         if (contentType == null) {
             contentType = "text/html";
-            path = "index.html";
+            path = defaultPath;
         }
         logger.info("handle {} {}", path, contentType);
         try {

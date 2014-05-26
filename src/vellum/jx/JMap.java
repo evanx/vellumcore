@@ -158,13 +158,9 @@ public class JMap extends HashMap<String, Object> {
     }
 
     public String toJson() {
-        String string = new Gson().toJson(this);
-        if (string.contains("\\\\")) {
-            throw new JMapRuntimeException("Gson escaping");
-        }
-        return string;
+        return JMaps.ensureTidy(new Gson().toJson(this));        
     }
-
+   
     public String getText() {
         return text;
     }

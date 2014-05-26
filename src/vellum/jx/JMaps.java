@@ -25,7 +25,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,7 +66,7 @@ public class JMaps {
         } else if (string.equals("false")) {
             return element.getAsBoolean();
         } else if (string.startsWith("\"")) {
-            return string.substring(1, string.length() - 1);
+            return ensureTidy(string.substring(1, string.length() - 1));
         } else if (string.contains(".")) {
             return element.getAsDouble();
         } else if (string.matches("[0-9]*")) {
@@ -75,7 +74,7 @@ public class JMaps {
         }
         return element.getAsString();
     }
-        
+
     public static List list(JsonArray array) {
         List list = new ArrayList();
         for (int i = 0; i < array.size(); i++) {
@@ -196,5 +195,15 @@ public class JMaps {
     public static JConsoleMap nullConsoleFile(String fileName) throws IOException {
         return nullConsole(parse(Streams.readString(fileName)));
     }
-    
+
+    public static String ensureTidy(String string) {
+        int index = string.indexOf("\\\\");
+        if (index > 10) {
+            String sub = string.substring(index - 10);
+            if (sub.length() > 50) sub = sub.substring(0, 50);
+            logger.error("toJson {}", sub);
+            throw new JMapRuntimeException("Gson escaping");
+        }
+        return string;
+    }
 }

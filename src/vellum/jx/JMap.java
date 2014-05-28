@@ -157,6 +157,7 @@ public class JMap extends HashMap<String, Object> {
         return Convertors.coerceInteger(get(key), defaultValue);
     }
 
+    
     public String toJson() {
         String string = new Gson().toJson(this);
         if (string.contains("\\\\")) {

@@ -156,7 +156,6 @@ public class JMap extends HashMap<String, Object> {
     public Integer getInteger(String key, int defaultValue) {
         return Convertors.coerceInteger(get(key), defaultValue);
     }
-
     
     public String toJson() {
         String string = new Gson().toJson(this);

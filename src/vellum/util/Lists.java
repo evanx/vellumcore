@@ -20,6 +20,7 @@
  */
 package vellum.util;
 
+import java.lang.reflect.Array;
 import vellum.data.MapEntryComparator;
 import vellum.data.MapValueComparator;
 import vellum.format.ListFormats;
@@ -378,4 +379,22 @@ public class Lists {
         }
         return list;
     }       
+
+    public static List asListArray(Object array) {
+        int length = Array.getLength(array);
+        List list = new ArrayList();
+        for (int i = 0; i < length; i++) {
+            list.add(Array.get(array, i));
+        }
+        return list;
+    }
+    
+    public static Object[] toObjectArray(Object array) {
+        int length = Array.getLength(array);
+        Object[] ret = new Object[length];
+        for (int i = 0; i < length; i++) {
+            ret[i] = Array.get(array, i);
+        }
+        return ret;
+    }
 }

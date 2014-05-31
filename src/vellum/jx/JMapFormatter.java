@@ -23,6 +23,7 @@ package vellum.jx;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.util.Lists;
 
 /**
  *
@@ -69,6 +70,8 @@ public class JMapFormatter {
     public static String formatObject(Object object) {
         if (object == null) {
             return "null";            
+        } else if (object.getClass().isArray()) {
+            return formatArray(Lists.asListArray(object));
         } else if (object instanceof Iterable) {
             return formatArray((Iterable) object);
         } else if (object instanceof CharSequence) {

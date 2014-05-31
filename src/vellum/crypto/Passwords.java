@@ -25,6 +25,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import org.postgresql.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +72,11 @@ public class Passwords {
         }
     }
 
+    public static boolean matches(char[] password, String passwordHash, String salt) 
+            throws GeneralSecurityException {
+        return matches(password, Base64.decode(passwordHash), Base64.decode(salt), ITERATION_COUNT, KEY_SIZE);
+    }
+    
     public static boolean matches(char[] password, byte[] passwordHash, byte[] salt) 
             throws GeneralSecurityException {
         return matches(password, passwordHash, salt, ITERATION_COUNT, KEY_SIZE);

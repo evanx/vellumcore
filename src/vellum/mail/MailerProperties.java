@@ -23,7 +23,7 @@ package vellum.mail;
 import java.io.IOException;
 import vellum.data.Emails;
 import vellum.jx.JMap;
-import vellum.jx.JMapException;
+import vellum.jx.JMapsException;
 import vellum.util.Args;
 import vellum.util.Streams;
 
@@ -45,7 +45,7 @@ public class MailerProperties {
     public MailerProperties() {
     }
     
-    public void init(JMap properties) throws JMapException, IOException {
+    public void init(JMap properties) throws JMapsException, IOException {
         enabled = properties.getBoolean("enabled", true);
         host = properties.getString("host", host);
         port = properties.getInt("port", port);

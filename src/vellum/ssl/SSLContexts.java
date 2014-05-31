@@ -39,7 +39,7 @@ import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.jx.JConsoleMap;
-import vellum.jx.JMapException;
+import vellum.jx.JMapsException;
 import vellum.security.KeyStores;
 
 /**
@@ -130,7 +130,7 @@ public class SSLContexts {
     }
 
     public static SSLContext create(JConsoleMap properties, 
-            X509TrustManager trustManager) throws GeneralSecurityException, IOException, JMapException {
+            X509TrustManager trustManager) throws GeneralSecurityException, IOException, JMapsException {
         char[] pass = properties.getPassword("pass");
         KeyStore keyStore = KeyStores.loadKeyStore(properties.getString("keyStoreType", "JKS"),
                 properties.getString("keyStoreLocation"), pass);

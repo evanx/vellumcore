@@ -87,15 +87,15 @@ public class JMap extends HashMap<String, Object> {
         }
     }
     
-    public Object getObject(String key) throws JMapException {
+    public Object getObject(String key) throws JMapsException {
         Object value = get(key);
         if (value == null) {
-            throw new JMapException(key);
+            throw new JMapsException(key);
         }
         return value;
     }
     
-    public String getString(String key) throws JMapException {
+    public String getString(String key) throws JMapsException {
         return getObject(key).toString();
     }
 
@@ -107,7 +107,7 @@ public class JMap extends HashMap<String, Object> {
         return value.toString();
     }
 
-    public char[] getChars(String key) throws JMapException {
+    public char[] getChars(String key) throws JMapsException {
         return getString(key).toCharArray();
     }
 
@@ -115,15 +115,15 @@ public class JMap extends HashMap<String, Object> {
         return Convertors.coerceInt(get(key), defaultValue);
     }
 
-    public int getInt(String key) throws JMapException {
+    public int getInt(String key) throws JMapsException {
         return Convertors.coerceInt(get(key));
     }
     
-    public long getLong(String key) throws JMapException {
+    public long getLong(String key) throws JMapsException {
         return Convertors.coerceLong(get(key));
     }
 
-    public long getMillis(String key) throws ParseException, JMapException {
+    public long getMillis(String key) throws ParseException, JMapsException {
         return Millis.parse(getString(key));
     }    
     
@@ -135,7 +135,7 @@ public class JMap extends HashMap<String, Object> {
         return Millis.parse(value.toString());
     }    
     
-    public boolean getBoolean(String key) throws JMapException {
+    public boolean getBoolean(String key) throws JMapsException {
         return Convertors.coerceBoolean(getObject(key));
     }
         
@@ -147,7 +147,7 @@ public class JMap extends HashMap<String, Object> {
         return Convertors.coerceLong(get(key), defaultValue);
     }
 
-    public Integer getInteger(String key) throws JMapException {
+    public Integer getInteger(String key) throws JMapsException {
         return Convertors.coerceInt(getObject(key));
     }
     

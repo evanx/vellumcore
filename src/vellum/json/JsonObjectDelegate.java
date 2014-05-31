@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import vellum.data.Millis;
 import vellum.exception.ParseException;
 import vellum.jx.JMap;
-import vellum.jx.JMapException;
+import vellum.jx.JMapsException;
 import vellum.jx.JMaps;
 import vellum.util.Args;
 import vellum.util.ExtendedProperties;
@@ -126,10 +126,10 @@ public class JsonObjectDelegate {
         return list;
     }
     
-    public String getString(String key) throws JMapException {
+    public String getString(String key) throws JMapsException {
         JsonElement element = get(key);
         if (element == null) {
-            throw new JMapException(key);
+            throw new JMapsException(key);
         }
         return element.getAsString();
     }

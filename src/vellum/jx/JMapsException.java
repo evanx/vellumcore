@@ -24,15 +24,10 @@ package vellum.jx;
  *
  * @author evan.summers
  */
-public class JMapException extends Exception {
-    JMap map;
-    
-    public JMapException(JMap map, String message) {
-        super(message);
-        this.map = map;
-    }
+public class JMapsException extends Exception {
 
-    public JMap getMap() {
-        return map;
-    }            
+    public JMapsException(String message) {
+        super(message);
+    }
+    
 }

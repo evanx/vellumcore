@@ -31,9 +31,9 @@ public class Convertors {
 
     final static Logger logger = LoggerFactory.getLogger(Convertors.class);
 
-    public static boolean coerceBoolean(Object value) throws JMapException {
+    public static boolean coerceBoolean(Object value) throws JMapsException {
         if (value == null) {
-            throw new JMapException("Null boolean");
+            throw new JMapsException("Null boolean");
         }
         if (value instanceof String) {
             return Boolean.parseBoolean((String) value);
@@ -41,7 +41,7 @@ public class Convertors {
         if (value instanceof Boolean) {
             return (boolean) value;
         }
-        throw new JMapException("Not boolean: " + value.getClass());
+        throw new JMapsException("Not boolean: " + value.getClass());
     }
 
     public static boolean coerceBoolean(Object value, boolean defaultValue) {
@@ -89,9 +89,9 @@ public class Convertors {
         return defaultValue;
     }
 
-    public static int coerceInt(Object value) throws JMapException {
+    public static int coerceInt(Object value) throws JMapsException {
         if (value == null) {
-            throw new JMapException("Null integer");
+            throw new JMapsException("Null integer");
         }
         if (value instanceof String) {
             return Integer.parseInt((String) value);
@@ -99,7 +99,7 @@ public class Convertors {
         if (value instanceof Number) {
             return ((Number) value).intValue();
         }
-        throw new JMapException("Not integer: " + value.getClass());
+        throw new JMapsException("Not integer: " + value.getClass());
     }
 
     public static long coerceLong(Object value, long defaultValue) {
@@ -116,9 +116,9 @@ public class Convertors {
         return defaultValue;
     }
 
-    public static long coerceLong(Object value) throws JMapException {
+    public static long coerceLong(Object value) throws JMapsException {
         if (value == null) {
-            throw new JMapException("Null long integer");
+            throw new JMapsException("Null long integer");
         }
         if (value instanceof String) {
             return Long.parseLong((String) value);
@@ -126,6 +126,6 @@ public class Convertors {
         if (value instanceof Number) {
             return ((Number) value).longValue();
         }
-        throw new JMapException("Not long integer: " + value.getClass());
+        throw new JMapsException("Not long integer: " + value.getClass());
     }
 }

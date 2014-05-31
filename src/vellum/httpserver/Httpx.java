@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
-import vellum.jx.JMapException;
+import vellum.jx.JMapsException;
 import vellum.jx.JMapFormatter;
 import vellum.jx.JMaps;
 import vellum.parameter.Entry;
@@ -167,11 +167,11 @@ public class Httpx {
         }
     }
 
-    public void setCookie(JMap map, long ageMillis) throws JMapException {
+    public void setCookie(JMap map, long ageMillis) throws JMapsException {
         setCookie(map, null, null, ageMillis);
     }
     
-    public void setCookie(JMap map, String path, String version, long ageMillis) throws JMapException {
+    public void setCookie(JMap map, String path, String version, long ageMillis) throws JMapsException {
         for (String key : map.keySet()) {
             Object value = map.get(key);
             StringBuilder builder = new StringBuilder();

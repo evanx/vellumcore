@@ -41,6 +41,7 @@ import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
 import vellum.jx.JMapException;
+import vellum.jx.JMapFormatter;
 import vellum.jx.JMaps;
 import vellum.parameter.Entry;
 import vellum.parameter.Parameters;
@@ -351,9 +352,8 @@ public class Httpx {
         return out;
     }
 
-    public void sendResponse(JMap map) throws IOException {
-        logger.trace("sendResponse map {}", map);
-        sendResponse("text/json", map.toJson());
+    public void sendResponse(Map map) throws IOException {
+        sendResponse("text/json", JMapFormatter.formatMap(map));
     }
 
     public JMap parseJsonMap() throws IOException {

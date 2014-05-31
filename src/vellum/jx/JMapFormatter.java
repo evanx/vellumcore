@@ -20,6 +20,7 @@
  */
 package vellum.jx;
 
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,27 +73,26 @@ public class JMapFormatter {
             return formatArray((Iterable) object);
         } else if (object instanceof CharSequence) {
             return formatString(object.toString());
-        } else if (object instanceof JMap) {
-            return formatMap((JMap) object);
+        } else if (object instanceof Map) {
+            return formatMap((Map) object);
         } else {
             return formatPrimitive(object);
         }
     }
 
-    public static String formatMap(JMap map) {
+    public static String formatMap(Map map) {
         StringBuilder builder = new StringBuilder();
-        for (JEntry entry : JMaps.list(map)) {
+        for (Object entry : map.entrySet()) {
             if (builder.length() > 0) {
                 builder.append(", ");
             }
-            builder.append(formatEntry(entry));
+            builder.append(formatEntry((Map.Entry) entry));
         }
-        return String.format("{%s}", builder.toString());
-        
+        return String.format("{%s}", builder.toString());        
     }
-    
-    public static String formatEntry(JEntry map) {
-        return String.format("%s: %s", formatKey(map.getKey()), formatObject(map.getValue()));
+
+    public static String formatEntry(Map.Entry entry) {
+        return String.format("%s: %s", formatKey(entry.getKey().toString()), formatObject(entry.getValue()));
     }
     
     public static String formatKey(String key) {

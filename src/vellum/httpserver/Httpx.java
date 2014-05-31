@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
+import vellum.jx.JMapException;
 import vellum.jx.JMapsException;
 import vellum.jx.JMapFormatter;
 import vellum.jx.JMaps;
@@ -288,6 +289,13 @@ public class Httpx {
         getPrintStream().write(bytes);
     }
 
+    public void sendResponse(int statusCode, String contentType, byte[] bytes) throws IOException {
+        delegate.getResponseHeaders().set("Content-type", contentType);
+        delegate.getResponseHeaders().set("Content-length", Integer.toString(bytes.length));
+        delegate.sendResponseHeaders(statusCode, bytes.length);
+        getPrintStream().write(bytes);
+    }
+    
     public void sendResponseFile(String contentType, String fileName) throws IOException {
         delegate.getResponseHeaders().add("Content-disposition",
                 "attachment; filename=" + fileName);
@@ -323,13 +331,25 @@ public class Httpx {
         delegate.getResponseBody().write(responseBytes);
     }
     
-    public void sendError(Throwable e) {
-        if (e instanceof DisplayException) {
-        } else if (e instanceof StorageException) {
-        } else {
-            e.printStackTrace(System.err);
+    public void sendError(Throwable error) {
+        try {
+            if (error instanceof JMapException) {
+                JMapException mapException = (JMapException) error;
+                JMap responseMap = mapException.getMap();
+                responseMap.put("errorMessage", error.getMessage());
+                sendResponse(HttpURLConnection.HTTP_INTERNAL_ERROR, "text/json",
+                        JMapFormatter.formatMap(responseMap).getBytes());
+                return;
+            }
+            if (error instanceof DisplayException) {
+            } else if (error instanceof StorageException) {
+            } else {
+                error.printStackTrace(System.err);
+            }
+            sendError(error.getMessage());
+        } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
         }
-        sendError(e.getMessage());
     }
 
     public void sendError(DisplayMessage message) {

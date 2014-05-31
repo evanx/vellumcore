@@ -206,4 +206,12 @@ public class JMaps {
         }
         return string;
     }
+    
+    public static List<JEntry> list(JMap map) {
+        List<JEntry> list = new ArrayList();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            list.add(new JEntry(entry));
+        }
+        return list;
+    }      
 }

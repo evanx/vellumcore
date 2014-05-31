@@ -351,4 +351,31 @@ public class Lists {
         return reversedList;
     }
 
+    public static List<String> coerceString(Iterable iterable) {        
+        List<String> list = new ArrayList();
+        for (Object item : iterable) {
+            if (item == null) {
+                list.add(null);
+            } else {
+                list.add(item.toString());
+            }
+        }
+        return list;
+    }
+    
+    public static List listKeys(Set<Map.Entry<String, Object>> entrySet) {        
+        List keyList = new ArrayList();
+        for (Map.Entry entry : entrySet) {
+            keyList.add(entry.getKey());
+        }
+        return keyList;
+    }
+    
+    public static List listValues(Set<Map.Entry<String, Object>> entrySet) {
+        List list = new ArrayList();
+        for (Map.Entry entry : entrySet) {
+            list.add(entry.getValue());
+        }
+        return list;
+    }       
 }

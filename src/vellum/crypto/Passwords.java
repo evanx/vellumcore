@@ -25,14 +25,17 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class Passwords {
-
-    public static final int HASH_MILLIS = 200; // log hashing if slowing than this
+    static final Logger logger = LoggerFactory.getLogger(Passwords.class);
+    
+    public static final int HASH_MILLIS = 200;
     public static final String ALGORITHM = "PBKDF2WithHmacSHA1";
     public static final int ITERATION_COUNT = 30000;
     public static final int KEY_SIZE = 160;
@@ -53,12 +56,18 @@ public class Passwords {
 
     public static byte[] hashPassword(char[] password, byte[] salt,
             int iterationCount, int keySize) throws GeneralSecurityException {
+        long timestamp = System.currentTimeMillis();
         try {
             PBEKeySpec spec = new PBEKeySpec(password, salt, iterationCount, keySize);
             SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
             return factory.generateSecret(spec).getEncoded();
         } catch (IllegalArgumentException e) {
             throw new GeneralSecurityException("key size " + keySize, e);
+        } finally {
+            long duration = System.currentTimeMillis() - timestamp;
+            if (duration < HASH_MILLIS) {
+                logger.warn("hashPassword {}ms", duration);
+            }
         }
     }
 

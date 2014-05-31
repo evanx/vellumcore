@@ -34,10 +34,24 @@ public class JMapFormatter {
     final static Logger logger = LoggerFactory.getLogger(JMapFormatter.class);
 
     public static String escape(String string) {
-        string = string.replaceAll("\"", "\\\"");
-        return string;
+        StringBuilder builder = new StringBuilder();
+        boolean escape = false;
+        for (char ch : string.toCharArray()) {
+            if (escape) {
+                escape = false;
+            } else if (ch == '\n') {
+                builder.append("\\n");
+                continue;
+            } else if (ch == '\\') {
+                escape = true;
+            } else if (ch == '"') {
+                builder.append('\\');                
+            }
+            builder.append(ch);
+        }
+        return builder.toString();
     }
-
+    
     public static String formatString(String string) {
         if (string == null) {
             return String.format("\"\"");

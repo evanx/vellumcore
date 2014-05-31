@@ -21,6 +21,7 @@
 package vellum.crypto;
 
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -35,6 +36,15 @@ public class Passwords {
     public static final String ALGORITHM = "PBKDF2WithHmacSHA1";
     public static final int ITERATION_COUNT = 30000;
     public static final int KEY_SIZE = 160;
+    public static final int SALT_LENGTH = 16;
+    public static final int ENCODED_SALT_LENGTH = 24;
+    
+    public static byte[] generateSalt() {
+        byte[] salt = new byte[SALT_LENGTH];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(salt);
+        return salt;
+    }
             
     public static byte[] hashPassword(char[] password, byte[] salt)
             throws GeneralSecurityException {

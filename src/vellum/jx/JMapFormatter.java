@@ -99,7 +99,7 @@ public class JMapFormatter {
     }
     
     public static String formatKey(String key) {
-        if (key.matches("^\\w*$")) {
+        if (false && key.matches("^\\w*$")) {
             return key;
         }
         return String.format("\"%s\"", key);

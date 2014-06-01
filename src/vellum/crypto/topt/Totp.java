@@ -18,22 +18,22 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.crypto.asymmetricstore;
+package vellum.crypto.topt;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+public final class Totp {
 
-/**
- *
- * @author evan.summers
- */
-public interface VellumAsymmetricEncryptionStore {
-    
-    public void store(OutputStream stream, String type, String alias, 
-            byte[] bytes, PublicKey publicKey) throws Exception;
-    
-    public byte[] load(InputStream stream, String type, String alias, 
-            PrivateKey privateKey) throws Exception;
+    String secret;
+
+    public Totp() {
+        secret = Totps.generateSecret();
+    }
+
+    public Totp(String secret) {
+        this.secret = secret;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
 }

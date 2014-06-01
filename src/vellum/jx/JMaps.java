@@ -46,6 +46,10 @@ public class JMaps {
 
     final static Logger logger = LoggerFactory.getLogger(JMaps.class);
 
+    public static String format(JMap map) {
+        return JMapFormatter.formatMap(map);
+    }
+    
     public static Object parse(JsonElement element) {
         if (element.isJsonArray()) {
             return list(element.getAsJsonArray());

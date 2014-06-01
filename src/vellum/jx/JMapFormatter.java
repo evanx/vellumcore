@@ -39,8 +39,8 @@ public class JMapFormatter {
         for (char ch : string.toCharArray()) {
             if (escape) {
                 escape = false;
-            } else if (ch == '\n') {
-                builder.append("\\n");
+            } else if (ch < ' ') {
+                builder.append("_");
                 continue;
             } else if (ch == '\\') {
                 escape = true;

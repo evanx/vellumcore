@@ -60,16 +60,6 @@ public class JMapFormatter {
         }
     }
 
-    public static String formatPrimitive(Object object) {
-        if (object == null) {
-            return "null";
-        } else if (object instanceof CharSequence) {
-            return formatString(object.toString());
-        } else {
-            return object.toString();
-        }
-    }
-
     public static String formatArray(Iterable iterable) {
         StringBuilder builder = new StringBuilder();
         for (Object item : iterable) {
@@ -92,8 +82,16 @@ public class JMapFormatter {
             return formatString(object.toString());
         } else if (object instanceof Map) {
             return formatMap((Map) object);
+        } else if (object instanceof CharSequence) {
+            return formatString(object.toString());
+        } else if (object.getClass().isPrimitive()) {
+            return object.toString();
+        } else if (object instanceof Boolean) {
+            return object.toString();
+        } else if (object instanceof Number) {
+            return object.toString();
         } else {
-            return formatPrimitive(object);
+            return formatString(object.toString());
         }
     }
 

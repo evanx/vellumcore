@@ -86,15 +86,6 @@ public class Numbers {
         return operand/divisor;
     }
 
-    public static void main(String[] args) {
-        System.out.println(formatMoneyAlt((double) 514329.455000001));
-        System.out.println(formatMoneyAlt((double) 514329.455));
-        System.out.println(formatMoney(514329.455000001));
-        System.out.println(formatMoney(514329.455));
-        System.out.println(newBigDecimal(514329.455000001, 2).toString());
-        System.out.println(newBigDecimal(514329.455, 2).toString());
-    }
-
     public static int getInt(long value) {
         return (int) value;
     }

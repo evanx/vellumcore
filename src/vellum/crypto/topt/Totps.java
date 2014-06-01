@@ -47,8 +47,8 @@ public class Totps {
         return new String(new Base32().encode(buffer));
     }
     
-    public static String getQRBarcodeURL(String user, String host, String secret) {
-        String chl = "otpauth%3A%2F%2Ftotp%2F" + user + '@' + host + "%3Fsecret%3D" + secret;
+    public static String getQRBarcodeURL(String email, String secret) {
+        String chl = "otpauth%3A%2F%2Ftotp%2F" + email + "%3Fsecret%3D" + secret;
         System.out.println(Strings.decodeUrl(chl));
         return "http://chart.apis.google.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=" + chl;
     }

@@ -27,29 +27,21 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import vellum.util.Base64;
 
-public final class Hmac {
-    final String algorithm = "HmacSHA256";
+public final class Hmacs {
+    final static String algorithm = "HmacSHA256";
     
-    SecretKey secretKey;
-
-    public Hmac() {
-    }
-
-    public Hmac(String encodedSecret) {
-        secretKey = new SecretKeySpec(Base64.decode(encodedSecret), algorithm);
-    }
-
-    public String generateSecret() throws GeneralSecurityException {
+    public static String generateSecret() throws GeneralSecurityException {
         KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
-        secretKey = keyGen.generateKey();
+        SecretKey secretKey = keyGen.generateKey();
         return Base64.encode(secretKey.getEncoded());
     }
 
-    public String mac(String message) throws GeneralSecurityException {
-        return Base64.encode(mac(message.getBytes()));
+    public static String mac(String secret, String message) throws GeneralSecurityException {
+        return Base64.encode(mac(secret, message.getBytes()));
     }
     
-    public byte[] mac(byte[] message) throws GeneralSecurityException {
+    public static byte[] mac(String secret, byte[] message) throws GeneralSecurityException {
+        SecretKey secretKey = new SecretKeySpec(Base64.decode(secret), algorithm);
         Mac mac = Mac.getInstance(secretKey.getAlgorithm());
         mac.init(secretKey);
         return mac.doFinal(message);

@@ -35,8 +35,8 @@ public final class Hmac {
     public Hmac() {
     }
 
-    public Hmac(String encoded) {
-        secretKey = new SecretKeySpec(Base64.decode(encoded), algorithm);
+    public Hmac(String encodedSecret) {
+        secretKey = new SecretKeySpec(Base64.decode(encodedSecret), algorithm);
     }
 
     public void generateSecret() throws GeneralSecurityException {
@@ -44,14 +44,14 @@ public final class Hmac {
         secretKey = keyGen.generateKey();
     }
 
-    public SecretKey getSecretKey() {
-        return secretKey;
-    }
-
-    public String encodedSecretKey() {
+    public String encodeSecret() {
         return Base64.encode(secretKey.getEncoded());
     }
 
+    public String mac(String message) throws GeneralSecurityException {
+        return Base64.encode(mac(message.getBytes()));
+    }
+    
     public byte[] mac(byte[] message) throws GeneralSecurityException {
         Mac mac = Mac.getInstance(secretKey.getAlgorithm());
         mac.init(secretKey);

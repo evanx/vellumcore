@@ -20,9 +20,11 @@
  */
 package vellum.jx;
 
+import com.google.gson.Gson;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static vellum.jx.JMap.logger;
 import vellum.util.Lists;
 
 /**
@@ -71,6 +73,17 @@ public class JMapFormatter {
         return String.format("[%s]", builder.toString());
     }
 
+    public static String toJson(Object object) {
+        String string = new Gson().toJson(object);
+        if (string.contains("\\\\")) {
+            logger.error("Gson escaping");
+        }
+        while (string.contains("\\\\")) {
+            string = string.replace("\\\\", "\\");
+        }
+        return string;
+    }
+    
     public static String formatObject(Object object) {
         if (object == null) {
             return "null";            
@@ -91,7 +104,8 @@ public class JMapFormatter {
         } else if (object instanceof Number) {
             return object.toString();
         } else {
-            return formatString(object.toString());
+            logger.warn("formatObject {}", object.getClass());
+            return toJson(object);
         }
     }
 

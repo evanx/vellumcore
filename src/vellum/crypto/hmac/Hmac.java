@@ -39,12 +39,9 @@ public final class Hmac {
         secretKey = new SecretKeySpec(Base64.decode(encodedSecret), algorithm);
     }
 
-    public void generateSecret() throws GeneralSecurityException {
+    public String generateSecret() throws GeneralSecurityException {
         KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
         secretKey = keyGen.generateKey();
-    }
-
-    public String encodeSecret() {
         return Base64.encode(secretKey.getEncoded());
     }
 

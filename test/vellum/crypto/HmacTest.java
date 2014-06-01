@@ -13,11 +13,11 @@ public class HmacTest {
 
     @Test
     public void test() throws Exception {
-        hmac.generateSecret();
+        String secret = hmac.generateSecret();
         String text = "Let's test this baby...";
         String mac = hmac.mac(text);
         logger.info("mac {}", mac);
-        hmac = new Hmac(hmac.encodeSecret());
+        hmac = new Hmac(secret);
         Assert.assertEquals(mac, hmac.mac(text));
     }
 }

@@ -37,13 +37,7 @@ import vellum.exception.ParseException;
 public class JMap extends HashMap<String, Object> {
     final static Logger logger = LoggerFactory.getLogger(JMap.class);
     
-    String text;
-    
     public JMap() {
-    }
-
-    public JMap(String text) {
-        this.text = text;
     }
 
     public JMap(Collection<JEntry> entries) {
@@ -156,20 +150,9 @@ public class JMap extends HashMap<String, Object> {
     public Integer getInteger(String key, int defaultValue) {
         return Convertors.coerceInteger(get(key), defaultValue);
     }
-    
+
     public String toJson() {
-        String string = new Gson().toJson(this);
-        if (string.contains("\\\\")) {
-            logger.error("Gson escaping");
-        }
-        while (string.contains("\\\\")) {
-            string = string.replace("\\\\", "\\");
-        }
-        return string;
-    }
-    
-    public String getText() {
-        return text;
+        return new Gson().toJson(this);
     }
     
     @Override

@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static vellum.jx.JMap.logger;
 import vellum.util.Lists;
 
 /**

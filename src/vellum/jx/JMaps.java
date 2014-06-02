@@ -46,10 +46,10 @@ public class JMaps {
 
     final static Logger logger = LoggerFactory.getLogger(JMaps.class);
 
-    public static String format(JMap map) {
-        return JMapFormatter.formatMap(map);
+    public static JMap parseMap(String json) throws JsonSyntaxException {
+        return map(new JsonParser().parse(json).getAsJsonObject());
     }
-    
+
     public static Object parse(JsonElement element) {
         if (element.isJsonArray()) {
             return list(element.getAsJsonArray());
@@ -70,7 +70,7 @@ public class JMaps {
         } else if (string.equals("false")) {
             return element.getAsBoolean();
         } else if (string.startsWith("\"")) {
-            return ensureTidy(string.substring(1, string.length() - 1));
+            return element.getAsString();
         } else if (string.contains(".")) {
             return element.getAsDouble();
         } else if (string.matches("[0-9]*")) {
@@ -113,10 +113,6 @@ public class JMaps {
 
     public static List list(String json) throws JsonSyntaxException {
         return list(parseJsonArray(json));
-    }
-
-    public static JMap parse(String json) throws JsonSyntaxException {
-        return map(new JsonParser().parse(json).getAsJsonObject());
     }
 
     public static JMap mapValue(String key, Object value) {
@@ -193,11 +189,11 @@ public class JMaps {
     }
     
     public static JConsoleMap nullConsole(String json) {
-        return nullConsole(parse(json));
+        return nullConsole(parseMap(json));
     }
 
     public static JConsoleMap nullConsoleFile(String fileName) throws IOException {
-        return nullConsole(parse(Streams.readString(fileName)));
+        return nullConsole(parseMap(Streams.readString(fileName)));
     }
 
     public static String ensureTidy(String string) {

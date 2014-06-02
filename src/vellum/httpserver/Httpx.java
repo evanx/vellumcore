@@ -372,14 +372,14 @@ public class Httpx {
         return out;
     }
 
-    public void sendResponse(Map map) throws IOException {
-        sendResponse("text/json", JMapFormatter.formatMap(map));
+    public void sendResponse(JMap map) throws IOException {
+        sendResponse("text/json", map.toJson());
     }
 
     public JMap parseJsonMap() throws IOException {
         String string = readString();
         logger.info("parseJsonMap {}", string);
-        return JMaps.parse(string);
+        return JMaps.parseMap(string);
     }
 
     public void close() {

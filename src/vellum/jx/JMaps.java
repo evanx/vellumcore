@@ -196,17 +196,6 @@ public class JMaps {
         return nullConsole(parseMap(Streams.readString(fileName)));
     }
 
-    public static String ensureTidy(String string) {
-        int index = string.indexOf("\\\\");
-        if (index > 10) {
-            String sub = string.substring(index - 10);
-            if (sub.length() > 50) sub = sub.substring(0, 50);
-            logger.error("toJson {}", sub);
-            throw new JMapRuntimeException("Gson escaping");
-        }
-        return string;
-    }
-    
     public static List<JEntry> list(JMap map) {
         List<JEntry> list = new ArrayList();
         for (Map.Entry<String, Object> entry : map.entrySet()) {

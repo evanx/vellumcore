@@ -331,6 +331,16 @@ public class Lists {
         return list;
     }
 
+    public static <T> List<T> listExcess(Iterator<T> iterator, int count) {
+        List<T> list = new ArrayList();
+        for (int i = 0; iterator.hasNext(); i++) {
+            if (i >= count) {
+                list.add(iterator.next());
+            }
+        }
+        return list;
+    }
+    
     public static <T> List<T> list(Iterator<T> iterator, int count) {
         List list = new ArrayList();
         while (iterator.hasNext() && (count == 0 || list.size() < count)) {            

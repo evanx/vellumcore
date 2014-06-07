@@ -45,6 +45,10 @@ public class SafeDateFormat {
       return pattern;
    }
 
+   public synchronized String formatNow() {
+       return format(new Date());           
+   }
+   
    public synchronized String format(Date date) {
       if (date == null) {
          return "";

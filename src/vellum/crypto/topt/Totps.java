@@ -69,7 +69,7 @@ public class Totps {
         return System.currentTimeMillis()/1000/30;
     }
 
-    static List<Long> getCodeList(String secret, long timeIndex, int variance) 
+    static List<Long> getCodeList(String secret, long timeIndex, int variance)
             throws NoSuchAlgorithmException, InvalidKeyException {
         List<Long> list = new ArrayList();
         for (int i = -variance; i <= variance; i++) {
@@ -77,8 +77,8 @@ public class Totps {
         }
         return list;
     }
-    
-    static long getCode(String secret, long timeIndex) 
+
+    static long getCode(String secret, long timeIndex)
             throws NoSuchAlgorithmException, InvalidKeyException {
         return getCode(new Base32().decode(secret), timeIndex);
     }

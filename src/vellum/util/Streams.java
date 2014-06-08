@@ -264,11 +264,16 @@ public class Streams {
         }
     }
 
+    static int connectTimeout = 30000;
+    static int readTimeout = 45000;
+    
     public static byte[] readContent(String urlString) throws IOException {
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
         connection.setDoOutput(false);
         connection.setDoInput(true);
+        connection.setConnectTimeout(connectTimeout);
+        connection.setReadTimeout(readTimeout);
         connection.connect();
         int length = connection.getContentLength();
         byte[] content = readBytes(new BufferedInputStream(connection.getInputStream()));

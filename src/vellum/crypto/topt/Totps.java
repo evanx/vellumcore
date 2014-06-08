@@ -40,7 +40,12 @@ import vellum.util.Strings;
 public class Totps {
 
     static Logger logger = LoggerFactory.getLogger(Totps.class);
+    static final int VARIANCE = 6;
     
+    static long getCurrentTimeIndex() {
+        return System.currentTimeMillis()/1000/30;
+    }
+
     public static String generateSecret() {
         byte[] buffer = new byte[10];
         new SecureRandom().nextBytes(buffer);
@@ -52,7 +57,17 @@ public class Totps {
         System.out.println(Strings.decodeUrl(chl));
         return "http://chart.apis.google.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=" + chl;
     }
-     
+
+    public static boolean verifyCode(String secret, int code)
+            throws NoSuchAlgorithmException, InvalidKeyException {
+        return verifyCode(secret, code, getCurrentTimeIndex(), VARIANCE);
+    }
+    
+    public static boolean verifyCode(String secret, int code, int variance)
+            throws NoSuchAlgorithmException, InvalidKeyException {
+        return verifyCode(secret, code, getCurrentTimeIndex(), variance);
+    }
+    
     public static boolean verifyCode(String secret, int code, long timeIndex, int variance) 
             throws NoSuchAlgorithmException, InvalidKeyException {
         Base32 codec = new Base32();
@@ -65,25 +80,26 @@ public class Totps {
         return false;
     }
 
-    static long getCurrentTimeIndex() {
-        return System.currentTimeMillis()/1000/30;
-    }
-
-    static List<Long> getCodeList(String secret, long timeIndex, int variance)
+    static List<Integer> getCodeList(String secret, long timeIndex, int variance)
             throws NoSuchAlgorithmException, InvalidKeyException {
-        List<Long> list = new ArrayList();
+        List<Integer> list = new ArrayList();
         for (int i = -variance; i <= variance; i++) {
             list.add(getCode(new Base32().decode(secret), timeIndex + i));
         }
         return list;
     }
 
-    static long getCode(String secret, long timeIndex)
+    public static int getCurrentCode(String secret)
+            throws NoSuchAlgorithmException, InvalidKeyException {
+        return getCode(secret, getCurrentTimeIndex());
+    }
+    
+    public static int getCode(String secret, long timeIndex)
             throws NoSuchAlgorithmException, InvalidKeyException {
         return getCode(new Base32().decode(secret), timeIndex);
     }
 
-    static long getCode(byte[] secret, long timeIndex) 
+    static int getCode(byte[] secret, long timeIndex) 
             throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKeySpec signKey = new SecretKeySpec(secret, "HmacSHA1");
         ByteBuffer buffer = ByteBuffer.allocate(8);
@@ -98,6 +114,6 @@ public class Totps {
             truncatedHash <<= 8;
             truncatedHash |= hash[offset + i] & 0xff;
         }
-        return (truncatedHash %= 1000000);
+        return (int) (truncatedHash %= 1000000);
     }
 }

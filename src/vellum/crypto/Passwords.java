@@ -38,7 +38,7 @@ public class Passwords {
     
     public static final int HASH_MILLIS = 200;
     public static final String ALGORITHM = "PBKDF2WithHmacSHA1";
-    public static final int ITERATION_COUNT = 30000;
+    public static final int ITERATION_COUNT = 100*1000;
     public static final int KEY_SIZE = 160;
     public static final int SALT_LENGTH = 16;
     public static final int ENCODED_SALT_LENGTH = 24;
@@ -74,7 +74,12 @@ public class Passwords {
 
     public static boolean matches(char[] password, String passwordHash, String salt) 
             throws GeneralSecurityException {
-        return matches(password, Base64.decode(passwordHash), Base64.decode(salt), ITERATION_COUNT, KEY_SIZE);
+        return matches(password, passwordHash, salt, ITERATION_COUNT, KEY_SIZE);
+    }
+
+    public static boolean matches(char[] password, String passwordHash, String salt, int iterationCount, int keySize) 
+            throws GeneralSecurityException {
+        return matches(password, Base64.decode(passwordHash), Base64.decode(salt), iterationCount, keySize);
     }
     
     public static boolean matches(char[] password, byte[] passwordHash, byte[] salt) 

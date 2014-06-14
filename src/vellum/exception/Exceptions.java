@@ -45,7 +45,7 @@ public class Exceptions {
     }
 
     public static String getMessage(Throwable e) {
-        return Args.format(e.getClass(), e.getMessage());
+        return String.format("%s: %s", e.getClass(), e.getMessage());
     }
     
     public static RuntimeException newRuntimeException(Object ... args) {

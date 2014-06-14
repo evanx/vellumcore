@@ -25,6 +25,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.UnknownHostException;
@@ -282,6 +283,12 @@ public class Httpx {
         logger.trace("sendResponse {} string [{}]", contentType, string.trim());
         sendResponse(contentType, string.getBytes());
     }
+
+    public void sendResponseHeaders(String contentType, int length) throws IOException {
+        delegate.getResponseHeaders().set("Content-type", contentType);
+        delegate.getResponseHeaders().set("Content-length", Integer.toString(length));
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, length);
+    }
     
     public void sendResponse(String contentType, byte[] bytes) throws IOException {
         delegate.getResponseHeaders().set("Content-type", contentType);
@@ -366,6 +373,10 @@ public class Httpx {
         }
     }
 
+    public OutputStream getOutputStream() {
+        return delegate.getResponseBody();
+    }
+    
     public PrintStream getPrintStream() {
         if (out == null) {
             out = new PrintStream(delegate.getResponseBody());

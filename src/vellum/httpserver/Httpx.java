@@ -24,6 +24,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.UnknownHostException;
@@ -390,6 +391,10 @@ public class Httpx {
         return Streams.readString(delegate.getRequestBody());
     }
 
+    public InputStream getInputStream() throws IOException {
+        return delegate.getRequestBody();
+    }
+    
     public SSLSession getSSLSession() {
         return ((HttpsExchange) delegate).getSSLSession();
     }

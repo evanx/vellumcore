@@ -74,8 +74,6 @@ public class WebHttpHandler implements HttpHandler {
             logger.trace("path", path, bytes.length);
         } catch (IOException e) {
             logger.warn("handle {} {}", path, e.getMessage());
-        } catch (Throwable t) {
-            logger.warn("handle: " + path, t);
         } finally {
             httpExchange.close();
         }

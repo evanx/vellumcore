@@ -39,6 +39,7 @@ import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.data.Millis;
 import vellum.exception.DisplayException;
 import vellum.exception.DisplayMessage;
 import vellum.jx.JMap;
@@ -277,6 +278,13 @@ public class Httpx {
 
     public Collection<String> listRequestHeaders() {
         return delegate.getRequestHeaders().keySet();
+    }
+    
+
+    public void setCors(long cacheMillis) {
+        delegate.getResponseHeaders().set("Access-control-allow-headers", "if-modified-since");
+        delegate.getResponseHeaders().set("Access-control-allow-origin", "*");
+        delegate.getResponseHeaders().set("Cache-control", "max-age=" + Millis.toSeconds(cacheMillis));
     }
     
     public void sendResponse(String contentType, String string) throws IOException {

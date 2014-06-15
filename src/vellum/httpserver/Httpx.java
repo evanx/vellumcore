@@ -286,8 +286,7 @@ public class Httpx {
 
     public void sendResponseHeaders(String contentType, int length) throws IOException {
         delegate.getResponseHeaders().set("Content-type", contentType);
-        delegate.getResponseHeaders().set("Content-length", Integer.toString(length));
-        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, length);
+        delegate.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
     
     public void sendResponse(String contentType, byte[] bytes) throws IOException {

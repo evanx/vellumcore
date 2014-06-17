@@ -281,10 +281,10 @@ public class Httpx {
     }
     
 
-    public void setCors(long cacheMillis) {
+    public void setCors(int cacheSeconds) {
         delegate.getResponseHeaders().set("Access-control-allow-headers", "if-modified-since");
         delegate.getResponseHeaders().set("Access-control-allow-origin", "*");
-        delegate.getResponseHeaders().set("Cache-control", "max-age=" + Millis.toSeconds(cacheMillis));
+        delegate.getResponseHeaders().set("Cache-control", "max-age=" + cacheSeconds);
     }
     
     public void sendResponse(String contentType, String string) throws IOException {

@@ -126,4 +126,14 @@ public class Millis {
     public static String formatDefaultTimeZone(long timestamp) {
         return CalendarFormats.timestampFormat.format(TimeZone.getDefault(), timestamp);
     }
+    
+    
+    public static String formatSeconds(long millis) {
+       if (millis < 1000) {
+          return String.format("%dms", millis);          
+       } else {
+          return String.format("%ds", millis/1000);
+       }
+    }
+    
 }

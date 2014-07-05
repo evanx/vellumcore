@@ -21,6 +21,7 @@
 package vellum.jx;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -160,7 +161,8 @@ public class JMap extends HashMap<String, Object> {
    }
 
    public String toJson() {
-      return new Gson().toJson(this);
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();      
+      return gson.toJson(this);
    }
 
    @Override

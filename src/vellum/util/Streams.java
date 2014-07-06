@@ -264,8 +264,8 @@ public class Streams {
         }
     }
 
-    static int connectTimeout = 30000;
-    static int readTimeout = 45000;
+    static int connectTimeout = 15000;
+    static int readTimeout = 20000;
     
     public static byte[] readContent(String urlString) throws IOException {
         URL url = new URL(urlString);

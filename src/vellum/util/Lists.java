@@ -407,4 +407,18 @@ public class Lists {
         }
         return ret;
     }
+    
+   public static <T> Set<T> dupSet(List<T> list) {
+      Set<T> set = new HashSet();
+      Set<T> dupSet = new HashSet();
+      for (T item : list) {
+         if (!set.contains(item)) {
+            set.add(item);
+         } else {
+            dupSet.add(item);
+         }
+      }
+      return dupSet;
+   }
+    
 }

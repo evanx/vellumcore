@@ -63,12 +63,21 @@ public class Streams {
     }
 
     public static BufferedReader newBufferedGzip(String fileName) throws FileNotFoundException, IOException {
-        File file = new File(fileName);
+        return newBufferedGzip(new File(fileName));
+    }
+
+    public static BufferedReader newBufferedGzip(File file) throws FileNotFoundException, IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 new GZIPInputStream(new FileInputStream(file))));
         return reader;
     }
 
+    public static BufferedReader newBufferedGzipInputStream(File file) throws FileNotFoundException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new GZIPInputStream(new FileInputStream(file))));
+        return reader;
+    }
+    
     public static String loadResourceString(Class parent, String resourceName) throws IOException {
         return readString(getResourceAsStream(parent, resourceName));
     }
@@ -266,8 +275,8 @@ public class Streams {
 
     static int connectTimeout = 15000;
     static int readTimeout = 20000;
-    
-    public static byte[] readContent(String urlString) throws IOException {
+
+    public static URLConnection connect(String urlString) throws IOException {
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
         connection.setDoOutput(false);
@@ -275,6 +284,11 @@ public class Streams {
         connection.setConnectTimeout(connectTimeout);
         connection.setReadTimeout(readTimeout);
         connection.connect();
+        return connection;
+    }
+    
+    public static byte[] readContent(String urlString) throws IOException {
+        URLConnection connection = connect(urlString);
         int length = connection.getContentLength();
         byte[] content = readBytes(new BufferedInputStream(connection.getInputStream()));
         if (content.length < length) {
@@ -282,7 +296,7 @@ public class Streams {
         }
         return content;
     }
-
+    
     public static void write(byte[] content, File file)
             throws FileNotFoundException, IOException {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {

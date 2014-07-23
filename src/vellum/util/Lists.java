@@ -420,5 +420,14 @@ public class Lists {
       }
       return dupSet;
    }
-    
+
+   public boolean dedup(List list) {
+      Set set = dupSet(list);
+      if (!set.isEmpty()) {
+         list.removeAll(set);
+         return true;
+      } else {
+         return false;
+      }      
+   }
 }

@@ -53,268 +53,274 @@ import vellum.exception.SizeRuntimeException;
  */
 public class Streams {
 
-    private final static Logger logger = LoggerFactory.getLogger(Streams.class);
+   private final static Logger logger = LoggerFactory.getLogger(Streams.class);
 
-    public static final String fileSeparator = System.getProperty("file.separator");
-    public static final String userHomeDir = System.getProperty("user.home");
+   public static final String fileSeparator = System.getProperty("file.separator");
+   public static final String userHomeDir = System.getProperty("user.home");
 
-    public static BufferedReader newBufferedReader(InputStream inputStream) {
-        return new BufferedReader(new InputStreamReader(inputStream));
-    }
+   public static BufferedReader newBufferedReader(InputStream inputStream) {
+      return new BufferedReader(new InputStreamReader(inputStream));
+   }
 
-    public static BufferedReader newBufferedGzip(String fileName) throws FileNotFoundException, IOException {
-        return newBufferedGzip(new File(fileName));
-    }
+   public static BufferedReader newBufferedGzip(String fileName) throws FileNotFoundException, IOException {
+      return newBufferedGzip(new File(fileName));
+   }
 
-    public static BufferedReader newBufferedGzip(File file) throws FileNotFoundException, IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new GZIPInputStream(new FileInputStream(file))));
-        return reader;
-    }
+   public static BufferedReader newBufferedGzip(File file) throws FileNotFoundException, IOException {
+      BufferedReader reader = new BufferedReader(new InputStreamReader(
+              new GZIPInputStream(new FileInputStream(file))));
+      return reader;
+   }
 
-    public static BufferedReader newBufferedGzipInputStream(File file) throws FileNotFoundException, IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new GZIPInputStream(new FileInputStream(file))));
-        return reader;
-    }
-    
-    public static String loadResourceString(Class parent, String resourceName) throws IOException {
-        return readString(getResourceAsStream(parent, resourceName));
-    }
+   public static BufferedReader newBufferedGzipInputStream(File file) throws FileNotFoundException, IOException {
+      BufferedReader reader = new BufferedReader(new InputStreamReader(
+              new GZIPInputStream(new FileInputStream(file))));
+      return reader;
+   }
 
-    public static byte[] readResourceBytes(Class parent, String resourceName) throws IOException {
-        return readBytes(getResourceAsStream(parent, resourceName));
-    }
+   public static String loadResourceString(Class parent, String resourceName) throws IOException {
+      return readString(getResourceAsStream(parent, resourceName));
+   }
 
-    public static String readResourceString(Class parent, String resourceName) throws IOException {
-        return readString(getResourceAsStream(parent, resourceName));
-    }
+   public static byte[] readResourceBytes(Class parent, String resourceName) throws IOException {
+      return readBytes(getResourceAsStream(parent, resourceName));
+   }
 
-    protected static InputStream getResourceAsStream(Class type, String resourceName) {
-        InputStream stream = type.getResourceAsStream(resourceName);
-        if (stream == null) {
-            throw new ArgsRuntimeException(type, resourceName);
-        }
-        return stream;
-    }
+   public static String readResourceString(Class parent, String resourceName) throws IOException {
+      return readString(getResourceAsStream(parent, resourceName));
+   }
 
-    public static byte[] readBytes(String filePath) throws IOException {
-        return readBytes(new File(filePath));
-    }
+   protected static InputStream getResourceAsStream(Class type, String resourceName) {
+      InputStream stream = type.getResourceAsStream(resourceName);
+      if (stream == null) {
+         throw new ArgsRuntimeException(type, resourceName);
+      }
+      return stream;
+   }
 
-    public static byte[] readBytes(File file) throws FileNotFoundException, IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        FileInputStream stream = new FileInputStream(file);
-        while (true) {
+   public static byte[] readGzipBytes(File file) throws FileNotFoundException, IOException {
+      try (InputStream stream = new GZIPInputStream(new FileInputStream(file))) {
+         return readBytes(stream);
+      }
+   }
+
+   public static byte[] readBytes(String filePath) throws IOException {
+      return readBytes(new File(filePath));
+   }
+
+   public static byte[] readBytes(File file) throws FileNotFoundException, IOException {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      FileInputStream stream = new FileInputStream(file);
+      while (true) {
+         int b = stream.read();
+         if (b < 0) {
+            return outputStream.toByteArray();
+         }
+         outputStream.write(b);
+      }
+   }
+
+   public static byte[] readBytes(InputStream stream) throws IOException {
+      try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+         while (true) {
             int b = stream.read();
             if (b < 0) {
-                return outputStream.toByteArray();
+               return outputStream.toByteArray();
             }
             outputStream.write(b);
-        }
-    }
+         }
+      }
+   }
 
-    public static byte[] readBytes(InputStream stream) throws IOException {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            while (true) {
-                int b = stream.read();
-                if (b < 0) {
-                    return outputStream.toByteArray();
-                }
-                outputStream.write(b);
-            }
-        }
-    }
+   public static StringBuilder readStringBuilder(InputStream stream) throws IOException {
+      return new StringBuilder(readString(stream));
+   }
 
-    public static StringBuilder readStringBuilder(InputStream stream) throws IOException {
-        return new StringBuilder(readString(stream));
-    }
+   public static String readString(InputStream stream) throws IOException {
+      return new String(readBytes(stream));
+   }
 
-    public static String readString(InputStream stream) throws IOException {
-        return new String(readBytes(stream));
-    }
+   public static String readString(File file) throws IOException {
+      return new String(readBytes(new FileInputStream(file)));
+   }
 
-    public static String readString(File file) throws IOException {
-        return new String(readBytes(new FileInputStream(file)));
-    }
-    
-    public static String readString(String fileName) throws IOException {
-        return new String(readBytes(new FileInputStream(fileName)));
-    }    
+   public static String readString(String fileName) throws IOException {
+      return new String(readBytes(new FileInputStream(fileName)));
+   }
 
-    public static char[] readChars(InputStream stream) throws IOException {
-        return Bytes.toCharArray(readBytes(stream));
-    }
+   public static char[] readChars(InputStream stream) throws IOException {
+      return Bytes.toCharArray(readBytes(stream));
+   }
 
-    public static InputStream exec(String command) throws IOException {
-        logger.debug("exec {}", command);
-        Process process = Runtime.getRuntime().exec(command);
-        return process.getInputStream();
-    }
+   public static InputStream exec(String command) throws IOException {
+      logger.debug("exec {}", command);
+      Process process = Runtime.getRuntime().exec(command);
+      return process.getInputStream();
+   }
 
-    public static void process(LineProcessor processor, InputStream stream) throws Exception {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-            while (true) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                processor.processLine(line);
-            }
-        }
-    }
-
-    public static void close(ServerSocket closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void close(Socket closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void close(Closeable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void renameTo(String srcFileName, String destFileName) {
-        logger.debug("replaceFile {} {}", srcFileName, destFileName);
-        File srcFile = new File(srcFileName);
-        File destFile = new File(destFileName);
-        srcFile.renameTo(destFile);
-    }
-
-    public static List<String> readLineList(InputStream stream, int capacity) throws IOException {
-        List<String> lineList = new ArrayList();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        while (true) {
+   public static void process(LineProcessor processor, InputStream stream) throws Exception {
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+         while (true) {
             String line = reader.readLine();
             if (line == null) {
-                return lineList;
+               break;
             }
-            lineList.add(line);
-            if (capacity > 0 && lineList.size() > capacity) {
-                throw new SizeRuntimeException(lineList.size());
-            }
-        }
-    }
+            processor.processLine(line);
+         }
+      }
+   }
 
-    public static void read(InputStream stream, StringBuilder builder) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        while (true) {
-            String line = reader.readLine();
-            if (line == null) {
-                return;
-            }
-            builder.append(line);
-            builder.append("\n");
-        }
-    }
+   public static void close(ServerSocket closeable) {
+      try {
+         if (closeable != null) {
+            closeable.close();
+         }
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
 
-    public static String readString(InputStream stream, long capacity) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        StringBuilder builder = new StringBuilder();
-        while (true) {
-            String line = reader.readLine();
-            if (line == null) {
-                return builder.toString();
-            }
-            builder.append(line);
-            builder.append("\n");
-            if (capacity > 0 && builder.length() > capacity) {
-                throw new SizeRuntimeException(builder.length());
-            }
-        }
-    }
+   public static void close(Socket closeable) {
+      try {
+         if (closeable != null) {
+            closeable.close();
+         }
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
 
-    public static void transmit(InputStream inputStream, File file)
-            throws IOException {
-        transmit(inputStream, new FileOutputStream(file));
-    }
+   public static void close(Closeable closeable) {
+      try {
+         if (closeable != null) {
+            closeable.close();
+         }
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
 
-    public static void transmit(InputStream inputStream, OutputStream outputStream)
-            throws IOException {
-        while (true) {
-            int b = inputStream.read();
-            if (b < 0) {
-                return;
-            }
-            outputStream.write(b);
-        }
-    }
+   public static void renameTo(String srcFileName, String destFileName) {
+      logger.debug("replaceFile {} {}", srcFileName, destFileName);
+      File srcFile = new File(srcFileName);
+      File destFile = new File(destFileName);
+      srcFile.renameTo(destFile);
+   }
 
-    public static void println(OutputStream outputStream, Object data) {
-        new PrintWriter(outputStream).println(data);
-    }
+   public static List<String> readLineList(InputStream stream, int capacity) throws IOException {
+      List<String> lineList = new ArrayList();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+      while (true) {
+         String line = reader.readLine();
+         if (line == null) {
+            return lineList;
+         }
+         lineList.add(line);
+         if (capacity > 0 && lineList.size() > capacity) {
+            throw new SizeRuntimeException(lineList.size());
+         }
+      }
+   }
 
-    public static String parseFileName(String urlString) {
-        int index = urlString.lastIndexOf('/');
-        if (index >= 0) {
-            return urlString.substring(index + 1);
-        } else {
-            return urlString;
-        }
-    }
+   public static void read(InputStream stream, StringBuilder builder) throws IOException {
+      BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+      while (true) {
+         String line = reader.readLine();
+         if (line == null) {
+            return;
+         }
+         builder.append(line);
+         builder.append("\n");
+      }
+   }
 
-    static int connectTimeout = 15000;
-    static int readTimeout = 20000;
+   public static String readString(InputStream stream, long capacity) throws IOException {
+      BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+      StringBuilder builder = new StringBuilder();
+      while (true) {
+         String line = reader.readLine();
+         if (line == null) {
+            return builder.toString();
+         }
+         builder.append(line);
+         builder.append("\n");
+         if (capacity > 0 && builder.length() > capacity) {
+            throw new SizeRuntimeException(builder.length());
+         }
+      }
+   }
 
-    public static URLConnection connect(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        URLConnection connection = url.openConnection();
-        connection.setDoOutput(false);
-        connection.setDoInput(true);
-        connection.setConnectTimeout(connectTimeout);
-        connection.setReadTimeout(readTimeout);
-        connection.connect();
-        return connection;
-    }
-    
-    public static byte[] readContent(String urlString) throws IOException {
-        URLConnection connection = connect(urlString);
-        int length = connection.getContentLength();
-        byte[] content = readBytes(new BufferedInputStream(connection.getInputStream()));
-        if (content.length < length) {
-            throw new IOException(String.format("Read only %d of %d for %s", content.length, length, urlString));
-        }
-        return content;
-    }
-    
-    public static void write(byte[] content, File file)
-            throws FileNotFoundException, IOException {
-        try (FileOutputStream outputStream = new FileOutputStream(file)) {
-            outputStream.write(content);
-        }
-    }
+   public static void transmit(InputStream inputStream, File file)
+           throws IOException {
+      transmit(inputStream, new FileOutputStream(file));
+   }
 
-    public static void postHttp(byte[] content, URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        try {
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "plain/text");
-            connection.setDoOutput(true);
-            connection.setDoInput(false);
-            InputStream inputStream = new ByteArrayInputStream(content);
-            transmit(inputStream, connection.getOutputStream());
-        } finally {
-            connection.disconnect();
-        }
-    }
+   public static void transmit(InputStream inputStream, OutputStream outputStream)
+           throws IOException {
+      while (true) {
+         int b = inputStream.read();
+         if (b < 0) {
+            return;
+         }
+         outputStream.write(b);
+      }
+   }
+
+   public static void println(OutputStream outputStream, Object data) {
+      new PrintWriter(outputStream).println(data);
+   }
+
+   public static String parseFileName(String urlString) {
+      int index = urlString.lastIndexOf('/');
+      if (index >= 0) {
+         return urlString.substring(index + 1);
+      } else {
+         return urlString;
+      }
+   }
+
+   static int connectTimeout = 15000;
+   static int readTimeout = 20000;
+
+   public static URLConnection connect(String urlString) throws IOException {
+      URL url = new URL(urlString);
+      URLConnection connection = url.openConnection();
+      connection.setDoOutput(false);
+      connection.setDoInput(true);
+      connection.setConnectTimeout(connectTimeout);
+      connection.setReadTimeout(readTimeout);
+      connection.connect();
+      return connection;
+   }
+
+   public static byte[] readContent(String urlString) throws IOException {
+      URLConnection connection = connect(urlString);
+      int length = connection.getContentLength();
+      byte[] content = readBytes(new BufferedInputStream(connection.getInputStream()));
+      if (content.length < length) {
+         throw new IOException(String.format("Read only %d of %d for %s", content.length, length, urlString));
+      }
+      return content;
+   }
+
+   public static void write(byte[] content, File file)
+           throws FileNotFoundException, IOException {
+      try (FileOutputStream outputStream = new FileOutputStream(file)) {
+         outputStream.write(content);
+      }
+   }
+
+   public static void postHttp(byte[] content, URL url) throws IOException {
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      try {
+         connection.setRequestMethod("POST");
+         connection.setRequestProperty("Content-Type", "plain/text");
+         connection.setDoOutput(true);
+         connection.setDoInput(false);
+         InputStream inputStream = new ByteArrayInputStream(content);
+         transmit(inputStream, connection.getOutputStream());
+      } finally {
+         connection.disconnect();
+      }
+   }
 }

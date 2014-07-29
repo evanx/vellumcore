@@ -82,7 +82,7 @@ public class Comparables {
         return new ComparableTuple(values);        
     }
     
-    public static String toString(String comparable) {
+    public static String toString(Comparable comparable) {
         if (comparable == null) return "null";
         return comparable.toString();
     }

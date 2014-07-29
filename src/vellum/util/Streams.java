@@ -279,8 +279,8 @@ public class Streams {
       }
    }
 
-   static int connectTimeout = 15000;
-   static int readTimeout = 20000;
+   public static int connectTimeout = 15000;
+   public static int readTimeout = 20000;
 
    public static URLConnection connect(String urlString) throws IOException {
       URL url = new URL(urlString);

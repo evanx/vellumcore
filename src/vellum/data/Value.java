@@ -24,6 +24,42 @@ package vellum.data;
  *
  * @author evan.summers
  */
-public interface Nullable<T> {
-   public T getValue();
+public class Value<T> {
+
+   T value;
+   
+   public Value() {      
+   }
+
+   public Value(T value) {
+      this.value = value;
+   }
+      
+   public T get() {
+      return value;      
+   }
+   
+   public boolean ok() {
+      return value != null;
+   }
+
+   public static <T> Value<T> of(T value) {
+      return new Value(value);
+   }
+
+   @Override
+   public String toString() {
+      if (value == null) {
+         return "$null";
+      } else {
+         String string = value.toString();
+         if (string.isEmpty()) {
+            return "$empty";
+         } else {
+            return string;            
+         }
+      }
+   }
+      
+   public final static Value none = new Value();
 }

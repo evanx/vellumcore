@@ -24,7 +24,42 @@ package vellum.data;
  *
  * @author evan.summers
  */
-public interface Result<T> {
-   public T value();
-   public boolean ok();
+public class Result<T> {
+
+   T value;
+   
+   public Result() {      
+   }
+
+   public Result(T value) {
+      this.value = value;
+   }
+      
+   public T get() {
+      return value;      
+   }
+   
+   public boolean exists() {
+      return value != null;
+   }
+
+   public static <T> Result<T> as(T value) {
+      return new Result(value);
+   }
+
+   @Override
+   public String toString() {
+      if (value == null) {
+         return "$null";
+      } else {
+         String string = value.toString();
+         if (string.isEmpty()) {
+            return "$empty";
+         } else {
+            return string;            
+         }
+      }
+   }
+      
+   public final static Result none = new Result();
 }

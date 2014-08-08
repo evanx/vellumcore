@@ -128,4 +128,22 @@ public class Convertors {
         }
         throw new JMapsException("Not long integer: " + value.getClass());
     }
+    
+    public static Double coerceDouble(Object value, Double defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof String) {
+            return Double.parseDouble((String) value);
+        }
+        if (value instanceof Double) {
+            return (Double) value;
+        }
+        if (value instanceof Float) {
+            return Double.valueOf((Float) value);
+        }
+        logger.warn("coerceDouble {} {}", value.getClass(), value.toString());
+        return defaultValue;
+    }
+    
 }

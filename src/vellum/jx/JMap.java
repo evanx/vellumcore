@@ -160,6 +160,10 @@ public class JMap extends HashMap<String, Object> {
       return Convertors.coerceInteger(get(key), defaultValue);
    }
 
+   public Double getDouble(String key, Double defaultValue) {
+      return Convertors.coerceDouble(get(key), defaultValue);
+   }
+   
    public String toJson() {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();      
       return gson.toJson(this);

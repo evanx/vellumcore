@@ -80,7 +80,7 @@ public class Systems {
         return fileName;
     }
 
-    public static boolean isExcessiveLoadAvg(float threshold) throws IOException {
+    public static boolean isExcessiveLoadAvg(double threshold) throws IOException {
        return getLoadAvg() > threshold;
     }
     

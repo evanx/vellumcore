@@ -20,10 +20,12 @@
  */
 package vellum.system;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.util.Streams;
 
 /**
  *
@@ -76,6 +78,18 @@ public class Systems {
             return homeDir + "/" + fileName;
         }
         return fileName;
+    }
+
+    public static boolean isHighLoadAvg() throws IOException {
+       return getLoadAvg() > 2;
+    }
+    
+    public static float getLoadAvg() throws IOException {
+       if (!isLinux()) {
+          return 0;
+       } else {
+          return Float.parseFloat(Streams.readString("/proc/loadavg").split("\\s")[0]);
+       }
     }
     
 }

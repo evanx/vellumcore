@@ -40,7 +40,7 @@ public class VellumHttpServer implements Shutdownable {
     HttpServer delegate;
     HttpServerProperties properties; 
     ThreadPoolExecutor executor = 
-            new ThreadPoolExecutor(32, 96, 0, TimeUnit.MILLISECONDS, 
+            new ThreadPoolExecutor(32, 64, 0, TimeUnit.MILLISECONDS, 
             new ArrayBlockingQueue<Runnable>(256));
     
     public VellumHttpServer() {

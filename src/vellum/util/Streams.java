@@ -283,7 +283,10 @@ public class Streams {
    public static int readTimeout = 20000;
 
    public static URLConnection connect(String urlString) throws IOException {
-      URL url = new URL(urlString);
+      return connect(new URL(urlString));
+   }
+   
+   public static URLConnection connect(URL url) throws IOException {
       URLConnection connection = url.openConnection();
       connection.setDoOutput(false);
       connection.setDoInput(true);

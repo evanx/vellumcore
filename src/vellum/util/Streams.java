@@ -304,7 +304,7 @@ public class Streams {
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("HEAD");
       connection.setDoOutput(false);
-      connection.setDoInput(false);
+      connection.setDoInput(true);
       connection.setConnectTimeout(connectTimeout);
       connection.setReadTimeout(readTimeout);
       connection.connect();

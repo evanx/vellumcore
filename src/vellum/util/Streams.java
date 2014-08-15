@@ -296,6 +296,17 @@ public class Streams {
       return connection;
    }
 
+   public static HttpURLConnection connectHead(URL url) throws IOException {
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod("HEAD");
+      connection.setDoOutput(false);
+      connection.setDoInput(false);
+      connection.setConnectTimeout(connectTimeout);
+      connection.setReadTimeout(readTimeout);
+      connection.connect();
+      return connection;
+   }
+   
    public static byte[] readContent(String urlString) throws IOException {
       URLConnection connection = connect(urlString);
       int length = connection.getContentLength();

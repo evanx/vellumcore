@@ -296,6 +296,10 @@ public class Streams {
       return connection;
    }
 
+   public static int connectHeadCode(URL url) throws IOException {
+      return connectHead(url).getResponseCode();
+   }
+   
    public static HttpURLConnection connectHead(URL url) throws IOException {
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("HEAD");

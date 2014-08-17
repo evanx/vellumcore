@@ -162,5 +162,4 @@ public class Calendars {
       setTime(calendar, 0, 0, 0);
       return calendar;
    }
-
 }

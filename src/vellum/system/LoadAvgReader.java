@@ -43,6 +43,7 @@ public final class LoadAvgReader {
    static File procFile = new File("/proc/loadavg");
 
    public LoadAvgReader(long period, double lowThreshold, double highThreshold) throws IOException {
+      this.period = period;
       this.lowThreshold = lowThreshold;
       this.highThreshold = highThreshold;
       if (!procFile.exists()) {
@@ -54,15 +55,16 @@ public final class LoadAvgReader {
       try {
          try (BufferedReader reader = new BufferedReader(new FileReader(procFile))) {
             cachedLoadAvg = Float.parseFloat(reader.readLine().split("\\s")[0]);
+            logger.debug("read loadavg: {}", cachedLoadAvg);
          }
       } catch (IOException e) {
-         logger.warn("read load failed", e);
+         logger.warn("read loadavg failed", e);
       }
    }
 
    public double getLoadAvg() {
       long timestamp = System.currentTimeMillis();
-      if (lastTimestamp == 0 || lastTimestamp + period > timestamp) {
+      if (lastTimestamp == 0 || timestamp > lastTimestamp + period) {
          lastTimestamp = timestamp;
          readLoadAvg();
       }

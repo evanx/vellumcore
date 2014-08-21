@@ -62,6 +62,14 @@ public final class LoadAvgReader {
       }
    }
 
+   public String getLoadAvgString() {
+      return String.format("%.2f", getLoadAvg());
+   }
+
+   public int getLoadAvgTenths() {
+      return new Float(getLoadAvg()*10).intValue();
+   }
+   
    public double getLoadAvg() {
       long timestamp = System.currentTimeMillis();
       if (lastTimestamp == 0 || timestamp > lastTimestamp + period) {

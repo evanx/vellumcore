@@ -102,6 +102,12 @@ public class Systems {
       return Systems.execList(command, 99);
    }
 
+   public static Process execProcess(String command) throws IOException, InterruptedException {
+      Process process = Runtime.getRuntime().exec(command);
+      process.waitFor();
+      return process;
+   }
+   
    public static Iterable<String> execList(String command, int lineLimit) throws IOException, InterruptedException {
       Process process = Runtime.getRuntime().exec(command);
       process.waitFor();

@@ -98,8 +98,8 @@ public class Systems {
       }
    }
 
-   public static Iterable<String> readExecList(String command) throws IOException, InterruptedException {
-      return execList(command, 99);
+   public static Iterable<String> execList(String command) throws IOException, InterruptedException {
+      return Systems.execList(command, 99);
    }
 
    public static Iterable<String> execList(String command, int lineLimit) throws IOException, InterruptedException {

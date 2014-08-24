@@ -212,13 +212,10 @@ public class Streams {
       BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
       while (true) {
          String line = reader.readLine();
-         if (line == null) {
+         if (line == null || lineList.size() == capacity) {
             return lineList;
          }
          lineList.add(line);
-         if (capacity > 0 && lineList.size() > capacity) {
-            throw new SizeRuntimeException(lineList.size());
-         }
       }
    }
 

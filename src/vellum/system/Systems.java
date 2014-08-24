@@ -99,10 +99,10 @@ public class Systems {
    }
 
    public static Iterable<String> readExecList(String command) throws IOException, InterruptedException {
-      return readExecList(command, 99);
+      return execList(command, 99);
    }
 
-   public static Iterable<String> readExecList(String command, int lineLimit) throws IOException, InterruptedException {
+   public static Iterable<String> execList(String command, int lineLimit) throws IOException, InterruptedException {
       Process process = Runtime.getRuntime().exec(command);
       process.waitFor();
       BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -117,38 +117,16 @@ public class Systems {
       }
    }
 
-   public static String readExecFirstLine(String command) throws IOException, InterruptedException {
+   public static String execFirstLine(String command) throws IOException, InterruptedException {
       Process process = Runtime.getRuntime().exec(command);
       process.waitFor();
       BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
       return reader.readLine();
    }
 
-   public static String readExecString(String command) throws IOException, InterruptedException {
+   public static String execString(String command) throws IOException, InterruptedException {
       Process process = Runtime.getRuntime().exec(command);
       process.waitFor();
       return Streams.readString(process.getInputStream());
-   }
-
-   public static String readExecStringRemoveBlank(String command) throws IOException, InterruptedException {
-      return joinLines(removeBlank(readExecList(command, 99)));
-   }
-
-   public static List<String> removeBlank(Iterable<String> iterable) {
-      List<String> list = new ArrayList();
-      for (String line : iterable) {
-         if (!line.trim().isEmpty()) {
-            list.add(line);
-         }
-      }
-      return list;
-   }
-
-   public static String joinLines(Iterable<String> list) {
-      StringBuilder builder = new StringBuilder();
-      for (String line : list) {
-         builder.append(line).append('\n');
-      }
-      return builder.toString();
    }
 }

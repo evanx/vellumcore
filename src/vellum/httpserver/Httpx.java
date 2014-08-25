@@ -88,7 +88,7 @@ public class Httpx {
     }
     
     public boolean isLocalhost() throws UnknownHostException {
-        return delegate.getLocalAddress().getAddress().getHostAddress().equals("127.0.0.1");        
+        return delegate.getRemoteAddress().getAddress().getHostAddress().equals("127.0.0.1");        
     }
     
     public String getRemoteHostName() {

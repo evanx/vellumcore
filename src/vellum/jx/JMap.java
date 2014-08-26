@@ -121,7 +121,7 @@ public class JMap extends HashMap<String, Object> {
    }
 
    public long getLong(String key) throws JMapsException {
-      return Convertors.coerceLong(get(key));
+      return Convertors.coerceLong(getObject(key));
    }
 
    public long getMillis(String key) throws ParseException, JMapsException {

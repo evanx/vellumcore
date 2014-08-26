@@ -117,7 +117,7 @@ public class JMap extends HashMap<String, Object> {
    }
 
    public int getInt(String key) throws JMapsException {
-      return Convertors.coerceInt(get(key));
+      return Convertors.coerceInt(getObject(key));
    }
 
    public long getLong(String key) throws JMapsException {

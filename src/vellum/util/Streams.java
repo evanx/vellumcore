@@ -296,12 +296,21 @@ public class Streams {
    public static int connectHeadCode(URL url) throws IOException {
       return connectHead(url).getResponseCode();
    }
-
+   
    public static boolean exists(URL url) throws IOException {
       try {
          return connectHead(url).getResponseCode() == 200;
       } catch (Exception e) {
          logger.debug("exists failed: {}", url.toExternalForm());
+         return false;
+      }
+   }
+
+   public static boolean existsUrl(String urlString) throws IOException {
+      try {
+         return connectHead(new URL(urlString)).getResponseCode() == 200;
+      } catch (Exception e) {
+         logger.debug("exists failed: {}", urlString);
          return false;
       }
    }

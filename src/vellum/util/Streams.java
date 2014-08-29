@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.exception.Exceptions;
 import vellum.exception.SizeRuntimeException;
 
 /**
@@ -297,20 +298,20 @@ public class Streams {
       return connectHead(url).getResponseCode();
    }
    
-   public static boolean exists(URL url) throws IOException {
+   public static boolean exists(URL url) {
       try {
          return connectHead(url).getResponseCode() == 200;
-      } catch (Exception e) {
-         logger.debug("exists failed: {}", url.toExternalForm());
+      } catch (RuntimeException | IOException e) {
+         logger.debug("exists failed: {}: {}", url.toExternalForm(), Exceptions.getMessage(e));
          return false;
       }
    }
 
-   public static boolean existsUrl(String urlString) throws IOException {
+   public static boolean existsUrl(String urlString) {
       try {
          return connectHead(new URL(urlString)).getResponseCode() == 200;
-      } catch (Exception e) {
-         logger.debug("exists failed: {}", urlString);
+      } catch (RuntimeException | IOException e) {
+         logger.debug("exists failed: {}: {}", urlString, Exceptions.getMessage(e));
          return false;
       }
    }

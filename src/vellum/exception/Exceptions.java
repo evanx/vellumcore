@@ -52,6 +52,14 @@ public class Exceptions {
       }
    }
 
+   public static String getMessage(Throwable e, Object arg) {
+      if (e.getMessage() == null) {
+         return e.getClass().getSimpleName();
+      } else {
+         return String.format("%s: %s: %s", e.getClass().getSimpleName(), e.getMessage(), arg);
+      }
+   }
+   
    public static RuntimeException newRuntimeException(Object... args) {
       if (args.length == 1) {
          Throwable e = getThrowable(args);

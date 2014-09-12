@@ -121,12 +121,12 @@ public class JMaps {
         return map;
     }
 
-    public static JEntry entryValue(String key, Object value) {
+    public static JEntry value(String key, Object value) {
         return new JEntry(key, value);
     }
 
     public static JEntry entry(String key, Iterable<? extends JMapped> iterable) {
-        return entryValue(key, list(iterable));
+        return value(key, list(iterable));
     }
 
     public static JMap map(String key, Iterable<? extends JMapped> iterable) {

@@ -35,7 +35,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import vellum.exception.ArgsRuntimeException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
@@ -91,10 +90,10 @@ public class Streams {
       return readString(getResourceAsStream(parent, resourceName));
    }
 
-   protected static InputStream getResourceAsStream(Class type, String resourceName) {
+   protected static InputStream getResourceAsStream(Class type, String resourceName) throws IOException {
       InputStream stream = type.getResourceAsStream(resourceName);
       if (stream == null) {
-         throw new ArgsRuntimeException(type, resourceName);
+         throw new IOException(String.format("resource:%s:%s", type.getSimpleName(), resourceName));
       }
       return stream;
    }

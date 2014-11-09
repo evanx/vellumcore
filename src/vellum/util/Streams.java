@@ -1,5 +1,5 @@
 /*
- Source https://code.google.com/p/vellum by @evanxsummers
+ Source https://github.com/evanx by @evanxsummers
 
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements. See the NOTICE file
@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -336,6 +337,14 @@ public class Streams {
       return content;
    }
 
+   public static Reader urlReader(String urlString) throws IOException {
+      return urlReader(new URL(urlString));
+   }
+   
+   public static Reader urlReader(URL url) throws IOException {
+      return new InputStreamReader(Streams.connect(url).getInputStream());      
+   }
+   
    public static void write(byte[] content, File file)
            throws FileNotFoundException, IOException {
       try (FileOutputStream outputStream = new FileOutputStream(file)) {

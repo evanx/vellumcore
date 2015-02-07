@@ -1,4 +1,4 @@
 
 ## vellumcore 
 
-common utilities, at some stage refactored out of [https://github.com/evanx/vellum](github.com/evanx/vellum)
+Common utilities, at some stage refactored out of <a href="https://github.com/evanx/vellum">github.com/evanx/vellum</a>.
